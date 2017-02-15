@@ -1,0 +1,11 @@
+h2{
+    color: green;
+}
+.header{
+}
+
+.content{
+    background: url("images/world.jpg") no-repeat right top;
+    background-size: cover;
+    height: 646px;
+}
