@@ -47,7 +47,7 @@ public class CityResource extends ResourceSupport{
     }
 
     public City toCity(Country country){
-        City city = new City(name, countryCode, district, population);
+        City city = new City(name, district, population);
         country.addCity(city);
         return city;
     }

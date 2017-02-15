@@ -35,7 +35,7 @@ public class WorldServiceTest {
     public void setUp(){
         this.country = new Country("AAA", "Limpopo", Continent.AFRICA, "Chunga-Changa",
                 100.01d, 1990, 1234, 99.9, 100.1, 90.2, "Limpo", "Anarchy", "Ai-Bolit", "AA");
-        this.capital = new City("Chunge", null, "Change", 111);
+        this.capital = new City("Chunge", "Change", 111);
         this.language = new CountryLanguage(true, 99.9, country, "Nigra");
         country.setCapital(capital);
         service.save(country);

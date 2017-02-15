@@ -18,7 +18,7 @@ public class CountryLanguage {
     private boolean isOfficial;
     private Double percentage;
     @ManyToOne
-    @JoinColumn(name = "countryCode", insertable = false, updatable = false)//TODO check other abilities
+    @JoinColumn(name = "countryCode", insertable = false, updatable = false)
     private Country country;
 
     protected CountryLanguage() {

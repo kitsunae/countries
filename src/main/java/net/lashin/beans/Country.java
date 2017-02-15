@@ -203,7 +203,6 @@ public class Country {
         addCity(capital);
         this.capital = capital.getId();
         capital.setCountry(this);
-        capital.setCountryCode(this.code);
     }
 
     public void addCity(City city){
@@ -211,7 +210,6 @@ public class Country {
             this.cities.add(city);
         }
         city.setCountry(this);
-        city.setCountryCode(this.getCode());
     }
 
     public void addLanguage(CountryLanguage language){
