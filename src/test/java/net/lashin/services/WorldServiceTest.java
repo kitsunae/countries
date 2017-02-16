@@ -45,7 +45,7 @@ public class WorldServiceTest {
     @Transactional
     public void addingTest(){
         assertEquals(this.capital, service.getCityByName(this.capital.getName()));
-        assertEquals(this.language, service.getLanguagesByCountry(this.country).get(0));
+        assertEquals(this.language, service.getLanguagesByCountry(this.country.getCode()).get(0));
         this.country = service.getCountryByCapital(capital);
         City city = new City("hehe", "haha", 100, this.country);
         service.save(city);
@@ -66,6 +66,17 @@ public class WorldServiceTest {
         assertNull(service.getCountryByName(country.getName()));
         assertNull(service.getCityByName(this.capital.getName()));
         assertNull(service.getCityByName(city.getName()));
-        assertEquals(0, service.getLanguagesByCountry(country).size());
+        assertEquals(0, service.getLanguagesByCountry(country.getCode()).size());
+    }
+
+    @Test
+    @Transactional
+    public void removalTest(){
+        Country country = new Country("AAA", "Limpopo", Continent.AFRICA, "Chunga-Changa",
+                100.01d, 1990, 1234, 99.9, 100.1, 90.2, "Limpo", "Anarchy", "Ai-Bolit", "AA");
+        service.remove(country);
+        assertNull(service.getCountryByCode(this.country.getCode()));
+        assertNull(service.getCityByName(this.capital.getName()));
+        assertNull(service.getLanguageByNameAndCountry("Nigra", this.country.getCode()));
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by lashi on 09.02.2017.
@@ -46,16 +47,12 @@ public class WorldService implements CityService, CountryService, LanguageServic
 
     @Override
     public List<City> getWorldCapitals() {
-        List<City> result = new ArrayList<>();
-        for (Country country : countryRepository.findAll()) {
-            result.add(country.getCapital());
-        }
-        return result;
+        return countryRepository.findAll().stream().map(Country::getCapital).collect(Collectors.toList());
     }
 
     @Override
-    public List<CountryLanguage> getLanguagesByCountry(Country country) {
-        return languageRepository.findByCountry(country);
+    public List<CountryLanguage> getLanguagesByCountry(String countryId) {
+        return languageRepository.findByCountry(countryRepository.findOne(countryId));
     }
 
     @Override
@@ -70,6 +67,13 @@ public class WorldService implements CityService, CountryService, LanguageServic
 
     @Override
     public City save(City city) {
+        return cityRepository.saveAndFlush(city);
+    }
+
+    @Override
+    public City save(City city, String countryCode) {
+        Country country = countryRepository.findOne(countryCode);
+        city.setCountry(country);
         return cityRepository.saveAndFlush(city);
     }
 
@@ -89,18 +93,14 @@ public class WorldService implements CityService, CountryService, LanguageServic
     }
 
     @Override
-    public CountryLanguage getLanguageByNameAndCountry(String language, Country country) {
-        CountryLanguageId id = new CountryLanguageId(country.getCode(), language);
+    public CountryLanguage getLanguageByNameAndCountry(String language, String countryCode) {
+        CountryLanguageId id = new CountryLanguageId(countryCode, language);
         return languageRepository.findOne(id);
     }
 
     @Override
     public List<String> getAllCountryNames() {
-        List<String> result = new ArrayList<>();
-        for (Country country : countryRepository.findAll()){
-            result.add(country.getName());
-        }
-        return result;
+        return countryRepository.findAll().stream().map(Country::getName).collect(Collectors.toList());
     }
 
     @Override
@@ -123,12 +123,7 @@ public class WorldService implements CityService, CountryService, LanguageServic
 
     @Override
     public List<Country> getCountriesByLanguage(String language) {
-        List<Country> result = new ArrayList<>();
-        for (CountryLanguage countryLanguage : languageRepository.findAll()){
-            if (countryLanguage.getLanguage().equals(language))
-                result.add(countryLanguage.getCountry());
-        }
-        return result;
+        return languageRepository.findAll().stream().filter(countryLanguage -> countryLanguage.getLanguage().equals(language)).map(CountryLanguage::getCountry).collect(Collectors.toList());
     }
 
     @Override
@@ -153,5 +148,10 @@ public class WorldService implements CityService, CountryService, LanguageServic
     @Override
     public void remove(Country country) {
         countryRepository.delete(country);
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCode(String countryCode) {
+        return getCitiesByCountry(getCountryByCode(countryCode));
     }
 }

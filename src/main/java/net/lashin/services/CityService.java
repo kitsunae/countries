@@ -14,4 +14,6 @@ public interface CityService {
     List<City> getWorldCapitals();
     List<City> getAllCities();
     City save(City city);
+    City save(City city, String countryCode);
+    List<City> getCitiesByCountryCode(String countryCode);
 }

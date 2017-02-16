@@ -46,9 +46,11 @@ public class CityResource extends ResourceSupport{
         this.population = population;
     }
 
+    public City toCity(){
+        return new City(name, district, population);
+    }
+
     public City toCity(Country country){
-        City city = new City(name, district, population);
-        country.addCity(city);
-        return city;
+        return new City(name, district, population, country);
     }
 }

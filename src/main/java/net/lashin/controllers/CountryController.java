@@ -1,37 +1,51 @@
 package net.lashin.controllers;
 
+import net.lashin.beans.Continent;
 import net.lashin.beans.Country;
+import net.lashin.beans.hateoas.CountryResource;
+import net.lashin.beans.hateoas.asm.CountryResourceAsm;
 import net.lashin.services.CountryService;
-import net.lashin.services.WorldService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by lashi on 09.02.2017.
  */
-@Controller
-@RequestMapping(value = "/getCountry")
+@RestController
+@RequestMapping(value = "/country")
 public class CountryController {
     @Autowired
     private CountryService service;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody Country getCountry(){
-        return service.getCountryByName("Russian Federation");
+    @RequestMapping(value = "/{countryCode}", method = RequestMethod.GET)
+    public CountryResource getCountry(@PathVariable String countryCode){
+        Country country = service.getCountryByCode(countryCode);
+        return new CountryResourceAsm().toResource(country);
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public @ResponseBody List<Country> getAllCountries(){
-        return service.getAllCountries();
+    public List<CountryResource> getAllCountries(){
+        return service.getAllCountries().stream().map(country -> new CountryResourceAsm().toResource(country)).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/names", method = RequestMethod.GET)
-    public @ResponseBody List<String> getAllCountryNames(){
+    public List<String> getAllCountryNames(){
         return service.getAllCountryNames();
+    }
+
+    @RequestMapping (value = "/remove", method = RequestMethod.POST)
+    public void remove(@RequestBody CountryResource countryResource){
+        service.remove(countryResource.toCountry());
+    }
+
+    @RequestMapping(value = "/continent", method = RequestMethod.GET)
+    public List<CountryResource> getCountriesByContinent(@RequestBody Continent continent){
+        return service.getCountriesByContinent(continent)
+                .stream()
+                .map(country -> new CountryResourceAsm().toResource(country))
+                .collect(Collectors.toList());
     }
 }
