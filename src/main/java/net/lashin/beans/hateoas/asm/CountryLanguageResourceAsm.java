@@ -30,6 +30,8 @@ public class CountryLanguageResourceAsm extends ResourceAssemblerSupport<Country
         resource.add(self);
         Link country = linkTo(methodOn(CountryController.class).getCountry(language.getCountryCode())).withRel("country");
         resource.add(country);
+        Link allCountries = linkTo(methodOn(LanguageController.class).getCountriesWithSameLanguage(language.getLanguage())).withRel("allCountries");
+        resource.add(allCountries);
         return resource;
     }
 }

@@ -5,6 +5,7 @@ import net.lashin.beans.Country;
 import net.lashin.beans.hateoas.CountryResource;
 import net.lashin.beans.hateoas.asm.CountryResourceAsm;
 import net.lashin.services.CountryService;
+import net.lashin.services.WorldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/country")
 public class CountryController {
     @Autowired
-    private CountryService service;
+    private WorldService service;
 
     @RequestMapping(value = "/{countryCode}", method = RequestMethod.GET)
     public CountryResource getCountry(@PathVariable String countryCode){

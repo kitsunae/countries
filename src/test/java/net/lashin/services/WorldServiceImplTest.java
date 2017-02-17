@@ -21,10 +21,10 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class, JpaConfig.class})
-public class WorldServiceTest {
+public class WorldServiceImplTest {
 
     @Autowired
-    private WorldService service;
+    private WorldServiceImpl service;
 
     private Country country;
     private City capital;
@@ -45,7 +45,7 @@ public class WorldServiceTest {
     @Transactional
     public void addingTest(){
         assertEquals(this.capital, service.getCityByName(this.capital.getName()));
-        assertEquals(this.language, service.getLanguagesByCountry(this.country.getCode()).get(0));
+        assertEquals(this.language, service.getLanguagesByCountryCode(this.country.getCode()).get(0));
         this.country = service.getCountryByCapital(capital);
         City city = new City("hehe", "haha", 100, this.country);
         service.save(city);
@@ -66,7 +66,7 @@ public class WorldServiceTest {
         assertNull(service.getCountryByName(country.getName()));
         assertNull(service.getCityByName(this.capital.getName()));
         assertNull(service.getCityByName(city.getName()));
-        assertEquals(0, service.getLanguagesByCountry(country.getCode()).size());
+        assertEquals(0, service.getLanguagesByCountry(country).size());
     }
 
     @Test

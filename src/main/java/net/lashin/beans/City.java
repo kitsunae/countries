@@ -22,6 +22,7 @@ public class City {
     private Integer population;
     @ManyToOne
     @JoinColumn(name = "countryCode", nullable = false)
+    @NotNull
     private Country country;
 
     protected City() {

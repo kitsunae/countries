@@ -1,11 +1,26 @@
-h2{
-    color: green;
+*{
+    padding: 0;
+    margin: 0;
 }
+
 .header{
+    background-color: #00ca20;
+}
+
+#main-menu{
+    text-align: center;
+}
+
+#main-menu li{
+    display: inline;
+    padding: 30px 30px;
+    margin: 20px 30px;
+    font-size: 3em;
+    color: #2836fa;
+    font-family: "Arial", serif;
 }
 
 .content{
     background: url("images/world.jpg") no-repeat right top;
     background-size: cover;
-    height: 646px;
 }

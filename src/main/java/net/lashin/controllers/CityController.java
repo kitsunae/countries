@@ -3,6 +3,7 @@ package net.lashin.controllers;
 import net.lashin.beans.hateoas.CityResource;
 import net.lashin.beans.hateoas.asm.CityResourceAsm;
 import net.lashin.services.CityService;
+import net.lashin.services.WorldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 public class CityController {
 
     @Autowired
-    private CityService service;
+    private WorldService service;
 
     @RequestMapping(value="/{name}", method = RequestMethod.GET)
     public CityResource getCity(@PathVariable String name){

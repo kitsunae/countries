@@ -21,6 +21,7 @@ public class CityResourceAsm extends ResourceAssemblerSupport<City, CityResource
 
     @Override
     public CityResource toResource(City city) {
+        if (city==null) return null;
         CityResource res = new CityResource();
         res.setCountryCode(city.getCountry().getCode());
         res.setDistrict(city.getDistrict());
