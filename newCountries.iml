@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
-    <facet type="web" name="Web">
-      <configuration>
-        <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/src/main/java/net/lashin/config" />
-        </descriptors>
-        <webroots>
-          <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
-        </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/java" />
-          <root url="file://$MODULE_DIR$/src/main/resources" />
-        </sourceRoots>
-      </configuration>
-    </facet>
     <facet type="hibernate" name="Hibernate">
       <configuration>
         <datasource-map />
@@ -26,9 +12,19 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />
         <datasource-mapping>
+          <factory-entry name="entityManagerFactory" value="fb9764ea-73a9-4836-9c1c-006454127b8c" />
           <factory-entry name="world" value="fb9764ea-73a9-4836-9c1c-006454127b8c" />
         </datasource-mapping>
-        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" />
+      </configuration>
+    </facet>
+    <facet type="Spring" name="Spring">
+      <configuration process_explicitly_annotated="false">
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/java/net/lashin/config/CountryWebAppInitializer.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/net/lashin/config/JpaConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/net/lashin/config/RootConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/net/lashin/config/WebConfig.java</file>
+        </fileset>
       </configuration>
     </facet>
   </component>

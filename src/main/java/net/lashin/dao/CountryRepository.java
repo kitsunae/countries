@@ -1,6 +1,5 @@
 package net.lashin.dao;
 
-import net.lashin.beans.City;
 import net.lashin.beans.Continent;
 import net.lashin.beans.Country;
 import org.springframework.data.jpa.repository.JpaRepository;

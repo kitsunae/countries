@@ -17,8 +17,12 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/city")
 public class CityController {
 
+    private final WorldService service;
+
     @Autowired
-    private WorldService service;
+    public CityController(WorldService service) {
+        this.service = service;
+    }
 
     @RequestMapping(value="/{name}", method = RequestMethod.GET)
     public CityResource getCity(@PathVariable String name){

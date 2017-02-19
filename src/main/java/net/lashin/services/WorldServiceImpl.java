@@ -18,22 +18,23 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class WorldServiceImpl implements WorldService{
-    @Autowired
+
     private CountryRepository countryRepository;
-    @Autowired
     private CityRepository cityRepository;
-    @Autowired
     private CountryLanguageRepository languageRepository;
+
+    @Autowired
+    public WorldServiceImpl(CountryRepository countryRepository, CityRepository cityRepository, CountryLanguageRepository languageRepository) {
+        this.countryRepository = countryRepository;
+        this.cityRepository = cityRepository;
+        this.languageRepository = languageRepository;
+    }
 
     @Override
     public City getCityByName(String name) {
         return cityRepository.findByName(name);
     }
 
-    @Override
-    public List<City> getCitiesByCountry(Country country) {
-        return cityRepository.findByCountry(country);
-    }
 
     @Override
     public List<CountryLanguage> getAllLanguages() {
@@ -52,7 +53,8 @@ public class WorldServiceImpl implements WorldService{
 
     @Override
     public List<CountryLanguage> getLanguagesByCountryCode(String countryId) {
-        return countryRepository.findOne(countryId).getLanguages();
+        Country country = countryRepository.findOne(countryId);
+        return country == null ? new ArrayList<>() : country.getLanguages();
     }
 
     @Override
@@ -152,11 +154,6 @@ public class WorldServiceImpl implements WorldService{
 
     @Override
     public List<City> getCitiesByCountryCode(String countryCode) {
-        return getCitiesByCountry(getCountryByCode(countryCode));
-    }
-
-    @Override
-    public List<CountryLanguage> getLanguagesByCountry(Country country) {
-        return languageRepository.findByCountry(country);
+        return getCountryByCode(countryCode).getCities();
     }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 public interface LanguageService {
     List<CountryLanguage> getAllLanguages();
     List<CountryLanguage> getLanguagesByCountryCode(String countryId);
-    List<CountryLanguage> getLanguagesByCountry(Country country);
     List<CountryLanguage> getLanguagesByOfficialty(boolean isOfficial);
     CountryLanguage getLanguageByNameAndCountry(String language, String countryCode);
     List<CountryLanguage> getLanguagesByPercentRate(Double percentage, boolean less);

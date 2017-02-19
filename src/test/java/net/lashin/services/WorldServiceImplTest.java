@@ -66,7 +66,7 @@ public class WorldServiceImplTest {
         assertNull(service.getCountryByName(country.getName()));
         assertNull(service.getCityByName(this.capital.getName()));
         assertNull(service.getCityByName(city.getName()));
-        assertEquals(0, service.getLanguagesByCountry(country).size());
+        assertEquals(0, service.getLanguagesByCountryCode(country.getCode()).size());
     }
 
     @Test

@@ -18,8 +18,12 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/language")
 public class LanguageController {
 
+    private final WorldService service;
+
     @Autowired
-    private WorldService service;
+    public LanguageController(WorldService service) {
+        this.service = service;
+    }
 
     @RequestMapping(value = "/{countryId}", method = RequestMethod.GET)
     public List<CountryLanguageResource> getLanguagesByCountry(@PathVariable String countryId){

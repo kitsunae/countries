@@ -11,7 +11,6 @@ import java.util.List;
  */
 public interface CityService {
     City getCityByName(String name);
-    List<City> getCitiesByCountry(Country country);
     List<City> getWorldCapitals();
     List<City> getAllCities();
     City save(@Valid City city);

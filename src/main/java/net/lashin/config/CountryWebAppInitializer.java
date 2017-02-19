@@ -1,6 +1,5 @@
 package net.lashin.config;
 
-import org.springframework.orm.hibernate5.support.OpenSessionInViewFilter;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -11,6 +10,7 @@ import javax.servlet.Filter;
  */
 public class CountryWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
+    //try to get rid of that filter
     protected Class<?>[] getRootConfigClasses() {
         return new Class<?>[]{RootConfig.class, JpaConfig.class};
     }

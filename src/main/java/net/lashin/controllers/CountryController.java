@@ -18,8 +18,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/country")
 public class CountryController {
+
+    private final WorldService service;
+
     @Autowired
-    private WorldService service;
+    public CountryController(WorldService service) {
+        this.service = service;
+    }
 
     @RequestMapping(value = "/{countryCode}", method = RequestMethod.GET)
     public CountryResource getCountry(@PathVariable String countryCode){
