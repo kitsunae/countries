@@ -1,0 +1,54 @@
+package net.lashin.core.services;
+
+import net.lashin.core.beans.CountryLanguage;
+import net.lashin.core.beans.CountryLanguageId;
+import net.lashin.core.dao.CountryLanguageRepository;
+import net.lashin.core.dao.CountryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * Created by lashi on 14.03.2017.
+ */
+@Service
+public class LanguageServiceImpl implements LanguageService {
+
+    private CountryLanguageRepository languageRepository;
+    private CountryRepository countryRepository;
+
+    @Autowired
+    public LanguageServiceImpl(CountryLanguageRepository languageRepository, CountryRepository countryRepository) {
+        this.languageRepository = languageRepository;
+        this.countryRepository = countryRepository;
+    }
+
+    @Override
+    public List<CountryLanguage> getAllLanguages() {
+        return languageRepository.findAll();
+    }
+
+    @Override
+    public List<CountryLanguage> getLanguagesByCountryCode(String countryId) {
+        return countryRepository.findOne(countryId).getLanguages();
+    }
+
+    @Override
+    public List<CountryLanguage> getLanguagesByCountryAndOfficialty(String countryCode, boolean isOfficial) {
+        return languageRepository.findByCountryCode(countryCode)
+                .stream()
+                .filter(CountryLanguage::isOfficial==isOfficial);
+    }
+
+    @Override
+    public CountryLanguage getLanguageByNameAndCountry(String language, String countryCode) {
+        CountryLanguageId id = new CountryLanguageId(countryCode, language);
+        return languageRepository.findOne(id);
+    }
+
+    @Override
+    public CountryLanguage save(CountryLanguage language) {
+        return languageRepository.save(language);
+    }
+}

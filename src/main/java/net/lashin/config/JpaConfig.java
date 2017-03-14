@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * Created by lashi on 09.02.2017.
  */
 @Configuration
-@EnableJpaRepositories(basePackages = "net.lashin.dao")
+@EnableJpaRepositories(basePackages = "net.lashin.core.dao")
 public class JpaConfig {
 }

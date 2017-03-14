@@ -23,7 +23,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("net.lashin.controllers")
+@ComponentScan("net.lashin.web.controllers")
 public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
@@ -61,6 +61,6 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     //adding a .css and .js files access
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/views/");
+        registry.addResourceHandler("/**").addResourceLocations("/views/");
     }
 }

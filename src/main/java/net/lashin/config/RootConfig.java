@@ -20,7 +20,7 @@ import javax.sql.DataSource;
  * Created by lashi on 24.01.2017.
  */
 @Configuration
-@ComponentScan(basePackages = {"net.lashin"},
+@ComponentScan(basePackages = {"net.lashin.core"},
         excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value = EnableWebMvc.class),})
 public class RootConfig {
 
@@ -52,7 +52,7 @@ public class RootConfig {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
-        entityManagerFactoryBean.setPackagesToScan("net.lashin.beans");
+        entityManagerFactoryBean.setPackagesToScan("net.lashin.core.beans");
         return entityManagerFactoryBean;
     }
 
