@@ -27,13 +27,21 @@ public class CityController {
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
-    public CityResource getCity(@PathVariable long id){
+    public CityResource getCity(@PathVariable Long id){
         return assembler.toResource(service.getCityById(id));
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<CityResource> getAllCities(){
         return service.getAllCities()
+                .stream()
+                .map(assembler::toResource)
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public List<CityResource> getAllCitiesOfCountry(@RequestParam(value = "countryCode") String countryCode){
+        return service.getCitiesByCountryCode(countryCode)
                 .stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
@@ -58,5 +66,15 @@ public class CityController {
     @RequestMapping(method = RequestMethod.POST)
     public CityResource saveCity(@RequestBody CityResource cityResource){
         return assembler.toResource(service.save(cityResource.toCity(), cityResource.getCountryCode()));
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public CityResource editCity(@RequestBody CityResource city, @PathVariable Long id){
+        return assembler.toResource(service.edit(city.toCity(), id, city.getCountryCode()));
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void deleteCity(@PathVariable Long id){
+        service.remove(id);
     }
 }

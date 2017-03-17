@@ -1,6 +1,5 @@
 package net.lashin.web.controllers;
 
-import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
 import net.lashin.core.beans.hateoas.CountryResource;
 import net.lashin.core.services.CountryService;
@@ -47,11 +46,42 @@ public class CountryController {
     }
 
 
-    @RequestMapping(value = "/continent", method = RequestMethod.GET)
-    public List<CountryResource> getCountriesByContinent(@RequestBody Continent continent){
-        return service.getCountriesByContinent(continent)
+    @RequestMapping(value = "/continent/{name}", method = RequestMethod.GET)
+    public List<CountryResource> getCountriesByContinent(@PathVariable String name){
+        return service.getCountriesByContinentName(name)
                 .stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/language/{name}", method = RequestMethod.GET)
+    public List<CountryResource> getCountriesWithSameLanguage(@PathVariable String name){
+        return service.getCountriesByLanguage(name)
+                .stream()
+                .map(assembler::toResource)
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/capital/{name}", method = RequestMethod.GET)
+    public List<CountryResource> getCountriesByCapital(@PathVariable String cityName){
+        return service.getCountriesByCapital(cityName)
+                .stream()
+                .map(assembler::toResource)
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public CountryResource save(@RequestBody CountryResource country){
+        return assembler.toResource(service.save(country.toCountry()));
+    }
+
+    @RequestMapping(value = "/{countryCode}", method = RequestMethod.PUT)
+    public CountryResource edit(@RequestBody CountryResource country, @PathVariable String countryCode){
+        return assembler.toResource(service.edit(country.toCountry(), countryCode));
+    }
+
+    @RequestMapping(value = "/{countryCode}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable String countryCode){
+        service.remove(countryCode);
     }
 }

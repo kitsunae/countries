@@ -49,4 +49,8 @@ public class CountryLanguageResource extends ResourceSupport {
     public CountryLanguage toCountryLanguage(Country country){
         return new CountryLanguage(isOfficial, percentage, country, language);
     }
+
+    public CountryLanguage toCountryLanguage(){
+        return new CountryLanguage(countryCode,language,isOfficial, percentage);
+    }
 }

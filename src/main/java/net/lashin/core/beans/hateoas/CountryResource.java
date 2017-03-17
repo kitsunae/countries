@@ -147,7 +147,7 @@ public class CountryResource extends ResourceSupport {
     }
 
     public Country toCountry(){
-        Country country = new Country(code, name, Continent.value(continent), region, surfaceArea, indepYear, population, lifeExpectancy, gnp, gnpOld, localName, governmentForm, headOfState, code2);
+        Country country = new Country(code, name, Continent.fromString(continent), region, surfaceArea, indepYear, population, lifeExpectancy, gnp, gnpOld, localName, governmentForm, headOfState, code2);
         country.setCapital(capital.toCity(country));
         return country;
     }

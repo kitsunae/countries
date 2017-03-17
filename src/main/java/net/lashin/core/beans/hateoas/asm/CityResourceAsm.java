@@ -25,14 +25,15 @@ public class CityResourceAsm extends ResourceAssemblerSupport<City, CityResource
     public CityResource toResource(City city) {
         if (city==null) return null;
         CityResource res = new CityResource();
+        res.setIdentity(city.getId());
         res.setCountryCode(city.getCountry().getCode());
         res.setDistrict(city.getDistrict());
         res.setName(city.getName());
         res.setPopulation(city.getPopulation());
         Link selfRel = linkTo(methodOn(CityController.class).getCity(city.getId())).withSelfRel();
         res.add(selfRel);
-//        Link cities = linkTo(methodOn(CountryController.class).getCitiesOfCountry(city.getCountry().getCode())).withRel("allCities");
-//        res.add(cities);
+        Link cities = linkTo(methodOn(CityController.class).getAllCitiesOfCountry(city.getCountry().getCode())).withRel("allCities");
+        res.add(cities);
         Link country = linkTo(methodOn(CountryController.class).getCountry(city.getCountry().getCode())).withRel("country");
         res.add(country);
         return res;

@@ -1,6 +1,5 @@
 package net.lashin.core.services;
 
-import net.lashin.core.beans.City;
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
 
@@ -12,11 +11,15 @@ import java.util.List;
 public interface CountryService {
     List<Country> getCountriesByName(String name);
     Country getCountryByCode(String code);
-    List<Country> getCountriesByCapital(City capital);
+    List<Country> getCountriesByCapital(Long cityId);
+    List<Country> getCountriesByCapital(String name);
     List<Country> getAllCountries();
     List<String> getAllCountryNames();
     List<Country> getCountriesByContinent(Continent continent);
+    List<Country> getCountriesByContinentName(String continentName);
     List<Country> getCountriesByLanguage(String language);
     Country save(Country country);
+    Country edit(Country country, String countryCode);
     void remove(Country country);
+    void remove(String countryCode);
 }

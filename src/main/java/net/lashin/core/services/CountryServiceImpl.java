@@ -41,8 +41,16 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
-    public List<Country> getCountriesByCapital(City capital) {
-        return countryRepository.findByCapitalId(capital.getId());
+    public List<Country> getCountriesByCapital(Long cityId) {
+        return countryRepository.findByCapitalId(cityId);
+    }
+
+    @Override
+    public List<Country> getCountriesByCapital(String capitalName) {
+        return cityRepository.findByName(capitalName)
+                .stream()
+                .map(City::getCountry)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -63,6 +71,12 @@ public class CountryServiceImpl implements CountryService{
         return countryRepository.findByContinent(continent);
     }
 
+    @Override
+    public List<Country> getCountriesByContinentName(String continentName) {
+        Continent continent = Continent.fromString(continentName);
+        return getCountriesByContinent(continent);
+    }
+
     //TODO edit
     @Override
     public List<Country> getCountriesByLanguage(String language) {
@@ -79,7 +93,19 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
+    public Country edit(Country country, String countryCode) {
+        if (!country.getCode().equals(countryCode))
+            return null; //TODO throw Exception
+        return save(country);
+    }
+
+    @Override
     public void remove(Country country) {
         countryRepository.delete(country);
+    }
+
+    @Override
+    public void remove(String countryCode) {
+        countryRepository.delete(countryCode);
     }
 }

@@ -19,7 +19,7 @@ public enum Continent {
         return name;
     }
 
-    public static Continent value(String name){
+    public static Continent fromString(String name){
         for (Continent c : values()){
             if (c.getName().equals(name))
                 return c;

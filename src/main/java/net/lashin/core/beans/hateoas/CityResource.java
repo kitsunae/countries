@@ -9,6 +9,7 @@ import org.springframework.hateoas.ResourceSupport;
  */
 public class CityResource extends ResourceSupport{
 
+    private Long identity;
     private String name;
     private String countryCode;
     private String district;
@@ -46,11 +47,19 @@ public class CityResource extends ResourceSupport{
         this.population = population;
     }
 
+    public Long getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(Long identity) {
+        this.identity = identity;
+    }
+
     public City toCity(){
-        return new City(name, district, population);
+        return new City(identity, name, district, population);
     }
 
     public City toCity(Country country){
-        return new City(name, district, population, country);
+        return new City(identity, name, district, population, country);
     }
 }

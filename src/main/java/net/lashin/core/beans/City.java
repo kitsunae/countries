@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Size(max = 35)
     @NotNull
     private String name;
@@ -26,8 +26,8 @@ public class City {
     protected City() {
     }
 
-    public City(long id, String name, String district, int population, Country country){
-        this(String name, String district, Integer population, Country country);
+    public City(Long id, String name, String district, int population, Country country){
+        this(name, district, population,country);
         this.id = id;
     }
 
@@ -35,6 +35,11 @@ public class City {
         this.name = name;
         this.district = district;
         this.population = population;
+    }
+
+    public City(Long id, String name, String district, int population) {
+        this(name, district, population);
+        this.id = id;
     }
 
     public City(String name, String district, Integer population, Country country) {
@@ -50,12 +55,8 @@ public class City {
         this.country = country;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

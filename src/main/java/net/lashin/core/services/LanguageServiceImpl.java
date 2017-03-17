@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by lashi on 14.03.2017.
@@ -38,7 +39,8 @@ public class LanguageServiceImpl implements LanguageService {
     public List<CountryLanguage> getLanguagesByCountryAndOfficialty(String countryCode, boolean isOfficial) {
         return languageRepository.findByCountryCode(countryCode)
                 .stream()
-                .filter(CountryLanguage::isOfficial==isOfficial);
+                .filter(countryLanguage -> countryLanguage.isOfficial()==isOfficial)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -50,5 +52,10 @@ public class LanguageServiceImpl implements LanguageService {
     @Override
     public CountryLanguage save(CountryLanguage language) {
         return languageRepository.save(language);
+    }
+
+    @Override
+    public void remove(String language, String countryCode) {
+        languageRepository.delete(new CountryLanguageId(countryCode, language));
     }
 }

@@ -7,8 +7,8 @@ import net.lashin.core.dao.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -46,12 +46,16 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public City edit(@Valid City city) {
+    public City edit(City city, Long cityId, String countryCode) {
+        if (!Objects.equals(city.getId(), cityId))
+            return null; //TODO throw exception
+        Country country = countryRepository.findOne(countryCode);
+        city.setCountry(country);
         return cityRepository.save(city);
     }
 
     @Override
-    public City save(@Valid City city, String countryCode) {
+    public City save(City city, String countryCode) {
         Country country = countryRepository.findOne(countryCode);
         city.setCountry(country);
         return cityRepository.save(city);
@@ -70,5 +74,10 @@ public class CityServiceImpl implements CityService {
     @Override
     public City getCityById(long id) {
         return cityRepository.findOne(id);
+    }
+
+    @Override
+    public void remove(Long id) {
+        cityRepository.delete(id);
     }
 }

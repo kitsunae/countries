@@ -3,7 +3,6 @@ package net.lashin.core.services;
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -13,9 +12,10 @@ public interface CityService {
     List<City> getCitiesByName(String name);
     List<City> getWorldCapitals();
     List<City> getAllCities();
-    City edit(@Valid City city);
-    City save(@Valid City city, String countryCode);
+    City edit(City city, Long cityId, String countryCode);
+    City save(City city, String countryCode);
     List<City> getCitiesByCountryCode(String countryCode);
     List<City> getCitiesByCountry(Country country);
     City getCityById(long id);
+    void remove(Long id);
 }
