@@ -78,6 +78,9 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public void remove(Long id) {
+        List<Country> countries = countryRepository.findByCapitalId(id);
+        countries.forEach(country -> country.setCapital(null));
+        countryRepository.save(countries);
         cityRepository.delete(id);
     }
 }

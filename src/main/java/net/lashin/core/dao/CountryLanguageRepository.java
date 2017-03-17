@@ -10,5 +10,5 @@ import java.util.List;
  * Created by lashi on 11.02.2017.
  */
 public interface CountryLanguageRepository extends JpaRepository<CountryLanguage, CountryLanguageId> {
-    List<CountryLanguage> findByCountryCode(String countryCode);
+    List<CountryLanguage> findByCountry_Code(String countryCode);
 }

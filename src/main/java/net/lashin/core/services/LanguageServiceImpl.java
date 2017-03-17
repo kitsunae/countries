@@ -37,7 +37,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     public List<CountryLanguage> getLanguagesByCountryAndOfficialty(String countryCode, boolean isOfficial) {
-        return languageRepository.findByCountryCode(countryCode)
+        return languageRepository.findByCountry_Code(countryCode)
                 .stream()
                 .filter(countryLanguage -> countryLanguage.isOfficial()==isOfficial)
                 .collect(Collectors.toList());

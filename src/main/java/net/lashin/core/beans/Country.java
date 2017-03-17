@@ -32,10 +32,12 @@ public class Country {
     @Size(max = 45)
     private String localName;
     @Size(max = 45)
+    @NotNull
     private String governmentForm;
     @Size(max = 60)
     private String headOfState;
     @Size(max = 2)
+    @NotNull
     private String code2;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "capital", referencedColumnName = "id")
@@ -48,25 +50,25 @@ public class Country {
     protected Country() {
     }
 
-    public Country(String code, String name, Continent continent) {
+    public Country(String code, String name, Continent continent, String region, Double surfaceArea, Integer population, String localName, String governmentForm, String code2) {
         this.code = code;
         this.name = name;
         this.continent = continent;
+        this.region = region;
+        this.surfaceArea = surfaceArea;
+        this.population = population;
+        this.localName = localName;
+        this.governmentForm = governmentForm;
+        this.code2 = code2;
     }
 
     public Country(String code, String name, Continent continent, String region, Double surfaceArea, Integer indepYear, Integer population, Double lifeExpectancy, Double gnp, Double gnpOld, String localName, String governmentForm, String headOfState, String code2) {
-        this(code, name, continent);
-        this.region = region;
-        this.surfaceArea = surfaceArea;
+        this(code, name, continent,region, surfaceArea,population, localName, governmentForm, code2);
         this.indepYear = indepYear;
-        this.population = population;
         this.lifeExpectancy = lifeExpectancy;
         this.gnp = gnp;
         this.gnpOld = gnpOld;
-        this.localName = localName;
-        this.governmentForm = governmentForm;
         this.headOfState = headOfState;
-        this.code2 = code2;
     }
 
     public List<City> getCities() {
@@ -191,7 +193,9 @@ public class Country {
 
     public void setCapital(City capital) {
         this.capital = capital;
-        capital.setCountry(this);
+        if (capital!=null) {
+            capital.setCountry(this);
+        }
     }
 
     public void addCity(City city){
