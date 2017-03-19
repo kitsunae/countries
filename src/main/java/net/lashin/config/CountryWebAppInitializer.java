@@ -8,7 +8,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 public class CountryWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{RootConfig.class, JpaConfig.class};
+        return new Class<?>[]{RootConfig.class};
     }
 
     protected Class<?>[] getServletConfigClasses() {

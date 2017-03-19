@@ -5,13 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -20,19 +22,24 @@ import javax.sql.DataSource;
  * Created by lashi on 24.01.2017.
  */
 @Configuration
-@ComponentScan(basePackages = {"net.lashin.core"},
-        excludeFilters = {@ComponentScan.Filter(type = FilterType.ANNOTATION, value = EnableWebMvc.class),})
+@PropertySource("database.properties")
+@EnableJpaRepositories("net.lashin.core.dao")
+@EnableTransactionManagement
+@ComponentScan(basePackages = {"net.lashin.core"})
 public class RootConfig {
+
+    @Autowired
+    private Environment environment;
 
     @Bean
     public DataSource dataSource(){
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/world");
-        dataSource.setUsername("root");
-        dataSource.setPassword("4112");
-        dataSource.setInitialSize(5);
-        dataSource.setMaxActive(10);
+        dataSource.setDriverClassName(environment.getProperty("jdbc.driver"));
+        dataSource.setUrl(environment.getProperty("jdbc.url"));
+        dataSource.setUsername(environment.getProperty("jdbc.user"));
+        dataSource.setPassword(environment.getProperty("jdbc.password"));
+        dataSource.setInitialSize(environment.getProperty("dbcp.initial_size", Integer.class));
+        dataSource.setMaxActive(environment.getProperty("dbcp.max_active", Integer.class));
         return dataSource;
     }
 

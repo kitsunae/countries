@@ -58,4 +58,14 @@ public class LanguageServiceImpl implements LanguageService {
     public void remove(String language, String countryCode) {
         languageRepository.delete(new CountryLanguageId(countryCode, language));
     }
+
+    //TODO replace with repository query
+    @Override
+    public List<String> getAllLanguageNames() {
+        return languageRepository.findAll()
+                .stream()
+                .map(CountryLanguage::getLanguage)
+                .distinct()
+                .collect(Collectors.toList());
+    }
 }

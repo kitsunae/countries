@@ -1,6 +1,5 @@
 package net.lashin.core.services;
 
-import net.lashin.config.JpaConfig;
 import net.lashin.config.RootConfig;
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;
@@ -21,7 +20,7 @@ import static org.junit.Assert.*;
  * Created by lashi on 17.03.2017.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {RootConfig.class, JpaConfig.class})
+@ContextConfiguration(classes = {RootConfig.class})
 public class CityServiceImplTest {
 
     @Autowired

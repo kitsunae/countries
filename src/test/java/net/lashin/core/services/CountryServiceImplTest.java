@@ -1,6 +1,5 @@
 package net.lashin.core.services;
 
-import net.lashin.config.JpaConfig;
 import net.lashin.config.RootConfig;
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Continent;
@@ -21,7 +20,7 @@ import static org.junit.Assert.*;
  * Created by lashi on 17.03.2017.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {RootConfig.class, JpaConfig.class})
+@ContextConfiguration(classes = {RootConfig.class})
 @Transactional
 public class CountryServiceImplTest {
 
@@ -96,6 +95,7 @@ public class CountryServiceImplTest {
     public void save() throws Exception {
         City city = new City("New Vasuki", "Chelyaba", 15);
         Country country = new Country("AAA", "Chunga-Changa", Continent.AFRICA,"Region", 0.02, 15, "Pesech", "Tyrany", "AA");
+        country.addCity(city);
         country.setCapital(city);
         countryService.save(country);
         assertEquals(country, countryService.getCountryByCode("AAA"));

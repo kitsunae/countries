@@ -14,4 +14,5 @@ public interface LanguageService {
     CountryLanguage getLanguageByNameAndCountry(String language, String countryCode);
     CountryLanguage save(CountryLanguage language);
     void remove(String language, String countryCode);
+    List<String> getAllLanguageNames();
 }

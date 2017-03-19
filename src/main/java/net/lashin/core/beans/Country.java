@@ -193,9 +193,6 @@ public class Country {
 
     public void setCapital(City capital) {
         this.capital = capital;
-        if (capital!=null) {
-            capital.setCountry(this);
-        }
     }
 
     public void addCity(City city){
