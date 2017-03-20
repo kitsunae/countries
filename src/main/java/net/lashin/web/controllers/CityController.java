@@ -1,7 +1,7 @@
 package net.lashin.web.controllers;
 
 import net.lashin.core.beans.City;
-import net.lashin.core.beans.hateoas.CityResource;
+import net.lashin.core.hateoas.CityResource;
 import net.lashin.core.services.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;

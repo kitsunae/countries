@@ -72,6 +72,7 @@ public class StatisticsServiceImplTest {
         assertEquals(47.06, percentage, 0.01);
     }
 
+    @Test
     public void getWorldPopulation(){
         long population = statisticsService.getWorldPopulation();
         assertEquals(6078749450L, population);

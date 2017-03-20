@@ -23,9 +23,9 @@ public class Country {
     private Continent continent;
     @Size(max=26)
     private String region;
-    private Double surfaceArea;
+    private double surfaceArea;
     private Integer indepYear;
-    private Integer population;
+    private int population;
     private Double lifeExpectancy;
     private Double gnp;
     private Double gnpOld;
@@ -50,19 +50,24 @@ public class Country {
     protected Country() {
     }
 
-    public Country(String code, String name, Continent continent, String region, Double surfaceArea, Integer population, String localName, String governmentForm, String code2) {
+    public Country(String code, String name, Continent continent, String region, double surfaceArea, int population, String localName, String governmentForm, String code2) {
+        this(code, name, continent, region, localName, governmentForm, code2);
+        this.surfaceArea = surfaceArea;
+        this.population = population;
+
+    }
+
+    public Country(String code, String name, Continent continent, String region, String localName, String governmentForm, String code2) {
         this.code = code;
         this.name = name;
         this.continent = continent;
         this.region = region;
-        this.surfaceArea = surfaceArea;
-        this.population = population;
         this.localName = localName;
         this.governmentForm = governmentForm;
         this.code2 = code2;
     }
 
-    public Country(String code, String name, Continent continent, String region, Double surfaceArea, Integer indepYear, Integer population, Double lifeExpectancy, Double gnp, Double gnpOld, String localName, String governmentForm, String headOfState, String code2) {
+    public Country(String code, String name, Continent continent, String region, double surfaceArea, Integer indepYear, int population, Double lifeExpectancy, Double gnp, Double gnpOld, String localName, String governmentForm, String headOfState, String code2) {
         this(code, name, continent,region, surfaceArea,population, localName, governmentForm, code2);
         this.indepYear = indepYear;
         this.lifeExpectancy = lifeExpectancy;
@@ -107,11 +112,11 @@ public class Country {
         this.region = region;
     }
 
-    public Double getSurfaceArea() {
+    public double getSurfaceArea() {
         return surfaceArea;
     }
 
-    public void setSurfaceArea(Double surfaceArea) {
+    public void setSurfaceArea(double surfaceArea) {
         this.surfaceArea = surfaceArea;
     }
 
@@ -123,11 +128,11 @@ public class Country {
         this.indepYear = indepYear;
     }
 
-    public Integer getPopulation() {
+    public int getPopulation() {
         return population;
     }
 
-    public void setPopulation(Integer population) {
+    public void setPopulation(int population) {
         this.population = population;
     }
 

@@ -1,7 +1,7 @@
 package net.lashin.web.controllers;
 
 import net.lashin.core.beans.CountryLanguage;
-import net.lashin.core.beans.hateoas.CountryLanguageResource;
+import net.lashin.core.hateoas.CountryLanguageResource;
 import net.lashin.core.services.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;

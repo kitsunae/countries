@@ -1,7 +1,7 @@
-package net.lashin.core.beans.hateoas.asm;
+package net.lashin.core.hateoas.asm;
 
 import net.lashin.core.beans.Country;
-import net.lashin.core.beans.hateoas.CountryResource;
+import net.lashin.core.hateoas.CountryResource;
 import net.lashin.web.controllers.CityController;
 import net.lashin.web.controllers.CountryController;
 import org.springframework.hateoas.Link;

@@ -1,4 +1,4 @@
-package net.lashin.core.beans.hateoas;
+package net.lashin.core.hateoas;
 
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;

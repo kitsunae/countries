@@ -1,7 +1,7 @@
-package net.lashin.core.beans.hateoas.asm;
+package net.lashin.core.hateoas.asm;
 
 import net.lashin.core.beans.CountryLanguage;
-import net.lashin.core.beans.hateoas.CountryLanguageResource;
+import net.lashin.core.hateoas.CountryLanguageResource;
 import net.lashin.web.controllers.CountryController;
 import net.lashin.web.controllers.LanguageController;
 import org.springframework.hateoas.Link;
