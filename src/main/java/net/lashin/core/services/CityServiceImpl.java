@@ -4,6 +4,7 @@ import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;
 import net.lashin.core.dao.CityRepository;
 import net.lashin.core.dao.CountryRepository;
+import net.lashin.core.filters.CityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,5 +83,34 @@ public class CityServiceImpl implements CityService {
         countries.forEach(country -> country.setCapital(null));
         countryRepository.save(countries);
         cityRepository.delete(id);
+    }
+
+    @Override
+    public List<City> filterCities(CityFilter filter) {
+        if (filter.getCountry()!=null){
+            return cityRepository.findByCountryCode(filter.getCountry().getCode())
+                    .stream()
+                    .filter(city -> filter.getContinent() == null || city.getCountry().getContinent()==filter.getContinent())
+                    .filter(city -> filter.getRegion()==null || filter.getRegion().equals(city.getCountry().getRegion()))
+                    .filter(city -> city.getPopulation()<=filter.getMaxPopulation() && city.getPopulation()>=filter.getMinPopulation())
+                    .collect(Collectors.toList());
+        }
+        if (filter.getContinent()!=null){
+            return cityRepository.findByCountry_Continent(filter.getContinent())
+                    .stream()
+                    .filter(city -> filter.getRegion() == null || filter.getRegion().equals(city.getCountry().getRegion()))
+                    .filter(city -> city.getPopulation()<=filter.getMaxPopulation() && city.getPopulation()>=filter.getMinPopulation())
+                    .collect(Collectors.toList());
+        }
+        if (filter.getRegion()!=null){
+            return cityRepository.findByCountry_Region(filter.getRegion())
+                    .stream()
+                    .filter(city -> city.getPopulation()<=filter.getMaxPopulation() && city.getPopulation()>=filter.getMinPopulation())
+                    .collect(Collectors.toList());
+        }
+        return cityRepository.findAll()
+                .stream()
+                .filter(city -> city.getPopulation()<=filter.getMaxPopulation() && city.getPopulation()>=filter.getMinPopulation())
+                .collect(Collectors.toList());
     }
 }

@@ -3,7 +3,6 @@ package net.lashin.core.services;
 import net.lashin.config.RootConfig;
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;
-import net.lashin.core.filters.CountryFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,27 +78,4 @@ public class StatisticsServiceImplTest {
         assertEquals(6078749450L, population);
     }
 
-    @Test
-    public void filterCountries(){
-        CountryFilter filter = new CountryFilter();
-        filter.setGovernmentForm("Federal Republic");
-        filter.setMinSurfaceArea(60);
-        filter.setMaxSurfaceArea(10000000);
-        filter.setMinIndepYear(0);
-        filter.setMaxIndepYear(1990);
-        filter.setMinPopulation(10000);
-        filter.setMaxPopulation(1000000000);
-        filter.setMinLifeExpectancy(45);
-        filter.setMaxLifeExpectancy(75);
-        List<Country> result = statisticsService.filterCountries(filter);
-        assertEquals(7, result.size());
-        filter = new CountryFilter();
-        filter.setMinIndepYear(0);
-        filter.setMaxIndepYear(1990);
-        result = statisticsService.filterCountries(filter);
-        assertEquals(166, result.size());
-        filter = new CountryFilter();
-        result = statisticsService.filterCountries(filter);
-        assertEquals(countryService.getAllCountries(), result);
-    }
 }

@@ -3,6 +3,7 @@ package net.lashin.core.services;
 import net.lashin.config.RootConfig;
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;
+import net.lashin.core.filters.CityFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class})
+@Transactional
 public class CityServiceImplTest {
 
     @Autowired
@@ -29,7 +31,6 @@ public class CityServiceImplTest {
     private CountryService countryService;
 
     @Test
-    @Transactional
     public void getCitiesByName() throws Exception {
         List<City> cities = cityService.getCitiesByName("Hamilton");
         assertEquals(3, cities.size());
@@ -40,7 +41,6 @@ public class CityServiceImplTest {
     }
 
     @Test
-    @Transactional
     public void getWorldCapitals() throws Exception {
         List<City> capitals = cityService.getWorldCapitals();
         assertEquals(232, capitals.size());
@@ -51,14 +51,12 @@ public class CityServiceImplTest {
     }
 
     @Test
-    @Transactional
     public void getAllCities() throws Exception {
         List<City> cities = cityService.getAllCities();
         assertEquals(4079, cities.size());
     }
 
     @Test
-    @Transactional
     @Rollback
     public void edit() throws Exception {
         City city = cityService.getCityById(3580);
@@ -68,7 +66,6 @@ public class CityServiceImplTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     public void save() throws Exception {
         Country country = countryService.getCountryByCode("USA");
@@ -78,7 +75,6 @@ public class CityServiceImplTest {
     }
 
     @Test
-    @Transactional
     public void getCitiesByCountryCode() throws Exception {
         List<City> cities = cityService.getCitiesByCountryCode("RUS");
         assertEquals(189, cities.size());
@@ -89,7 +85,6 @@ public class CityServiceImplTest {
     }
 
     @Test
-    @Transactional
     public void getCitiesByCountry() throws Exception {
         Country country = countryService.getCountryByCode("RUS");
         List<City> cities = cityService.getCitiesByCountry(country);
@@ -100,7 +95,6 @@ public class CityServiceImplTest {
     }
 
     @Test
-    @Transactional
     public void getCityById() throws Exception {
         City city = cityService.getCityById(3580);
         assertEquals("Moscow", city.getName());
@@ -110,7 +104,6 @@ public class CityServiceImplTest {
     }
 
     @Test
-    @Transactional
     @Rollback
     public void remove() throws Exception {
         City city = cityService.getCityById(3580);
@@ -120,4 +113,12 @@ public class CityServiceImplTest {
         assertNull(cityService.getCityById(3580));
     }
 
+
+    @Test
+    public void filterCities(){
+        CityFilter filter = new CityFilter();
+        filter.setRegion("Eastern Europe");
+        List<City> result = cityService.filterCities(filter);
+        assertEquals(371, result.size());
+    }
 }

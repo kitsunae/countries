@@ -2,6 +2,7 @@ package net.lashin.core.services;
 
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;
+import net.lashin.core.filters.CityFilter;
 
 import java.util.List;
 
@@ -18,4 +19,5 @@ public interface CityService {
     List<City> getCitiesByCountry(Country country);
     City getCityById(long id);
     void remove(Long id);
+    List<City> filterCities(CityFilter filter);
 }

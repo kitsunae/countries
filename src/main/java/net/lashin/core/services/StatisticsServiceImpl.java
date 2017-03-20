@@ -6,7 +6,6 @@ import net.lashin.core.beans.CountryLanguage;
 import net.lashin.core.dao.CityRepository;
 import net.lashin.core.dao.CountryLanguageRepository;
 import net.lashin.core.dao.CountryRepository;
-import net.lashin.core.filters.CountryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -77,24 +76,5 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public long getWorldPopulation() {
         return countryRepository.findAll().stream().collect(Collectors.summingLong(Country::getPopulation));
-    }
-
-    @Override
-    public List<Country> filterCountries(CountryFilter filter) {
-        List<Country> queryResults = countryRepository.filterCountries(filter.getMinSurfaceArea(), filter.getMaxSurfaceArea(),
-                filter.getMinIndepYear(), filter.getMaxIndepYear(),
-                filter.getMinPopulation(), filter.getMaxPopulation(),
-                filter.getMinLifeExpectancy(), filter.getMaxLifeExpectancy(),
-                filter.getMinGnp(), filter.getMaxGnp(),
-                filter.getMinGnpOld(), filter.getMaxGnpOld());
-        return queryResults.stream()
-                .filter(country -> !(country.getIndepYear()==null && filter.isEnabledYearFilter()))
-                .filter(country -> !(country.getLifeExpectancy()==null && filter.isEnabledLifeExpectFilter()))
-                .filter(country -> !(country.getGnp()==null && filter.isEnabledGnpFilter()))
-                .filter(country -> !(country.getGnpOld()==null && filter.isEnabledGnpOldFilter()))
-                .filter(country -> filter.getContinent() == null || country.getContinent()==filter.getContinent())
-                .filter(country -> filter.getRegion()==null || filter.getRegion().equals(country.getRegion()))
-                .filter(country -> filter.getGovernmentForm()==null|| filter.getGovernmentForm().equals(country.getGovernmentForm()))
-                .collect(Collectors.toList());
     }
 }

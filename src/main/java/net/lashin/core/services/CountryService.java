@@ -2,6 +2,7 @@ package net.lashin.core.services;
 
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
+import net.lashin.core.filters.CountryFilter;
 
 import java.util.List;
 
@@ -22,4 +23,5 @@ public interface CountryService {
     Country edit(Country country, String countryCode);
     void remove(Country country);
     void remove(String countryCode);
+    List<Country> filterCountries(CountryFilter filter);
 }
