@@ -2,6 +2,7 @@ package net.lashin.core.services;
 
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;
+import net.lashin.core.filters.CountryFilter;
 
 import java.util.List;
 import java.util.Map;
@@ -15,4 +16,5 @@ public interface StatisticsService {
     List<City> getBiggestCities(int quantity);
     double getPercentageOfUrbanPopulationOfCountry(String countryCode);
     long getWorldPopulation();
+    List<Country> filterCountries(CountryFilter filter);
 }

@@ -17,9 +17,6 @@ public class ContinentConverter implements AttributeConverter<Continent, String>
 
     @Override
     public Continent convertToEntityAttribute(String dbData) {
-        for (Continent continent : Continent.values())
-            if (continent.getName().equals(dbData))
-                return continent;
-        return null;
+        return Continent.fromString(dbData);
     }
 }

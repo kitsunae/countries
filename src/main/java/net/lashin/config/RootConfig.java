@@ -47,9 +47,9 @@ public class RootConfig {
     public JpaVendorAdapter jpaVendorAdapter(){
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabase(Database.MYSQL);
-        adapter.setShowSql(true);
-        adapter.setGenerateDdl(false);
-        adapter.setDatabasePlatform("org.hibernate.dialect.MySQLDialect");
+        adapter.setShowSql(environment.getProperty("hibernate.show_sql", Boolean.class));
+        adapter.setGenerateDdl(environment.getProperty("hibernate.generate_dll", Boolean.class));
+        adapter.setDatabasePlatform(environment.getProperty("hibernate.database_platform"));
         return adapter;
     }
 

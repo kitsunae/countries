@@ -233,7 +233,13 @@ public class Country {
         Country country = (Country) o;
 
         return code.equals(country.getCode());
+    }
 
+    @Override
+    public String toString() {
+        return "Country{" +
+                "name='" + name + '\'' +
+                '}';
     }
 
     @Override
