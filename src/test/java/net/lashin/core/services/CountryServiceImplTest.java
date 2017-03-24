@@ -8,6 +8,8 @@ import net.lashin.core.filters.CountryFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -68,9 +70,23 @@ public class CountryServiceImplTest {
     }
 
     @Test
+    public void getAllCountriesPageable(){
+        Page<Country> countries = countryService.getAllCountries(new PageRequest(0,20));
+        assertEquals(20, countries.getContent().size());
+        assertEquals(239/20+1, countries.getTotalPages());
+    }
+
+    @Test
     public void getAllCountryNames() throws Exception {
         List<String> names = countryService.getAllCountryNames();
         assertEquals(239, names.size());
+    }
+
+    @Test
+    public void getAllCountryNamesPageable(){
+        Page<String> names = countryService.getAllCountryNames(new PageRequest(0, 20));
+        assertEquals(20, names.getContent().size());
+        assertEquals(239/20+1, names.getTotalPages());
     }
 
     @Test
@@ -80,15 +96,38 @@ public class CountryServiceImplTest {
     }
 
     @Test
+    public void getCountriesByContinentPageable(){
+        Page<Country> countries = countryService.getCountriesByContinent(Continent.EUROPE, new PageRequest(0, 20));
+        assertEquals(20, countries.getContent().size());
+        assertEquals(3, countries.getTotalPages());
+    }
+
+    @Test
     public void getCountriesByContinentName() throws Exception {
         List<Country> countriesOfNorthAmerica = countryService.getCountriesByContinentName("North America");
         assertEquals(37, countriesOfNorthAmerica.size());
     }
 
     @Test
+    public void getCountriesByContinentNamePageable(){
+        Page<Country> countries = countryService.getCountriesByContinentName("North America", new PageRequest(0, 20));
+        assertEquals(20, countries.getContent().size());
+        assertEquals(2, countries.getTotalPages());
+    }
+
+    @Test
     public void getCountriesByLanguage() throws Exception {
         List<Country> countries = countryService.getCountriesByLanguage("Russian");
         assertEquals(17, countries.size());
+    }
+
+    @Test
+    public void getCountriesByLanguagePageable(){
+        Page<Country> countries = countryService.getCountriesByLanguage("Russian", new PageRequest(0, 5));
+        assertEquals(5, countries.getContent().size());
+        assertEquals(4, countries.getTotalPages());
+        assertEquals(countryService.getCountryByCode("AZE"), countries.getContent().get(0));
+        assertEquals(countryService.getCountryByCode("GEO"), countries.getContent().get(4));
     }
 
     @Test
@@ -156,5 +195,31 @@ public class CountryServiceImplTest {
         filter = new CountryFilter();
         result = countryService.filterCountries(filter);
         assertEquals(countryService.getAllCountries(), result);
+    }
+
+    @Test
+    public void filterCountriesPageable(){
+        CountryFilter filter = new CountryFilter();
+        filter.setGovernmentForm("Federal Republic");
+        filter.setMinSurfaceArea(60);
+        filter.setMaxSurfaceArea(10000000);
+        filter.setMinIndepYear(0);
+        filter.setMaxIndepYear(1990);
+        filter.setMinPopulation(10000);
+        filter.setMaxPopulation(1000000000);
+        filter.setMinLifeExpectancy(45);
+        filter.setMaxLifeExpectancy(75);
+        Page<Country> result = countryService.filterCountries(filter, new PageRequest(0, 5));
+        assertEquals(5, result.getContent().size());
+        assertEquals(2, result.getTotalPages());
+        result = countryService.filterCountries(filter, new PageRequest(1, 5));
+        assertEquals(2, result.getContent().size());
+        assertEquals(2, result.getTotalPages());
+        filter = new CountryFilter();
+        filter.setMinIndepYear(0);
+        filter.setMaxIndepYear(1990);
+        result = countryService.filterCountries(filter, new PageRequest(3, 20));
+        assertEquals(20, result.getContent().size());
+        assertEquals(166/20+1, result.getTotalPages());
     }
 }

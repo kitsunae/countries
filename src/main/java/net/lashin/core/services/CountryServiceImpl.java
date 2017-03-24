@@ -9,6 +9,9 @@ import net.lashin.core.dao.CountryLanguageRepository;
 import net.lashin.core.dao.CountryRepository;
 import net.lashin.core.filters.CountryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,11 +63,18 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
+    public Page<Country> getAllCountries(Pageable pageRequest) {
+        return countryRepository.findAll(pageRequest);
+    }
+
+    @Override
     public List<String> getAllCountryNames() {
-        return countryRepository.findAll()
-                .stream()
-                .map(Country::getName)
-                .collect(Collectors.toList());
+        return countryRepository.findAllCountryNames();
+    }
+
+    @Override
+    public Page<String> getAllCountryNames(Pageable pageRequest) {
+        return countryRepository.findAllCountryNames(pageRequest);
     }
 
     @Override
@@ -73,9 +83,20 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
+    public Page<Country> getCountriesByContinent(Continent continent, Pageable pageRequest) {
+        return countryRepository.findByContinent(continent, pageRequest);
+    }
+
+    @Override
     public List<Country> getCountriesByContinentName(String continentName) {
         Continent continent = Continent.fromString(continentName);
         return getCountriesByContinent(continent);
+    }
+
+    @Override
+    public Page<Country> getCountriesByContinentName(String continentName, Pageable pageRequest) {
+        Continent continent = Continent.fromString(continentName);
+        return getCountriesByContinent(continent, pageRequest);
     }
 
     //TODO edit
@@ -86,6 +107,17 @@ public class CountryServiceImpl implements CountryService{
                 .filter(countryLanguage -> countryLanguage.getLanguage().equals(language))
                 .map(CountryLanguage::getCountry)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Country> getCountriesByLanguage(String language, Pageable pageRequest) {
+        List<Country> list = getCountriesByLanguage(language);
+        List<Country> result = list
+                .stream()
+                .skip(pageRequest.getPageNumber()*pageRequest.getPageSize())
+                .limit(pageRequest.getPageSize())
+                .collect(Collectors.toList());
+        return new PageImpl<>(result, pageRequest, list.size());
     }
 
     @Override
@@ -127,5 +159,15 @@ public class CountryServiceImpl implements CountryService{
                 .filter(country -> filter.getRegion()==null || filter.getRegion().equals(country.getRegion()))
                 .filter(country -> filter.getGovernmentForm()==null|| filter.getGovernmentForm().equals(country.getGovernmentForm()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Country> filterCountries(CountryFilter filter, Pageable pageRequest) {
+        List<Country> list = filterCountries(filter);
+        List<Country> result = list.stream()
+                .skip(pageRequest.getPageNumber()*pageRequest.getPageSize())
+                .limit(pageRequest.getPageSize())
+                .collect(Collectors.toList());
+        return new PageImpl<>(result, pageRequest, list.size());
     }
 }

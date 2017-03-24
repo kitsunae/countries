@@ -2,6 +2,8 @@ package net.lashin.core.dao;
 
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,7 +15,14 @@ import java.util.List;
 public interface CountryRepository extends JpaRepository<Country, String> {
     List<Country> findByName(String name);
     List<Country> findByContinent(Continent continent);
+    Page<Country> findByContinent(Continent continent, Pageable pageable);
     List<Country> findByCapitalId(Long id);
+
+    @Query("select c.name from Country c")
+    List<String> findAllCountryNames();
+
+    @Query("select c.name from Country c")
+    Page<String> findAllCountryNames(Pageable pageable);
 
     @Query("select c from Country c " +
             "where (c.surfaceArea between ?1 and ?2) " +
