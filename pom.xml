@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.lashin</groupId>
-  <artifactId>newCountries</artifactId>
+  <artifactId>Countries</artifactId>
   <packaging>war</packaging>
   <version>0.01-SNAPSHOT</version>
-  <name>newCountries</name>
+  <name>Countries</name>
   <dependencies>
     <!-- Spring -->
     <dependency>

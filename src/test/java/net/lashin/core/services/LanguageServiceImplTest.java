@@ -97,4 +97,9 @@ public class LanguageServiceImplTest {
         assertEquals(2, languageService.getLanguagesByCountryAndOfficialty("USA", true).size());
         assertEquals(language.getPercentage(), languageService.getLanguageByNameAndCountry("Chinese", "USA").getPercentage());
     }
+
+    @Test
+    public void filterLanguages(){
+
+    }
 }

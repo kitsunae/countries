@@ -13,7 +13,7 @@ public class CityFilter {
     private int maxPopulation;
     private Continent continent;
     private String region;
-    private Country country;
+    private Country country; //TODO think if necessary (could be just country code)
 
     public CityFilter() {
         minPopulation = 0;
