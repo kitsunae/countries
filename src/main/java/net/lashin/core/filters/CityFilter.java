@@ -1,7 +1,6 @@
 package net.lashin.core.filters;
 
 import net.lashin.core.beans.Continent;
-import net.lashin.core.beans.Country;
 
 /**
  * Created by lashi on 21.03.2017.
@@ -13,7 +12,7 @@ public class CityFilter {
     private int maxPopulation;
     private Continent continent;
     private String region;
-    private Country country; //TODO think if necessary (could be just country code)
+    private String country;
 
     public CityFilter() {
         minPopulation = 0;
@@ -60,11 +59,11 @@ public class CityFilter {
         this.region = region;
     }
 
-    public Country getCountry() {
+    public String getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(String country) {
         this.country = country;
     }
 }

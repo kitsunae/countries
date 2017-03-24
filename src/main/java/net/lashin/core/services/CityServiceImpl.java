@@ -6,6 +6,9 @@ import net.lashin.core.dao.CityRepository;
 import net.lashin.core.dao.CountryRepository;
 import net.lashin.core.filters.CityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +36,11 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    public Page<City> getCitiesByName(String name, Pageable pageRequest) {
+        return cityRepository.findByName(name, pageRequest);
+    }
+
+    @Override
     public List<City> getWorldCapitals() {
         return countryRepository.findAll()
                 .stream()
@@ -42,8 +50,23 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    public Page<City> getWorldCapitals(Pageable pageRequest) {
+        List<City> all = getWorldCapitals();
+        List<City> result = all.stream()
+                .skip(pageRequest.getPageNumber()*pageRequest.getPageSize())
+                .limit(pageRequest.getPageSize())
+                .collect(Collectors.toList());
+        return new PageImpl<>(result, pageRequest, all.size());
+    }
+
+    @Override
     public List<City> getAllCities() {
         return cityRepository.findAll();
+    }
+
+    @Override
+    public Page<City> getAllCities(Pageable pageRequest) {
+        return cityRepository.findAll(pageRequest);
     }
 
     @Override
@@ -68,8 +91,18 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    public Page<City> getCitiesByCountryCode(String countryCode, Pageable pageRequest) {
+        return cityRepository.findByCountryCode(countryCode, pageRequest);
+    }
+
+    @Override
     public List<City> getCitiesByCountry(Country country) {
         return cityRepository.findByCountryCode(country.getCode());
+    }
+
+    @Override
+    public Page<City> getCitiesByCountry(Country country, Pageable pageRequest) {
+        return cityRepository.findByCountryCode(country.getCode(), pageRequest);
     }
 
     @Override
@@ -88,7 +121,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public List<City> filterCities(CityFilter filter) {
         if (filter.getCountry()!=null){
-            return cityRepository.findByCountryCode(filter.getCountry().getCode())
+            return cityRepository.findByCountryCode(filter.getCountry())
                     .stream()
                     .filter(city -> filter.getContinent() == null || city.getCountry().getContinent()==filter.getContinent())
                     .filter(city -> filter.getRegion()==null || filter.getRegion().equals(city.getCountry().getRegion()))
@@ -108,9 +141,16 @@ public class CityServiceImpl implements CityService {
                     .filter(city -> city.getPopulation()<=filter.getMaxPopulation() && city.getPopulation()>=filter.getMinPopulation())
                     .collect(Collectors.toList());
         }
-        return cityRepository.findAll()
-                .stream()
-                .filter(city -> city.getPopulation()<=filter.getMaxPopulation() && city.getPopulation()>=filter.getMinPopulation())
+        return cityRepository.filterCities(filter.getMinPopulation(), filter.getMaxPopulation());
+    }
+
+    @Override
+    public Page<City> filterCities(CityFilter filter, Pageable pageRequest) {
+        List<City> all = filterCities(filter);
+        List<City> result = all.stream()
+                .skip(pageRequest.getPageNumber()*pageRequest.getPageSize())
+                .limit(pageRequest.getPageSize())
                 .collect(Collectors.toList());
+        return new PageImpl<>(result, pageRequest, all.size());
     }
 }

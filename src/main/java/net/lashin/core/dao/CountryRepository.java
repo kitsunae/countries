@@ -14,9 +14,13 @@ import java.util.List;
  */
 public interface CountryRepository extends JpaRepository<Country, String> {
     List<Country> findByName(String name);
+    Page<Country> findByName(String name, Pageable pageable);
     List<Country> findByContinent(Continent continent);
     Page<Country> findByContinent(Continent continent, Pageable pageable);
     List<Country> findByCapitalId(Long id);
+    Page<Country> findByCapitalId(Long cityId, Pageable pageable);
+    List<Country> findByCapitalName(String name);
+    Page<Country> findByCapitalName(String capitalName, Pageable pageable);
 
     @Query("select c.name from Country c")
     List<String> findAllCountryNames();

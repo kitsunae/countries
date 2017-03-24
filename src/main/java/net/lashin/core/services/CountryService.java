@@ -13,9 +13,12 @@ import java.util.List;
  */
 public interface CountryService {
     List<Country> getCountriesByName(String name);
+    Page<Country> getCountriesByName(String name, Pageable pageRequest);
     Country getCountryByCode(String code);
     List<Country> getCountriesByCapital(Long cityId);
+    Page<Country> getCountriesByCapital(Long cityId, Pageable pageRequest);
     List<Country> getCountriesByCapital(String name);
+    Page<Country> getCountriesByCapital(String capitalName, Pageable pageRequest);
     List<Country> getAllCountries();
     Page<Country> getAllCountries(Pageable pageRequest);
     List<String> getAllCountryNames();

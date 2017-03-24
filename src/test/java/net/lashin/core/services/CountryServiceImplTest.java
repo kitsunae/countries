@@ -41,6 +41,14 @@ public class CountryServiceImplTest {
     }
 
     @Test
+    public void getCountriesByNamePageable(){
+        Page<Country> countries = countryService.getCountriesByName("Russian Federation", new PageRequest(0, 20));
+        assertEquals(1, countries.getContent().size());
+        assertEquals(1, countries.getTotalPages());
+        assertEquals("RUS", countries.getContent().get(0).getCode());
+    }
+
+    @Test
     public void getCountryByCode() throws Exception {
         Country country = countryService.getCountryByCode("RUS");
         assertNotNull(country);
@@ -57,10 +65,25 @@ public class CountryServiceImplTest {
     }
 
     @Test
+    public void getCountriesByCapitalNamePageable(){
+        Page<Country> countries = countryService.getCountriesByCapital("Kingston", new PageRequest(0, 1));
+        assertEquals(1, countries.getContent().size());
+        assertEquals(2, countries.getTotalPages());
+        assertEquals(countryService.getCountryByCode("JAM"), countries.getContent().get(0));
+    }
+
+    @Test
     public void getCountriesByCapital1() throws Exception {
         List<Country> countries = countryService.getCountriesByCapital(3580L);
         assertEquals(1, countries.size());
         assertEquals(countryService.getCountryByCode("RUS"), countries.get(0));
+    }
+
+    @Test
+    public void getCountriesByCapitalCodePageable(){
+        Page<Country> countries = countryService.getCountriesByCapital(3580L, new PageRequest(0, 10));
+        assertEquals(1, countries.getContent().size());
+        assertEquals(countryService.getCountryByCode("RUS"), countries.getContent().get(0));
     }
 
     @Test

@@ -7,6 +7,8 @@ import net.lashin.core.filters.CityFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -41,6 +43,14 @@ public class CityServiceImplTest {
     }
 
     @Test
+    public void getCitiesByNamePageable(){
+        Page<City> cities = cityService.getCitiesByName("Hamilton", new PageRequest(1,1));
+        assertEquals(1, cities.getContent().size());
+        assertEquals(3, cities.getTotalPages());
+        assertEquals(cityService.getCityById(1821L), cities.getContent().get(0));
+    }
+
+    @Test
     public void getWorldCapitals() throws Exception {
         List<City> capitals = cityService.getWorldCapitals();
         assertEquals(232, capitals.size());
@@ -51,9 +61,25 @@ public class CityServiceImplTest {
     }
 
     @Test
+    public void getWorldCapitalsPageable(){
+        Page<City> capitals = cityService.getWorldCapitals(new PageRequest(0, 20));
+        assertEquals(20, capitals.getContent().size());
+        assertEquals(232/20+1, capitals.getTotalPages());
+    }
+
+    @Test
     public void getAllCities() throws Exception {
         List<City> cities = cityService.getAllCities();
         assertEquals(4079, cities.size());
+    }
+
+    @Test
+    public void getAllCitiesPageable(){
+        Page<City> cities = cityService.getAllCities(new PageRequest(1, 20));
+        assertEquals(20, cities.getContent().size());
+        assertEquals(4079/20+1, cities.getTotalPages());
+        assertEquals(cityService.getCityById(21L), cities.getContent().get(0));
+        assertEquals(cityService.getCityById(40L), cities.getContent().get(19));
     }
 
     @Test
@@ -85,6 +111,15 @@ public class CityServiceImplTest {
     }
 
     @Test
+    public void getCitiesByCountryCodePageable(){
+        Page<City> cities = cityService.getCitiesByCountryCode("RUS", new PageRequest(3, 20));
+        assertEquals(20, cities.getContent().size());
+        assertEquals(189/20+1, cities.getTotalPages());
+        assertEquals(cityService.getCityById(3640), cities.getContent().get(0));
+        assertEquals(cityService.getCityById(3659), cities.getContent().get(19));
+    }
+
+    @Test
     public void getCitiesByCountry() throws Exception {
         Country country = countryService.getCountryByCode("RUS");
         List<City> cities = cityService.getCitiesByCountry(country);
@@ -92,6 +127,16 @@ public class CityServiceImplTest {
         for (City city : cities){
             assertEquals(country, city.getCountry());
         }
+    }
+
+    @Test
+    public void getCitiesByCountryPageable(){
+        Country country = countryService.getCountryByCode("RUS");
+        Page<City> cities = cityService.getCitiesByCountry(country, new PageRequest(3, 20));
+        assertEquals(20, cities.getContent().size());
+        assertEquals(189/20+1, cities.getTotalPages());
+        assertEquals(cityService.getCityById(3640), cities.getContent().get(0));
+        assertEquals(cityService.getCityById(3659), cities.getContent().get(19));
     }
 
     @Test
@@ -120,5 +165,16 @@ public class CityServiceImplTest {
         filter.setRegion("Eastern Europe");
         List<City> result = cityService.filterCities(filter);
         assertEquals(371, result.size());
+    }
+
+    @Test
+    public void filterCitiesPageable(){
+        CityFilter filter = new CityFilter();
+        filter.setRegion("Eastern Europe");
+        Page<City> result = cityService.filterCities(filter, new PageRequest(2, 20));
+        assertEquals(20, result.getContent().size());
+        assertEquals(371/20+1, result.getTotalPages());
+        assertEquals(cityService.getCityById(3487), result.getContent().get(0));
+        assertEquals(cityService.getCityById(2938), result.getContent().get(19));
     }
 }

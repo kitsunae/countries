@@ -1,10 +1,8 @@
 package net.lashin.core.services;
 
-import net.lashin.core.beans.City;
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
 import net.lashin.core.beans.CountryLanguage;
-import net.lashin.core.dao.CityRepository;
 import net.lashin.core.dao.CountryLanguageRepository;
 import net.lashin.core.dao.CountryRepository;
 import net.lashin.core.filters.CountryFilter;
@@ -24,19 +22,23 @@ import java.util.stream.Collectors;
 public class CountryServiceImpl implements CountryService{
 
     private CountryRepository countryRepository;
-    private CityRepository cityRepository;
     private CountryLanguageRepository languageRepository;
 
     @Autowired
-    public CountryServiceImpl(CountryRepository countryRepository, CityRepository cityRepository, CountryLanguageRepository languageRepository) {
+    public CountryServiceImpl(CountryRepository countryRepository, CountryLanguageRepository languageRepository) {
         this.countryRepository = countryRepository;
-        this.cityRepository = cityRepository;
         this.languageRepository = languageRepository;
     }
 
     @Override
     public List<Country> getCountriesByName(String name) {
         return countryRepository.findByName(name);
+    }
+
+
+    @Override
+    public Page<Country> getCountriesByName(String name, Pageable pageRequest) {
+        return countryRepository.findByName(name, pageRequest);
     }
 
     @Override
@@ -50,11 +52,18 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
+    public Page<Country> getCountriesByCapital(Long cityId, Pageable pageRequest) {
+        return countryRepository.findByCapitalId(cityId, pageRequest);
+    }
+
+    @Override
     public List<Country> getCountriesByCapital(String capitalName) {
-        return cityRepository.findByName(capitalName)
-                .stream()
-                .map(City::getCountry)
-                .collect(Collectors.toList());
+        return countryRepository.findByCapitalName(capitalName);
+    }
+
+    @Override
+    public Page<Country> getCountriesByCapital(String capitalName, Pageable pageRequest) {
+        return countryRepository.findByCapitalName(capitalName, pageRequest);
     }
 
     @Override
@@ -102,9 +111,8 @@ public class CountryServiceImpl implements CountryService{
     //TODO edit
     @Override
     public List<Country> getCountriesByLanguage(String language) {
-        return languageRepository.findAll()
+        return languageRepository.findByLanguage(language)
                 .stream()
-                .filter(countryLanguage -> countryLanguage.getLanguage().equals(language))
                 .map(CountryLanguage::getCountry)
                 .collect(Collectors.toList());
     }
