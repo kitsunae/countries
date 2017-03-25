@@ -9,9 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-/**
- * Created by lashi on 09.02.2017.
- */
 public interface CityRepository extends JpaRepository<City, Long> {
     List<City> findByName(String name);
     Page<City> findByName(String name, Pageable pageRequest);

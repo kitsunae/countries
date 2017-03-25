@@ -7,9 +7,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-/**
- * Created by lashi on 24.01.2017.
- */
 public class IndexControllerTest {
 
     @Test

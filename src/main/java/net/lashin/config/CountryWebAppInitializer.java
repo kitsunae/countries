@@ -2,9 +2,6 @@ package net.lashin.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-/**
- * Created by lashi on 24.01.2017.
- */
 public class CountryWebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     protected Class<?>[] getRootConfigClasses() {

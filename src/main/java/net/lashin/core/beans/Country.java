@@ -8,9 +8,6 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by lashi on 24.01.2017.
- */
 @Entity
 public class Country {
     @Id

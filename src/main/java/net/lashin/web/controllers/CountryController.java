@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by lashi on 09.02.2017.
- */
 @RestController
 @RequestMapping(value = "/country")
 public class CountryController {
@@ -62,7 +59,7 @@ public class CountryController {
                 .collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/capital/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/capital/{cityName}", method = RequestMethod.GET)
     public List<CountryResource> getCountriesByCapital(@PathVariable String cityName){
         return service.getCountriesByCapital(cityName)
                 .stream()

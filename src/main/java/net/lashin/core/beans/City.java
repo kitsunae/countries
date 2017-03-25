@@ -5,9 +5,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- * Created by lashi on 24.01.2017.
- */
 @Entity
 public class City {
     @Id

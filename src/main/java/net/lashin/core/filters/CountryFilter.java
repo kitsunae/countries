@@ -4,9 +4,6 @@ import net.lashin.core.beans.Continent;
 
 import java.time.LocalDate;
 
-/**
- * Created by lashi on 20.03.2017.
- */
 public class CountryFilter {
 
     private Continent continent;

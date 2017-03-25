@@ -8,9 +8,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-/**
- * Created by lashi on 15.02.2017.
- */
 public interface CityService {
     List<City> getCitiesByName(String name);
     Page<City> getCitiesByName(String name, Pageable pageRequest);

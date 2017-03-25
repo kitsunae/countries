@@ -18,9 +18,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-/**
- * Created by lashi on 24.01.2017.
- */
 @Configuration
 @PropertySource("database.properties")
 @EnableJpaRepositories("net.lashin.core.dao")
@@ -28,6 +25,7 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = {"net.lashin.core"})
 public class RootConfig {
 
+    @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
     @Autowired
     private Environment environment;
 

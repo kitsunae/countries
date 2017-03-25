@@ -9,9 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-/**
- * Created by lashi on 11.02.2017.
- */
 public interface CountryLanguageRepository extends JpaRepository<CountryLanguage, CountryLanguageId> {
     List<CountryLanguage> findByCountry_Code(String countryCode);
     Page<CountryLanguage> findByCountry_Code(String countryCode, Pageable pageRequest);

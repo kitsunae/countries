@@ -9,9 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-/**
- * Created by lashi on 09.02.2017.
- */
 public interface CountryRepository extends JpaRepository<Country, String> {
     List<Country> findByName(String name);
     Page<Country> findByName(String name, Pageable pageable);

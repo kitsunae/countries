@@ -5,9 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-/**
- * Created by lashi on 24.01.2017.
- */
 
 @Entity
 public class CountryLanguage {
@@ -41,6 +38,10 @@ public class CountryLanguage {
         return country;
     }
 
+    public void setCountry(Country country) {
+        setCountryCode(country.getCode());
+    }
+
     public String getCountryCode() {
         return countryLanguageId.getCountryCode();
     }
@@ -71,11 +72,6 @@ public class CountryLanguage {
 
     public void setPercentage(Double percentage) {
         this.percentage = percentage;
-    }
-
-
-    public void setCountry(Country country) {
-        setCountryCode(country.getCode());
     }
 
     @Override

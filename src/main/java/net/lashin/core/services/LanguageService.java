@@ -7,9 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-/**
- * Created by lashi on 15.02.2017.
- */
 public interface LanguageService {
     List<CountryLanguage> getAllLanguages();
     Page<CountryLanguage> getAllLanguages(Pageable pageRequest);

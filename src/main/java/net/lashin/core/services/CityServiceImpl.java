@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-/**
- * Created by lashi on 14.03.2017.
- */
 @Service
 public class CityServiceImpl implements CityService {
 

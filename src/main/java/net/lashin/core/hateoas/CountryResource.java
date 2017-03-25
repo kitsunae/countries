@@ -4,9 +4,6 @@ import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
 import org.springframework.hateoas.ResourceSupport;
 
-/**
- * Created by lashi on 15.02.2017.
- */
 public class CountryResource extends ResourceSupport {
 
     private String code;

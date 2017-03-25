@@ -2,9 +2,6 @@ package net.lashin.core.filters;
 
 import net.lashin.core.beans.Continent;
 
-/**
- * Created by lashi on 24.03.2017.
- */
 public class LanguageFilter {
 
     private Continent continent;

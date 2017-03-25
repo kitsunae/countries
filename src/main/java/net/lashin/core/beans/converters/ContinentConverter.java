@@ -5,9 +5,6 @@ import net.lashin.core.beans.Continent;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-/**
- * Created by lashi on 09.02.2017.
- */
 @Converter(autoApply = true)
 public class ContinentConverter implements AttributeConverter<Continent, String> {
     @Override

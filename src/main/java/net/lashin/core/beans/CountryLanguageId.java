@@ -5,10 +5,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-/**
- * Created by lashi on 09.02.2017.
- */
-
 @Embeddable
 public class CountryLanguageId implements Serializable {
     @NotNull
@@ -49,8 +45,7 @@ public class CountryLanguageId implements Serializable {
 
         CountryLanguageId that = (CountryLanguageId) o;
 
-        if (!countryCode.equals(that.getCountryCode())) return false;
-        return language.equals(that.getLanguage());
+        return countryCode.equals(that.getCountryCode()) && language.equals(that.getLanguage());
 
     }
 

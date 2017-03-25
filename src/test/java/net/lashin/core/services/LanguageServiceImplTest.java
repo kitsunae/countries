@@ -19,9 +19,6 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by lashi on 17.03.2017.
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class})
 @Transactional
