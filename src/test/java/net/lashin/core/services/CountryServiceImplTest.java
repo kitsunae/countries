@@ -19,9 +19,6 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by lashi on 17.03.2017.
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class})
 @Transactional
@@ -172,7 +169,7 @@ public class CountryServiceImplTest {
         Country country = countryService.getCountryByCode("RUS");
         City newCapital = cityService.getCitiesByName("St Petersburg").get(0);
         country.setCapital(newCapital);
-        countryService.save(country);
+        countryService.edit(country, "RUS");
         assertEquals(newCapital, countryService.getCountriesByCapital(newCapital.getId()).get(0).getCapital());
         assertTrue(cityService.getWorldCapitals().contains(newCapital));
         assertEquals(country, cityService.getCityById(newCapital.getId()).getCountry());

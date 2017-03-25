@@ -2,6 +2,7 @@ package net.lashin.core.services;
 
 import net.lashin.config.RootConfig;
 import net.lashin.core.beans.City;
+import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
 import net.lashin.core.filters.CityFilter;
 import org.junit.Test;
@@ -19,9 +20,6 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by lashi on 17.03.2017.
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class})
 @Transactional
@@ -165,6 +163,21 @@ public class CityServiceImplTest {
         filter.setRegion("Eastern Europe");
         List<City> result = cityService.filterCities(filter);
         assertEquals(371, result.size());
+        filter = new CityFilter();
+        filter.setCountry("RUS");
+        filter.setMinPopulation(1000000);
+        result = cityService.filterCities(filter);
+        assertEquals(12, result.size());
+        assertEquals(cityService.getCityById(3580), result.get(0));
+        filter = new CityFilter();
+        filter.setContinent(Continent.AFRICA);
+        filter.setMinPopulation(1000000);
+        result = cityService.filterCities(filter);
+        assertEquals(23, result.size());
+        filter = new CityFilter();
+        filter.setMinPopulation(5000000);
+        result = cityService.filterCities(filter);
+        assertEquals(24, result.size());
     }
 
     @Test
