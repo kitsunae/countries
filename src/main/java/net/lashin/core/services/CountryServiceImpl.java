@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,78 +29,93 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Country> getCountriesByName(String name) {
         return countryRepository.findByName(name);
     }
 
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Country> getCountriesByName(String name, Pageable pageRequest) {
         return countryRepository.findByName(name, pageRequest);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Country getCountryByCode(String code) {
         return countryRepository.findOne(code);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Country> getCountriesByCapital(Long cityId) {
         return countryRepository.findByCapitalId(cityId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Country> getCountriesByCapital(Long cityId, Pageable pageRequest) {
         return countryRepository.findByCapitalId(cityId, pageRequest);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Country> getCountriesByCapital(String capitalName) {
         return countryRepository.findByCapitalName(capitalName);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Country> getCountriesByCapital(String capitalName, Pageable pageRequest) {
         return countryRepository.findByCapitalName(capitalName, pageRequest);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Country> getAllCountries() {
         return countryRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Country> getAllCountries(Pageable pageRequest) {
         return countryRepository.findAll(pageRequest);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<String> getAllCountryNames() {
         return countryRepository.findAllCountryNames();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<String> getAllCountryNames(Pageable pageRequest) {
         return countryRepository.findAllCountryNames(pageRequest);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Country> getCountriesByContinent(Continent continent) {
         return countryRepository.findByContinent(continent);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Country> getCountriesByContinent(Continent continent, Pageable pageRequest) {
         return countryRepository.findByContinent(continent, pageRequest);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Country> getCountriesByContinentName(String continentName) {
         Continent continent = Continent.fromString(continentName);
         return getCountriesByContinent(continent);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Country> getCountriesByContinentName(String continentName, Pageable pageRequest) {
         Continent continent = Continent.fromString(continentName);
         return getCountriesByContinent(continent, pageRequest);
@@ -107,6 +123,7 @@ public class CountryServiceImpl implements CountryService{
 
     //TODO edit
     @Override
+    @Transactional(readOnly = true)
     public List<Country> getCountriesByLanguage(String language) {
         return languageRepository.findByLanguage(language)
                 .stream()
@@ -115,6 +132,7 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Country> getCountriesByLanguage(String language, Pageable pageRequest) {
         List<Country> list = getCountriesByLanguage(language);
         List<Country> result = list
@@ -126,11 +144,13 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
+    @Transactional
     public Country save(Country country) {
         return countryRepository.save(country);
     }
 
     @Override
+    @Transactional
     public Country edit(Country country, String countryCode) {
         if (!country.getCode().equals(countryCode))
             return null; //TODO throw Exception
@@ -138,16 +158,19 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
+    @Transactional
     public void remove(Country country) {
         countryRepository.delete(country);
     }
 
     @Override
+    @Transactional
     public void remove(String countryCode) {
         countryRepository.delete(countryCode);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Country> filterCountries(CountryFilter filter) {
         List<Country> queryResults = countryRepository.filterCountries(filter.getMinSurfaceArea(), filter.getMaxSurfaceArea(),
                 filter.getMinIndepYear(), filter.getMaxIndepYear(),
@@ -167,6 +190,7 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Country> filterCountries(CountryFilter filter, Pageable pageRequest) {
         List<Country> list = filterCountries(filter);
         List<Country> result = list.stream()

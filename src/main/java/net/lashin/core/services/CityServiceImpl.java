@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,16 +29,19 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<City> getCitiesByName(String name) {
         return cityRepository.findByName(name);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<City> getCitiesByName(String name, Pageable pageRequest) {
         return cityRepository.findByName(name, pageRequest);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<City> getWorldCapitals() {
         return countryRepository.findAll()
                 .stream()
@@ -47,6 +51,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<City> getWorldCapitals(Pageable pageRequest) {
         List<City> all = getWorldCapitals();
         List<City> result = all.stream()
@@ -57,16 +62,19 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<City> getAllCities() {
         return cityRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<City> getAllCities(Pageable pageRequest) {
         return cityRepository.findAll(pageRequest);
     }
 
     @Override
+    @Transactional
     public City edit(City city, Long cityId, String countryCode) {
         if (!Objects.equals(city.getId(), cityId))
             return null; //TODO throw exception
@@ -76,6 +84,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    @Transactional
     public City save(City city, String countryCode) {
         Country country = countryRepository.findOne(countryCode);
         city.setCountry(country);
@@ -83,31 +92,37 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<City> getCitiesByCountryCode(String countryCode) {
         return cityRepository.findByCountryCode(countryCode);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<City> getCitiesByCountryCode(String countryCode, Pageable pageRequest) {
         return cityRepository.findByCountryCode(countryCode, pageRequest);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<City> getCitiesByCountry(Country country) {
         return cityRepository.findByCountryCode(country.getCode());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<City> getCitiesByCountry(Country country, Pageable pageRequest) {
         return cityRepository.findByCountryCode(country.getCode(), pageRequest);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public City getCityById(long id) {
         return cityRepository.findOne(id);
     }
 
     @Override
+    @Transactional
     public void remove(Long id) {
         List<Country> countries = countryRepository.findByCapitalId(id);
         countries.forEach(country -> country.setCapital(null));
@@ -116,6 +131,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<City> filterCities(CityFilter filter) {
         if (filter.getCountry()!=null){
             return cityRepository.findByCountryCode(filter.getCountry())
@@ -142,6 +158,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<City> filterCities(CityFilter filter, Pageable pageRequest) {
         List<City> all = filterCities(filter);
         List<City> result = all.stream()

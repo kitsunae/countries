@@ -36,8 +36,8 @@ public class CityController {
                 .collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public List<CityResource> getAllCitiesOfCountry(@RequestParam(value = "countryCode") String countryCode){
+    @RequestMapping(value = "/all/{countryCode}", method = RequestMethod.GET)
+    public List<CityResource> getAllCitiesOfCountry(@PathVariable String countryCode) {
         return service.getCitiesByCountryCode(countryCode)
                 .stream()
                 .map(assembler::toResource)

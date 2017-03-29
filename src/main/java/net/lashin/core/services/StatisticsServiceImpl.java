@@ -9,6 +9,7 @@ import net.lashin.core.dao.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,18 +29,21 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Country> getBiggestCountries(int quantity) {
         PageRequest pageRequest = new PageRequest(0, quantity, Sort.Direction.DESC, "surfaceArea");
         return countryRepository.findAll(pageRequest).getContent();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Country> getBiggestCountries(Pageable pageRequest) {
         PageRequest ordered = new PageRequest(pageRequest.getPageNumber(), pageRequest.getPageSize(), Sort.Direction.DESC, "surfaceArea");
         return countryRepository.findAll(ordered);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Long> getMostCommonLanguages(int quantity) {
         Map<String, Double> map = getLanguagesWithNumberOfSpeakers();
         List<Double> values = new ArrayList<>(map.values());
@@ -66,6 +70,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Map<String, Long>> getMostCommonLanguages(Pageable pageRequest) {
         Map<String, Double> map = getLanguagesWithNumberOfSpeakers();
         List<Double> values = new ArrayList<>(map.values());
@@ -93,18 +98,21 @@ public class StatisticsServiceImpl implements StatisticsService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public List<City> getBiggestCities(int quantity) {
         PageRequest pageRequest = new PageRequest(0,quantity, new Sort(Sort.Direction.DESC, "population"));
         return cityRepository.findAll(pageRequest).getContent();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<City> getBiggestCities(Pageable pageRequest) {
         PageRequest ordered = new PageRequest(pageRequest.getPageNumber(), pageRequest.getPageSize(), Sort.Direction.DESC, "population");
         return cityRepository.findAll(ordered);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public double getPercentageOfUrbanPopulationOfCountry(String countryCode) {
         double cityPopulation = cityRepository.findByCountryCode(countryCode)
                 .stream()
@@ -113,6 +121,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long getWorldPopulation() {
         return countryRepository.findAll().stream().collect(Collectors.summingLong(Country::getPopulation));
     }
