@@ -25,7 +25,7 @@ public class LanguageController {
 
     @RequestMapping(value = "/country/{countryCode}", method = RequestMethod.GET)
     public List<CountryLanguageResource> getLanguagesByCountry(@PathVariable String countryCode){
-        return service.getLanguagesByCountryCode(countryCode)
+        return service.getByCountryCode(countryCode)
                 .stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
@@ -43,7 +43,7 @@ public class LanguageController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<CountryLanguageResource> getAllLanguages(){
-        return service.getAllLanguages()
+        return service.getAll()
                 .stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
@@ -52,7 +52,7 @@ public class LanguageController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public CountryLanguageResource getLanguage(@RequestParam(value = "languageName") String languageName,
                                                @RequestParam(value = "countryCode") String countryCode){
-        return assembler.toResource(service.getLanguageByNameAndCountry(languageName, countryCode));
+        return assembler.toResource(service.getByNameAndCountry(languageName, countryCode));
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -69,7 +69,7 @@ public class LanguageController {
     //TODO editing language method (think about changing other languages in case of changing percentage)
 
     private List<CountryLanguageResource> getLanguagesByCountryAndOfficialty(String countryCode, boolean isOfficial){
-        return service.getLanguagesByCountryAndOfficialty(countryCode, isOfficial)
+        return service.getByCountryAndOfficialty(countryCode, isOfficial)
                 .stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());

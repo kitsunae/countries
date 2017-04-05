@@ -31,15 +31,15 @@ public class CountryServiceImplTest {
 
     @Test
     public void getCountriesByName() throws Exception {
-        List<Country> countries = countryService.getCountriesByName("Russian Federation");
+        List<Country> countries = countryService.getByName("Russian Federation");
         assertEquals(1, countries.size());
-        assertEquals(cityService.getCityById(3580), countries.get(0).getCapital());
+        assertEquals(cityService.getById(3580), countries.get(0).getCapital());
         assertEquals("RUS", countries.get(0).getCode());
     }
 
     @Test
     public void getCountriesByNamePageable(){
-        Page<Country> countries = countryService.getCountriesByName("Russian Federation", new PageRequest(0, 20));
+        Page<Country> countries = countryService.getByName("Russian Federation", new PageRequest(0, 20));
         assertEquals(1, countries.getContent().size());
         assertEquals(1, countries.getTotalPages());
         assertEquals("RUS", countries.getContent().get(0).getCode());
@@ -47,51 +47,51 @@ public class CountryServiceImplTest {
 
     @Test
     public void getCountryByCode() throws Exception {
-        Country country = countryService.getCountryByCode("RUS");
+        Country country = countryService.getByCode("RUS");
         assertNotNull(country);
         assertEquals("Russian Federation", country.getName());
-        assertEquals(cityService.getCityById(3580), country.getCapital());
+        assertEquals(cityService.getById(3580), country.getCapital());
     }
 
     @Test
     public void getCountriesByCapital() throws Exception {
-        List<Country> countries = countryService.getCountriesByCapital("Kingston");
+        List<Country> countries = countryService.getByCapital("Kingston");
         assertEquals(2, countries.size());
-        assertTrue(countries.contains(countryService.getCountryByCode("JAM")));
-        assertTrue(countries.contains(countryService.getCountryByCode("NFK")));
+        assertTrue(countries.contains(countryService.getByCode("JAM")));
+        assertTrue(countries.contains(countryService.getByCode("NFK")));
     }
 
     @Test
     public void getCountriesByCapitalNamePageable(){
-        Page<Country> countries = countryService.getCountriesByCapital("Kingston", new PageRequest(0, 1));
+        Page<Country> countries = countryService.getByCapital("Kingston", new PageRequest(0, 1));
         assertEquals(1, countries.getContent().size());
         assertEquals(2, countries.getTotalPages());
-        assertEquals(countryService.getCountryByCode("JAM"), countries.getContent().get(0));
+        assertEquals(countryService.getByCode("JAM"), countries.getContent().get(0));
     }
 
     @Test
     public void getCountriesByCapital1() throws Exception {
-        List<Country> countries = countryService.getCountriesByCapital(3580L);
+        List<Country> countries = countryService.getByCapital(3580L);
         assertEquals(1, countries.size());
-        assertEquals(countryService.getCountryByCode("RUS"), countries.get(0));
+        assertEquals(countryService.getByCode("RUS"), countries.get(0));
     }
 
     @Test
     public void getCountriesByCapitalCodePageable(){
-        Page<Country> countries = countryService.getCountriesByCapital(3580L, new PageRequest(0, 10));
+        Page<Country> countries = countryService.getByCapital(3580L, new PageRequest(0, 10));
         assertEquals(1, countries.getContent().size());
-        assertEquals(countryService.getCountryByCode("RUS"), countries.getContent().get(0));
+        assertEquals(countryService.getByCode("RUS"), countries.getContent().get(0));
     }
 
     @Test
     public void getAllCountries() throws Exception {
-        List<Country> countries = countryService.getAllCountries();
+        List<Country> countries = countryService.getAll();
         assertEquals(239, countries.size());
     }
 
     @Test
     public void getAllCountriesPageable(){
-        Page<Country> countries = countryService.getAllCountries(new PageRequest(0,20));
+        Page<Country> countries = countryService.getAll(new PageRequest(0, 20));
         assertEquals(20, countries.getContent().size());
         assertEquals(239/20+1, countries.getTotalPages());
     }
@@ -111,43 +111,43 @@ public class CountryServiceImplTest {
 
     @Test
     public void getCountriesByContinent() throws Exception {
-        List<Country> countriesOfEurope = countryService.getCountriesByContinent(Continent.EUROPE);
+        List<Country> countriesOfEurope = countryService.getByContinent(Continent.EUROPE);
         assertEquals(46, countriesOfEurope.size());
     }
 
     @Test
     public void getCountriesByContinentPageable(){
-        Page<Country> countries = countryService.getCountriesByContinent(Continent.EUROPE, new PageRequest(0, 20));
+        Page<Country> countries = countryService.getByContinent(Continent.EUROPE, new PageRequest(0, 20));
         assertEquals(20, countries.getContent().size());
         assertEquals(3, countries.getTotalPages());
     }
 
     @Test
     public void getCountriesByContinentName() throws Exception {
-        List<Country> countriesOfNorthAmerica = countryService.getCountriesByContinentName("North America");
+        List<Country> countriesOfNorthAmerica = countryService.getByContinentName("North America");
         assertEquals(37, countriesOfNorthAmerica.size());
     }
 
     @Test
     public void getCountriesByContinentNamePageable(){
-        Page<Country> countries = countryService.getCountriesByContinentName("North America", new PageRequest(0, 20));
+        Page<Country> countries = countryService.getByContinentName("North America", new PageRequest(0, 20));
         assertEquals(20, countries.getContent().size());
         assertEquals(2, countries.getTotalPages());
     }
 
     @Test
     public void getCountriesByLanguage() throws Exception {
-        List<Country> countries = countryService.getCountriesByLanguage("Russian");
+        List<Country> countries = countryService.getByLanguage("Russian");
         assertEquals(17, countries.size());
     }
 
     @Test
     public void getCountriesByLanguagePageable(){
-        Page<Country> countries = countryService.getCountriesByLanguage("Russian", new PageRequest(0, 5));
+        Page<Country> countries = countryService.getByLanguage("Russian", new PageRequest(0, 5));
         assertEquals(5, countries.getContent().size());
         assertEquals(4, countries.getTotalPages());
-        assertEquals(countryService.getCountryByCode("AZE"), countries.getContent().get(0));
-        assertEquals(countryService.getCountryByCode("GEO"), countries.getContent().get(4));
+        assertEquals(countryService.getByCode("AZE"), countries.getContent().get(0));
+        assertEquals(countryService.getByCode("GEO"), countries.getContent().get(4));
     }
 
     @Test
@@ -158,38 +158,38 @@ public class CountryServiceImplTest {
         country.addCity(city);
         country.setCapital(city);
         countryService.save(country);
-        assertEquals(country, countryService.getCountryByCode("AAA"));
-        assertEquals(city, countryService.getCountryByCode("AAA").getCapital());
+        assertEquals(country, countryService.getByCode("AAA"));
+        assertEquals(city, countryService.getByCode("AAA").getCapital());
         assertTrue(cityService.getWorldCapitals().contains(city));
     }
 
     @Test
     @Rollback
     public void edit() throws Exception {
-        Country country = countryService.getCountryByCode("RUS");
-        City newCapital = cityService.getCitiesByName("St Petersburg").get(0);
+        Country country = countryService.getByCode("RUS");
+        City newCapital = cityService.getByName("St Petersburg").get(0);
         country.setCapital(newCapital);
         countryService.edit(country, "RUS");
-        assertEquals(newCapital, countryService.getCountriesByCapital(newCapital.getId()).get(0).getCapital());
+        assertEquals(newCapital, countryService.getByCapital(newCapital.getId()).get(0).getCapital());
         assertTrue(cityService.getWorldCapitals().contains(newCapital));
-        assertEquals(country, cityService.getCityById(newCapital.getId()).getCountry());
+        assertEquals(country, cityService.getById(newCapital.getId()).getCountry());
     }
 
     @Test
     @Rollback
     public void remove() throws Exception {
         countryService.remove("USA");
-        assertNull(countryService.getCountryByCode("USA"));
-        assertEquals(0, cityService.getCitiesByCountryCode("USA").size());
+        assertNull(countryService.getByCode("USA"));
+        assertEquals(0, cityService.getByCountryCode("USA").size());
     }
 
     @Test
     @Rollback
     public void remove1() throws Exception {
-        Country country = countryService.getCountryByCode("USA");
+        Country country = countryService.getByCode("USA");
         countryService.remove(country);
-        assertNull(countryService.getCountryByCode("USA"));
-        assertEquals(0, cityService.getCitiesByCountryCode("USA").size());
+        assertNull(countryService.getByCode("USA"));
+        assertEquals(0, cityService.getByCountryCode("USA").size());
     }
 
 
@@ -205,16 +205,16 @@ public class CountryServiceImplTest {
         filter.setMaxPopulation(1000000000);
         filter.setMinLifeExpectancy(45);
         filter.setMaxLifeExpectancy(75);
-        List<Country> result = countryService.filterCountries(filter);
+        List<Country> result = countryService.filter(filter);
         assertEquals(7, result.size());
         filter = new CountryFilter();
         filter.setMinIndepYear(0);
         filter.setMaxIndepYear(1990);
-        result = countryService.filterCountries(filter);
+        result = countryService.filter(filter);
         assertEquals(166, result.size());
         filter = new CountryFilter();
-        result = countryService.filterCountries(filter);
-        assertEquals(countryService.getAllCountries(), result);
+        result = countryService.filter(filter);
+        assertEquals(countryService.getAll(), result);
     }
 
     @Test
@@ -229,16 +229,16 @@ public class CountryServiceImplTest {
         filter.setMaxPopulation(1000000000);
         filter.setMinLifeExpectancy(45);
         filter.setMaxLifeExpectancy(75);
-        Page<Country> result = countryService.filterCountries(filter, new PageRequest(0, 5));
+        Page<Country> result = countryService.filter(filter, new PageRequest(0, 5));
         assertEquals(5, result.getContent().size());
         assertEquals(2, result.getTotalPages());
-        result = countryService.filterCountries(filter, new PageRequest(1, 5));
+        result = countryService.filter(filter, new PageRequest(1, 5));
         assertEquals(2, result.getContent().size());
         assertEquals(2, result.getTotalPages());
         filter = new CountryFilter();
         filter.setMinIndepYear(0);
         filter.setMaxIndepYear(1990);
-        result = countryService.filterCountries(filter, new PageRequest(3, 20));
+        result = countryService.filter(filter, new PageRequest(3, 20));
         assertEquals(20, result.getContent().size());
         assertEquals(166/20+1, result.getTotalPages());
     }

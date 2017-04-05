@@ -30,13 +30,13 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<City> getCitiesByName(String name) {
+    public List<City> getByName(String name) {
         return cityRepository.findByName(name);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<City> getCitiesByName(String name, Pageable pageRequest) {
+    public Page<City> getByName(String name, Pageable pageRequest) {
         return cityRepository.findByName(name, pageRequest);
     }
 
@@ -63,13 +63,13 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<City> getAllCities() {
+    public List<City> getAll() {
         return cityRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<City> getAllCities(Pageable pageRequest) {
+    public Page<City> getAll(Pageable pageRequest) {
         return cityRepository.findAll(pageRequest);
     }
 
@@ -93,31 +93,31 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<City> getCitiesByCountryCode(String countryCode) {
+    public List<City> getByCountryCode(String countryCode) {
         return cityRepository.findByCountryCode(countryCode);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<City> getCitiesByCountryCode(String countryCode, Pageable pageRequest) {
+    public Page<City> getByCountryCode(String countryCode, Pageable pageRequest) {
         return cityRepository.findByCountryCode(countryCode, pageRequest);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<City> getCitiesByCountry(Country country) {
+    public List<City> getByCountry(Country country) {
         return cityRepository.findByCountryCode(country.getCode());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<City> getCitiesByCountry(Country country, Pageable pageRequest) {
+    public Page<City> getByCountry(Country country, Pageable pageRequest) {
         return cityRepository.findByCountryCode(country.getCode(), pageRequest);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public City getCityById(long id) {
+    public City getById(long id) {
         return cityRepository.findOne(id);
     }
 
@@ -132,14 +132,14 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<City> filterCities(CityFilter filter) {
+    public List<City> filter(CityFilter filter) {
         return cityRepository.filterCities(filter);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<City> filterCities(CityFilter filter, Pageable pageRequest) {
-        List<City> all = filterCities(filter);
+    public Page<City> filter(CityFilter filter, Pageable pageRequest) {
+        List<City> all = filter(filter);
         List<City> result = all.stream()
                 .skip(pageRequest.getPageNumber()*pageRequest.getPageSize())
                 .limit(pageRequest.getPageSize())

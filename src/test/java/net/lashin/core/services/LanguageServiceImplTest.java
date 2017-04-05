@@ -33,7 +33,7 @@ public class LanguageServiceImplTest {
     public void getAllLanguages() throws Exception {
         List<String> languages = languageService.getAllLanguageNames();
         assertEquals(457, languages.size());
-        List<CountryLanguage> countryLanguages = languageService.getAllLanguages();
+        List<CountryLanguage> countryLanguages = languageService.getAll();
         assertEquals(984, countryLanguages.size());
     }
 
@@ -48,26 +48,26 @@ public class LanguageServiceImplTest {
 
     @Test
     public void getAllCountryLanguagesPageable(){
-        Page<CountryLanguage> languages = languageService.getAllLanguages(new PageRequest(0,20));
+        Page<CountryLanguage> languages = languageService.getAll(new PageRequest(0, 20));
         assertEquals(20, languages.getContent().size());
         assertEquals(984/20+1, languages.getTotalPages());
     }
 
     @Test
     public void getLanguagesByCountryCode() throws Exception {
-        List<CountryLanguage> languages = languageService.getLanguagesByCountryCode("RUS");
+        List<CountryLanguage> languages = languageService.getByCountryCode("RUS");
         assertEquals(12, languages.size());
         List<String> names = languages.stream()
                 .map(CountryLanguage::getLanguage)
                 .collect(Collectors.toList());
         assertTrue(names.contains("Russian"));
         assertTrue(names.contains("Avarian"));
-        assertEquals(countryService.getCountryByCode("RUS"), languages.get(0).getCountry());
+        assertEquals(countryService.getByCode("RUS"), languages.get(0).getCountry());
     }
 
     @Test
     public void getLanguagesByCountryCodePageable(){
-        Page<CountryLanguage> languages = languageService.getLanguagesByCountryCode("RUS", new PageRequest(0,5));
+        Page<CountryLanguage> languages = languageService.getByCountryCode("RUS", new PageRequest(0, 5));
         assertEquals(5, languages.getContent().size());
         assertEquals(3, languages.getTotalPages());
         assertEquals("Avarian", languages.getContent().get(0).getLanguage());
@@ -76,16 +76,16 @@ public class LanguageServiceImplTest {
 
     @Test
     public void getLanguagesByCountryAndOfficialty() throws Exception {
-        List<CountryLanguage> list = languageService.getLanguagesByCountryAndOfficialty("RUS", true);
+        List<CountryLanguage> list = languageService.getByCountryAndOfficialty("RUS", true);
         assertEquals(1, list.size());
         assertEquals("Russian", list.get(0).getLanguage());
         assertTrue(list.get(0).isOfficial());
-        assertEquals(countryService.getCountryByCode("RUS"), list.get(0).getCountry());
+        assertEquals(countryService.getByCode("RUS"), list.get(0).getCountry());
     }
 
     @Test
     public void getLanguagesByCountryAndOfficialtyPageable(){
-        Page<CountryLanguage> list = languageService.getLanguagesByCountryAndOfficialty("RUS", false, new PageRequest(1, 5));
+        Page<CountryLanguage> list = languageService.getByCountryAndOfficialty("RUS", false, new PageRequest(1, 5));
         assertEquals(5, list.getContent().size());
         assertEquals(3, list.getTotalPages());
         assertEquals("Kazakh", list.getContent().get(0).getLanguage());
@@ -94,11 +94,11 @@ public class LanguageServiceImplTest {
 
     @Test
     public void getLanguageByNameAndCountry() throws Exception {
-        CountryLanguage language = languageService.getLanguageByNameAndCountry("Tatar", "RUS");
+        CountryLanguage language = languageService.getByNameAndCountry("Tatar", "RUS");
         assertEquals("Tatar", language.getLanguage());
         assertEquals(Double.valueOf(3.2), language.getPercentage());
         assertFalse(language.isOfficial());
-        assertEquals(countryService.getCountryByCode("RUS"), language.getCountry());
+        assertEquals(countryService.getByCode("RUS"), language.getCountry());
     }
 
     @Test
@@ -106,16 +106,16 @@ public class LanguageServiceImplTest {
     public void save() throws Exception {
         CountryLanguage language = new CountryLanguage("RUS", "OLOLOLO", true, 99.0);
         languageService.save(language);
-        assertTrue(languageService.getLanguagesByCountryAndOfficialty("RUS", true).contains(language));
-        assertTrue(languageService.getLanguagesByCountryCode("RUS").contains(language));
+        assertTrue(languageService.getByCountryAndOfficialty("RUS", true).contains(language));
+        assertTrue(languageService.getByCountryCode("RUS").contains(language));
     }
 
     @Test
     @Rollback
     public void remove() throws Exception {
         languageService.remove("English", "USA");
-        assertTrue(languageService.getLanguagesByCountryAndOfficialty("USA", true).isEmpty());
-        assertFalse(languageService.getLanguagesByCountryCode("USA")
+        assertTrue(languageService.getByCountryAndOfficialty("USA", true).isEmpty());
+        assertFalse(languageService.getByCountryCode("USA")
                 .stream()
                 .map(CountryLanguage::getLanguage)
                 .collect(Collectors.toList()).contains("English"));
@@ -124,13 +124,13 @@ public class LanguageServiceImplTest {
     @Test
     @Rollback
     public void editTest() throws Exception{
-        CountryLanguage language = languageService.getLanguageByNameAndCountry("Chinese", "USA");
+        CountryLanguage language = languageService.getByNameAndCountry("Chinese", "USA");
         language.setPercentage(45.3);
         language.setOfficial(true);
         languageService.save(language);
-        assertEquals(language, languageService.getLanguageByNameAndCountry("Chinese", "USA"));
-        assertEquals(2, languageService.getLanguagesByCountryAndOfficialty("USA", true).size());
-        assertEquals(language.getPercentage(), languageService.getLanguageByNameAndCountry("Chinese", "USA").getPercentage());
+        assertEquals(language, languageService.getByNameAndCountry("Chinese", "USA"));
+        assertEquals(2, languageService.getByCountryAndOfficialty("USA", true).size());
+        assertEquals(language.getPercentage(), languageService.getByNameAndCountry("Chinese", "USA").getPercentage());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class LanguageServiceImplTest {
         filter.setContinent(Continent.EUROPE);
         filter.setRegion("Eastern Europe");
         filter.setMinPercentage(50.0);
-        List<CountryLanguage> languages = languageService.filterLanguages(filter);
+        List<CountryLanguage> languages = languageService.filter(filter);
         assertEquals(10, languages.size());
     }
 
@@ -149,7 +149,7 @@ public class LanguageServiceImplTest {
         filter.setContinent(Continent.EUROPE);
         filter.setRegion("Eastern Europe");
         filter.setMinPercentage(50.0);
-        Page<CountryLanguage> languages = languageService.filterLanguages(filter, new PageRequest(1,5));
+        Page<CountryLanguage> languages = languageService.filter(filter, new PageRequest(1, 5));
         assertEquals(5, languages.getContent().size());
         assertEquals(2, languages.getTotalPages());
         assertEquals("Polish", languages.getContent().get(0).getLanguage());

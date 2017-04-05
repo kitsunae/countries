@@ -8,17 +8,25 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface LanguageService {
-    List<CountryLanguage> getAllLanguages();
-    Page<CountryLanguage> getAllLanguages(Pageable pageRequest);
-    List<CountryLanguage> getLanguagesByCountryCode(String countryId);
-    Page<CountryLanguage> getLanguagesByCountryCode(String countryCode, Pageable pageRequest);
-    List<CountryLanguage> getLanguagesByCountryAndOfficialty(String countryCode, boolean isOfficial);
-    Page<CountryLanguage> getLanguagesByCountryAndOfficialty(String countryCode, boolean isOfficial, Pageable pageRequest);
-    CountryLanguage getLanguageByNameAndCountry(String language, String countryCode);
+    List<CountryLanguage> getAll();
+
+    Page<CountryLanguage> getAll(Pageable pageRequest);
+
+    List<CountryLanguage> getByCountryCode(String countryId);
+
+    Page<CountryLanguage> getByCountryCode(String countryCode, Pageable pageRequest);
+
+    List<CountryLanguage> getByCountryAndOfficialty(String countryCode, boolean isOfficial);
+
+    Page<CountryLanguage> getByCountryAndOfficialty(String countryCode, boolean isOfficial, Pageable pageRequest);
+
+    CountryLanguage getByNameAndCountry(String language, String countryCode);
     CountryLanguage save(CountryLanguage language);
     void remove(String language, String countryCode);
     List<String> getAllLanguageNames();
     Page<String> getAllLanguageNames(Pageable pageRequest);
-    List<CountryLanguage> filterLanguages(LanguageFilter filter);
-    Page<CountryLanguage> filterLanguages(LanguageFilter filter, Pageable pageRequest);
+
+    List<CountryLanguage> filter(LanguageFilter filter);
+
+    Page<CountryLanguage> filter(LanguageFilter filter, Pageable pageRequest);
 }

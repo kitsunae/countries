@@ -9,20 +9,30 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface CityService {
-    List<City> getCitiesByName(String name);
-    Page<City> getCitiesByName(String name, Pageable pageRequest);
+    List<City> getByName(String name);
+
+    Page<City> getByName(String name, Pageable pageRequest);
     List<City> getWorldCapitals();
     Page<City> getWorldCapitals(Pageable pageRequest);
-    List<City> getAllCities();
-    Page<City> getAllCities(Pageable pageRequest);
+
+    List<City> getAll();
+
+    Page<City> getAll(Pageable pageRequest);
     City edit(City city, Long cityId, String countryCode);
     City save(City city, String countryCode);
-    List<City> getCitiesByCountryCode(String countryCode);
-    Page<City> getCitiesByCountryCode(String countryCode, Pageable pageRequest);
-    List<City> getCitiesByCountry(Country country);
-    Page<City> getCitiesByCountry(Country country, Pageable pageRequest);
-    City getCityById(long id);
+
+    List<City> getByCountryCode(String countryCode);
+
+    Page<City> getByCountryCode(String countryCode, Pageable pageRequest);
+
+    List<City> getByCountry(Country country);
+
+    Page<City> getByCountry(Country country, Pageable pageRequest);
+
+    City getById(long id);
     void remove(Long id);
-    List<City> filterCities(CityFilter filter);
-    Page<City> filterCities(CityFilter filter, Pageable pageRequest);
+
+    List<City> filter(CityFilter filter);
+
+    Page<City> filter(CityFilter filter, Pageable pageRequest);
 }

@@ -31,9 +31,9 @@ public class StatisticsServiceImplTest {
     @Test
     public void getBiggestCountries(){
         List<Country> countries = statisticsService.getBiggestCountries(3);
-        assertEquals(countryService.getCountryByCode("RUS"), countries.get(0));
-        assertEquals(countryService.getCountryByCode("ATA"), countries.get(1));
-        assertEquals(countryService.getCountryByCode("CAN"), countries.get(2));
+        assertEquals(countryService.getByCode("RUS"), countries.get(0));
+        assertEquals(countryService.getByCode("ATA"), countries.get(1));
+        assertEquals(countryService.getByCode("CAN"), countries.get(2));
     }
 
     @Test
@@ -41,10 +41,10 @@ public class StatisticsServiceImplTest {
         Page<Country> countries = statisticsService.getBiggestCountries(new PageRequest(0, 10));
         assertEquals(10, countries.getContent().size());
         assertEquals(239/10+1, countries.getTotalPages());
-        assertEquals(countryService.getCountryByCode("RUS"), countries.getContent().get(0));
-        assertEquals(countryService.getCountryByCode("ATA"), countries.getContent().get(1));
-        assertEquals(countryService.getCountryByCode("CAN"), countries.getContent().get(2));
-        assertEquals(countryService.getCountryByCode("KAZ"), countries.getContent().get(9));
+        assertEquals(countryService.getByCode("RUS"), countries.getContent().get(0));
+        assertEquals(countryService.getByCode("ATA"), countries.getContent().get(1));
+        assertEquals(countryService.getByCode("CAN"), countries.getContent().get(2));
+        assertEquals(countryService.getByCode("KAZ"), countries.getContent().get(9));
     }
 
     @Test
@@ -89,11 +89,11 @@ public class StatisticsServiceImplTest {
     @Test
     public void getBiggestCities(){
         List<City> cities = statisticsService.getBiggestCities(5);
-        assertEquals(cityService.getCityById(1024), cities.get(0));
-        assertEquals(cityService.getCityById(2331), cities.get(1));
-        assertEquals(cityService.getCityById(206), cities.get(2));
-        assertEquals(cityService.getCityById(1890), cities.get(3));
-        assertEquals(cityService.getCityById(939), cities.get(4));
+        assertEquals(cityService.getById(1024), cities.get(0));
+        assertEquals(cityService.getById(2331), cities.get(1));
+        assertEquals(cityService.getById(206), cities.get(2));
+        assertEquals(cityService.getById(1890), cities.get(3));
+        assertEquals(cityService.getById(939), cities.get(4));
     }
 
     @Test
@@ -101,11 +101,11 @@ public class StatisticsServiceImplTest {
         Page<City> cities = statisticsService.getBiggestCities(new PageRequest(0, 5));
         assertEquals(5, cities.getContent().size());
         assertEquals(4079/5+1, cities.getTotalPages());
-        assertEquals(cityService.getCityById(1024), cities.getContent().get(0));
-        assertEquals(cityService.getCityById(2331), cities.getContent().get(1));
-        assertEquals(cityService.getCityById(206), cities.getContent().get(2));
-        assertEquals(cityService.getCityById(1890), cities.getContent().get(3));
-        assertEquals(cityService.getCityById(939), cities.getContent().get(4));
+        assertEquals(cityService.getById(1024), cities.getContent().get(0));
+        assertEquals(cityService.getById(2331), cities.getContent().get(1));
+        assertEquals(cityService.getById(206), cities.getContent().get(2));
+        assertEquals(cityService.getById(1890), cities.getContent().get(3));
+        assertEquals(cityService.getById(939), cities.getContent().get(4));
     }
 
     @Test

@@ -26,31 +26,31 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CountryLanguage> getAllLanguages() {
+    public List<CountryLanguage> getAll() {
         return languageRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CountryLanguage> getAllLanguages(Pageable pageRequest) {
+    public Page<CountryLanguage> getAll(Pageable pageRequest) {
         return languageRepository.findAll(pageRequest);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CountryLanguage> getLanguagesByCountryCode(String countryId) {
+    public List<CountryLanguage> getByCountryCode(String countryId) {
         return languageRepository.findByCountry_Code(countryId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CountryLanguage> getLanguagesByCountryCode(String countryCode, Pageable pageRequest) {
+    public Page<CountryLanguage> getByCountryCode(String countryCode, Pageable pageRequest) {
         return languageRepository.findByCountry_Code(countryCode, pageRequest);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CountryLanguage> getLanguagesByCountryAndOfficialty(String countryCode, boolean isOfficial) {
+    public List<CountryLanguage> getByCountryAndOfficialty(String countryCode, boolean isOfficial) {
         return languageRepository.findByCountry_Code(countryCode)
                 .stream()
                 .filter(countryLanguage -> countryLanguage.isOfficial()==isOfficial)
@@ -59,8 +59,8 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CountryLanguage> getLanguagesByCountryAndOfficialty(String countryCode, boolean isOfficial, Pageable pageRequest) {
-        List<CountryLanguage> list = getLanguagesByCountryAndOfficialty(countryCode, isOfficial);
+    public Page<CountryLanguage> getByCountryAndOfficialty(String countryCode, boolean isOfficial, Pageable pageRequest) {
+        List<CountryLanguage> list = getByCountryAndOfficialty(countryCode, isOfficial);
         List<CountryLanguage> result = list.stream()
                 .skip(pageRequest.getPageNumber()*pageRequest.getPageSize())
                 .limit(pageRequest.getPageSize())
@@ -70,7 +70,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
-    public CountryLanguage getLanguageByNameAndCountry(String language, String countryCode) {
+    public CountryLanguage getByNameAndCountry(String language, String countryCode) {
         CountryLanguageId id = new CountryLanguageId(countryCode, language);
         return languageRepository.findOne(id);
     }
@@ -101,14 +101,14 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CountryLanguage> filterLanguages(LanguageFilter filter) {
+    public List<CountryLanguage> filter(LanguageFilter filter) {
         return languageRepository.filterLanguages(filter);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CountryLanguage> filterLanguages(LanguageFilter filter, Pageable pageRequest) {
-        List<CountryLanguage> list = filterLanguages(filter);
+    public Page<CountryLanguage> filter(LanguageFilter filter, Pageable pageRequest) {
+        List<CountryLanguage> list = filter(filter);
         List<CountryLanguage> result = list.stream()
                 .skip(pageRequest.getPageNumber()*pageRequest.getPageSize())
                 .limit(pageRequest.getPageSize())

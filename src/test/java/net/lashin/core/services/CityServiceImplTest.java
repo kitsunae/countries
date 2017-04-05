@@ -32,7 +32,7 @@ public class CityServiceImplTest {
 
     @Test
     public void getCitiesByName() throws Exception {
-        List<City> cities = cityService.getCitiesByName("Hamilton");
+        List<City> cities = cityService.getByName("Hamilton");
         assertEquals(3, cities.size());
         List<Country> countries = cities.stream().map(City::getCountry).collect(Collectors.toList());
         for (Country country: countries){
@@ -42,19 +42,19 @@ public class CityServiceImplTest {
 
     @Test
     public void getCitiesByNamePageable(){
-        Page<City> cities = cityService.getCitiesByName("Hamilton", new PageRequest(1,1));
+        Page<City> cities = cityService.getByName("Hamilton", new PageRequest(1, 1));
         assertEquals(1, cities.getContent().size());
         assertEquals(3, cities.getTotalPages());
-        assertEquals(cityService.getCityById(1821L), cities.getContent().get(0));
+        assertEquals(cityService.getById(1821L), cities.getContent().get(0));
     }
 
     @Test
     public void getWorldCapitals() throws Exception {
         List<City> capitals = cityService.getWorldCapitals();
         assertEquals(232, capitals.size());
-        assertTrue(capitals.contains(cityService.getCityById(3580)));
+        assertTrue(capitals.contains(cityService.getById(3580)));
         for (City capital : capitals){
-            assertTrue(countryService.getCountriesByCapital(capital.getId()).contains(capital.getCountry()));
+            assertTrue(countryService.getByCapital(capital.getId()).contains(capital.getCountry()));
         }
     }
 
@@ -67,42 +67,42 @@ public class CityServiceImplTest {
 
     @Test
     public void getAllCities() throws Exception {
-        List<City> cities = cityService.getAllCities();
+        List<City> cities = cityService.getAll();
         assertEquals(4079, cities.size());
     }
 
     @Test
     public void getAllCitiesPageable(){
-        Page<City> cities = cityService.getAllCities(new PageRequest(1, 20));
+        Page<City> cities = cityService.getAll(new PageRequest(1, 20));
         assertEquals(20, cities.getContent().size());
         assertEquals(4079/20+1, cities.getTotalPages());
-        assertEquals(cityService.getCityById(21L), cities.getContent().get(0));
-        assertEquals(cityService.getCityById(40L), cities.getContent().get(19));
+        assertEquals(cityService.getById(21L), cities.getContent().get(0));
+        assertEquals(cityService.getById(40L), cities.getContent().get(19));
     }
 
     @Test
     @Rollback
     public void edit() throws Exception {
-        City city = cityService.getCityById(3580);
+        City city = cityService.getById(3580);
         city.setName("New Moscow");
         cityService.edit(city, 3580L, "RUS");
-        assertEquals(city, cityService.getCityById(3580));
+        assertEquals(city, cityService.getById(3580));
     }
 
     @Test
     @Rollback
     public void save() throws Exception {
-        Country country = countryService.getCountryByCode("USA");
+        Country country = countryService.getByCode("USA");
         City city = new City("Foolishing", "Dumb AC", 7_000_000, country);
         cityService.save(city, country.getCode());
-        assertTrue(cityService.getCitiesByCountry(country).contains(city));
+        assertTrue(cityService.getByCountry(country).contains(city));
     }
 
     @Test
     public void getCitiesByCountryCode() throws Exception {
-        List<City> cities = cityService.getCitiesByCountryCode("RUS");
+        List<City> cities = cityService.getByCountryCode("RUS");
         assertEquals(189, cities.size());
-        Country country = countryService.getCountryByCode("RUS");
+        Country country = countryService.getByCode("RUS");
         for (City city : cities){
             assertEquals(country, city.getCountry());
         }
@@ -110,17 +110,17 @@ public class CityServiceImplTest {
 
     @Test
     public void getCitiesByCountryCodePageable(){
-        Page<City> cities = cityService.getCitiesByCountryCode("RUS", new PageRequest(3, 20));
+        Page<City> cities = cityService.getByCountryCode("RUS", new PageRequest(3, 20));
         assertEquals(20, cities.getContent().size());
         assertEquals(189/20+1, cities.getTotalPages());
-        assertEquals(cityService.getCityById(3640), cities.getContent().get(0));
-        assertEquals(cityService.getCityById(3659), cities.getContent().get(19));
+        assertEquals(cityService.getById(3640), cities.getContent().get(0));
+        assertEquals(cityService.getById(3659), cities.getContent().get(19));
     }
 
     @Test
     public void getCitiesByCountry() throws Exception {
-        Country country = countryService.getCountryByCode("RUS");
-        List<City> cities = cityService.getCitiesByCountry(country);
+        Country country = countryService.getByCode("RUS");
+        List<City> cities = cityService.getByCountry(country);
         assertEquals(189, cities.size());
         for (City city : cities){
             assertEquals(country, city.getCountry());
@@ -129,31 +129,31 @@ public class CityServiceImplTest {
 
     @Test
     public void getCitiesByCountryPageable(){
-        Country country = countryService.getCountryByCode("RUS");
-        Page<City> cities = cityService.getCitiesByCountry(country, new PageRequest(3, 20));
+        Country country = countryService.getByCode("RUS");
+        Page<City> cities = cityService.getByCountry(country, new PageRequest(3, 20));
         assertEquals(20, cities.getContent().size());
         assertEquals(189/20+1, cities.getTotalPages());
-        assertEquals(cityService.getCityById(3640), cities.getContent().get(0));
-        assertEquals(cityService.getCityById(3659), cities.getContent().get(19));
+        assertEquals(cityService.getById(3640), cities.getContent().get(0));
+        assertEquals(cityService.getById(3659), cities.getContent().get(19));
     }
 
     @Test
     public void getCityById() throws Exception {
-        City city = cityService.getCityById(3580);
+        City city = cityService.getById(3580);
         assertEquals("Moscow", city.getName());
         assertEquals(Integer.valueOf(8389200), city.getPopulation());
         assertEquals("Moscow (City)", city.getDistrict());
-        assertEquals(countryService.getCountryByCode("RUS"), city.getCountry());
+        assertEquals(countryService.getByCode("RUS"), city.getCountry());
     }
 
     @Test
     @Rollback
     public void remove() throws Exception {
-        City city = cityService.getCityById(3580);
+        City city = cityService.getById(3580);
         cityService.remove(3580L);
-        assertNull(countryService.getCountryByCode("RUS").getCapital());
-        assertFalse(cityService.getCitiesByCountryCode("RUS").contains(city));
-        assertNull(cityService.getCityById(3580));
+        assertNull(countryService.getByCode("RUS").getCapital());
+        assertFalse(cityService.getByCountryCode("RUS").contains(city));
+        assertNull(cityService.getById(3580));
     }
 
 
@@ -161,22 +161,22 @@ public class CityServiceImplTest {
     public void filterCities(){
         CityFilter filter = new CityFilter();
         filter.setRegion("Eastern Europe");
-        List<City> result = cityService.filterCities(filter);
+        List<City> result = cityService.filter(filter);
         assertEquals(371, result.size());
         filter = new CityFilter();
         filter.setCountry("RUS");
         filter.setMinPopulation(1000000);
-        result = cityService.filterCities(filter);
+        result = cityService.filter(filter);
         assertEquals(12, result.size());
-        assertEquals(cityService.getCityById(3580), result.get(0));
+        assertEquals(cityService.getById(3580), result.get(0));
         filter = new CityFilter();
         filter.setContinent(Continent.AFRICA);
         filter.setMinPopulation(1000000);
-        result = cityService.filterCities(filter);
+        result = cityService.filter(filter);
         assertEquals(23, result.size());
         filter = new CityFilter();
         filter.setMinPopulation(5000000);
-        result = cityService.filterCities(filter);
+        result = cityService.filter(filter);
         assertEquals(24, result.size());
     }
 
@@ -184,10 +184,10 @@ public class CityServiceImplTest {
     public void filterCitiesPageable(){
         CityFilter filter = new CityFilter();
         filter.setRegion("Eastern Europe");
-        Page<City> result = cityService.filterCities(filter, new PageRequest(2, 20));
+        Page<City> result = cityService.filter(filter, new PageRequest(2, 20));
         assertEquals(20, result.getContent().size());
         assertEquals(371/20+1, result.getTotalPages());
-        assertEquals(cityService.getCityById(2954), result.getContent().get(0));
-        assertEquals(cityService.getCityById(3019), result.getContent().get(19));
+        assertEquals(cityService.getById(2954), result.getContent().get(0));
+        assertEquals(cityService.getById(3019), result.getContent().get(19));
     }
 }
