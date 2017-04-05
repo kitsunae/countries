@@ -1,8 +1,11 @@
 package net.lashin.core.filters;
 
+import net.lashin.core.beans.City;
 import net.lashin.core.beans.Continent;
 
-public class CityFilter {
+import java.util.function.Predicate;
+
+public class CityFilter implements Predicate<City> {
 
     private String district;
     private int minPopulation;
@@ -62,5 +65,11 @@ public class CityFilter {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    @Override
+    public boolean test(City city) {
+        return (continent == null || city.getCountry().getContinent() == continent) && (district == null || district.equals(city.getDistrict())) &&
+                (region == null || region.equals(city.getCountry().getRegion())) && (country == null || country.equals(city.getCountry().getCode()));
     }
 }

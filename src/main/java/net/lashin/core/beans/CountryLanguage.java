@@ -89,4 +89,13 @@ public class CountryLanguage {
     public int hashCode() {
         return countryLanguageId != null ? countryLanguageId.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "CountryLanguage{" +
+                "countryLanguageId=" + countryLanguageId +
+                ", isOfficial=" + isOfficial +
+                ", percentage=" + percentage +
+                '}';
+    }
 }

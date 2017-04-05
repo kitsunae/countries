@@ -133,28 +133,7 @@ public class CityServiceImpl implements CityService {
     @Override
     @Transactional(readOnly = true)
     public List<City> filterCities(CityFilter filter) {
-        if (filter.getCountry()!=null){
-            return cityRepository.findByCountryCode(filter.getCountry())
-                    .stream()
-                    .filter(city -> filter.getContinent() == null || city.getCountry().getContinent()==filter.getContinent())
-                    .filter(city -> filter.getRegion()==null || filter.getRegion().equals(city.getCountry().getRegion()))
-                    .filter(city -> city.getPopulation()<=filter.getMaxPopulation() && city.getPopulation()>=filter.getMinPopulation())
-                    .collect(Collectors.toList());
-        }
-        if (filter.getContinent()!=null){
-            return cityRepository.findByCountry_Continent(filter.getContinent())
-                    .stream()
-                    .filter(city -> filter.getRegion() == null || filter.getRegion().equals(city.getCountry().getRegion()))
-                    .filter(city -> city.getPopulation()<=filter.getMaxPopulation() && city.getPopulation()>=filter.getMinPopulation())
-                    .collect(Collectors.toList());
-        }
-        if (filter.getRegion()!=null){
-            return cityRepository.findByCountry_Region(filter.getRegion())
-                    .stream()
-                    .filter(city -> city.getPopulation()<=filter.getMaxPopulation() && city.getPopulation()>=filter.getMinPopulation())
-                    .collect(Collectors.toList());
-        }
-        return cityRepository.filterCities(filter.getMinPopulation(), filter.getMaxPopulation());
+        return cityRepository.filterCities(filter);
     }
 
     @Override

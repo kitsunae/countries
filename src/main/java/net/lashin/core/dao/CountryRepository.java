@@ -2,12 +2,14 @@ package net.lashin.core.dao;
 
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
+import net.lashin.core.filters.CountryFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface CountryRepository extends JpaRepository<Country, String> {
     List<Country> findByName(String name);
@@ -34,4 +36,14 @@ public interface CountryRepository extends JpaRepository<Country, String> {
             "and (c.gnpOld between ?11 and ?12 or c.gnpOld is null)")
     List<Country> filterCountries(double minSurface, double maxSurface, int minYear, int maxYear, int minPopulation, int maxPopulation,
                                   double minLifeExpect, double maxLifeExpect, double minGnp, double maxGnp, double minGnpOld, double maxGnpOld);
+
+    default List<Country> filterCountries(CountryFilter filter) {
+        List<Country> queryResults = filterCountries(filter.getMinSurfaceArea(), filter.getMaxSurfaceArea(),
+                filter.getMinIndepYear(), filter.getMaxIndepYear(),
+                filter.getMinPopulation(), filter.getMaxPopulation(),
+                filter.getMinLifeExpectancy(), filter.getMaxLifeExpectancy(),
+                filter.getMinGnp(), filter.getMaxGnp(),
+                filter.getMinGnpOld(), filter.getMaxGnpOld());
+        return queryResults.stream().filter(filter).collect(Collectors.toList());
+    }
 }

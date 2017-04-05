@@ -187,7 +187,7 @@ public class CityServiceImplTest {
         Page<City> result = cityService.filterCities(filter, new PageRequest(2, 20));
         assertEquals(20, result.getContent().size());
         assertEquals(371/20+1, result.getTotalPages());
-        assertEquals(cityService.getCityById(3487), result.getContent().get(0));
-        assertEquals(cityService.getCityById(2938), result.getContent().get(19));
+        assertEquals(cityService.getCityById(2954), result.getContent().get(0));
+        assertEquals(cityService.getCityById(3019), result.getContent().get(19));
     }
 }

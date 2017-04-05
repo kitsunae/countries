@@ -1,5 +1,8 @@
 package net.lashin.core.beans;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Continent {
     ASIA("Asia"),
     EUROPE("Europe"),
@@ -9,21 +12,26 @@ public enum Continent {
     ANTARCTICA("Antarctica"),
     SOUTH_AMERICA("South America");
 
+    private static final Map<String, Continent> map = new HashMap<>();
+
+    static {
+        for (Continent c : Continent.values()) {
+            map.put(c.toString(), c);
+        }
+    }
+
     private String name;
 
     Continent(String name) {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
+    public static Continent fromString(String name) {
+        return map.get(name);
     }
 
-    public static Continent fromString(String name){
-        for (Continent c : values()){
-            if (c.getName().equals(name))
-                return c;
-        }
-        return null;
+    @Override
+    public String toString() {
+        return name;
     }
 }

@@ -4,6 +4,7 @@ import net.lashin.core.beans.Country;
 import net.lashin.core.hateoas.CountryResource;
 import net.lashin.web.controllers.CityController;
 import net.lashin.web.controllers.CountryController;
+import net.lashin.web.controllers.LanguageController;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class CountryResourceAsm extends ResourceAssemblerSupport<Country, Countr
         resource.setName(country.getName());
         resource.setCode(country.getCode());
         resource.setCode2(country.getCode2());
-        resource.setContinent(country.getContinent().getName());
+        resource.setContinent(country.getContinent().toString());
         resource.setRegion(country.getRegion());
         resource.setSurfaceArea(country.getSurfaceArea());
         resource.setIndepYear(country.getIndepYear());
@@ -40,8 +41,8 @@ public class CountryResourceAsm extends ResourceAssemblerSupport<Country, Countr
         resource.add(self);
         Link cities = linkTo(methodOn(CityController.class).getAllCitiesOfCountry(country.getCode())).withRel("cities");
         resource.add(cities);
-//        Link languages = linkTo(methodOn(LanguageController.class).getLanguagesByCountry(country.getCode())).withRel("languages");
-//        resource.add(languages);
+        Link languages = linkTo(methodOn(LanguageController.class).getLanguagesByCountry(country.getCode())).withRel("languages");
+        resource.add(languages);
         return resource;
     }
 

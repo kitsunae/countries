@@ -102,12 +102,7 @@ public class LanguageServiceImpl implements LanguageService {
     @Override
     @Transactional(readOnly = true)
     public List<CountryLanguage> filterLanguages(LanguageFilter filter) {
-        List<CountryLanguage> languages = languageRepository.filterLanguages(filter.getMinPercentage(), filter.getMaxPercentage());
-        return languages.stream()
-                .filter(cl->filter.getContinent()==null || cl.getCountry().getContinent()==filter.getContinent())
-                .filter(cl->filter.getRegion()==null || filter.getRegion().equals(cl.getCountry().getRegion()))
-                .filter(cl-> filter.isOfficial()==null || cl.isOfficial()==filter.isOfficial())
-                .collect(Collectors.toList());
+        return languageRepository.filterLanguages(filter);
     }
 
     @Override

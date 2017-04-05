@@ -80,6 +80,7 @@ public class City {
         this.population = population;
     }
 
+    @SuppressWarnings("SimplifiableIfStatement")
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,5 +101,16 @@ public class City {
         result = 31 * result + (getDistrict() != null ? getDistrict().hashCode() : 0);
         result = 31 * result + (getCountry() != null ? getCountry().hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", district='" + district + '\'' +
+                ", population=" + population +
+                ", country=" + country +
+                '}';
     }
 }

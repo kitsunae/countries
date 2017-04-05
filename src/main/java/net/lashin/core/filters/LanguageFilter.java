@@ -1,8 +1,11 @@
 package net.lashin.core.filters;
 
 import net.lashin.core.beans.Continent;
+import net.lashin.core.beans.CountryLanguage;
 
-public class LanguageFilter {
+import java.util.function.Predicate;
+
+public class LanguageFilter implements Predicate<CountryLanguage> {
 
     private Continent continent;
     private String region;
@@ -23,6 +26,7 @@ public class LanguageFilter {
         this.continent = continent;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public String getRegion() {
         return region;
     }
@@ -47,11 +51,19 @@ public class LanguageFilter {
         this.maxPercentage = maxPercentage;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Boolean isOfficial() {
         return isOfficial;
     }
 
     public void setOfficial(Boolean official) {
         isOfficial = official;
+    }
+
+    @Override
+    public boolean test(CountryLanguage countryLanguage) {
+        return (this.getContinent() == null || countryLanguage.getCountry().getContinent() == this.getContinent()) &&
+                (this.getRegion() == null || this.getRegion().equals(countryLanguage.getCountry().getRegion())) &&
+                (this.isOfficial() == null || countryLanguage.isOfficial() == this.isOfficial());
     }
 }

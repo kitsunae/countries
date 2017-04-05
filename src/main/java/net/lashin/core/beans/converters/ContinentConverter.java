@@ -9,7 +9,7 @@ import javax.persistence.Converter;
 public class ContinentConverter implements AttributeConverter<Continent, String> {
     @Override
     public String convertToDatabaseColumn(Continent attribute) {
-        return attribute.getName();
+        return attribute.toString();
     }
 
     @Override

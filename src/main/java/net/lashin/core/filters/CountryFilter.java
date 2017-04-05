@@ -1,10 +1,12 @@
 package net.lashin.core.filters;
 
 import net.lashin.core.beans.Continent;
+import net.lashin.core.beans.Country;
 
 import java.time.LocalDate;
+import java.util.function.Predicate;
 
-public class CountryFilter {
+public class CountryFilter implements Predicate<Country> {
 
     private Continent continent;
     private String region;
@@ -37,19 +39,19 @@ public class CountryFilter {
         this.maxGnpOld = 9999999999.99;
     }
 
-    public boolean isEnabledYearFilter(){
+    private boolean isEnabledYearFilter() {
         return minIndepYear!=-10000 || maxIndepYear != LocalDate.now().getYear();
     }
 
-    public boolean isEnabledLifeExpectFilter(){
+    private boolean isEnabledLifeExpectFilter() {
         return minLifeExpectancy != 0 || maxLifeExpectancy != 999.99;
     }
 
-    public boolean isEnabledGnpFilter(){
+    private boolean isEnabledGnpFilter() {
         return minGnp!=0 || maxGnp != 9999999999.99;
     }
 
-    public boolean isEnabledGnpOldFilter(){
+    private boolean isEnabledGnpOldFilter() {
         return minGnpOld!=0 || maxGnpOld != 9999999999.99;
     }
 
@@ -61,6 +63,7 @@ public class CountryFilter {
         this.continent = continent;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public String getRegion() {
         return region;
     }
@@ -69,6 +72,7 @@ public class CountryFilter {
         this.region = region;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public String getGovernmentForm() {
         return governmentForm;
     }
@@ -171,5 +175,16 @@ public class CountryFilter {
 
     public void setMaxGnpOld(double maxGnpOld) {
         this.maxGnpOld = maxGnpOld;
+    }
+
+    @Override
+    public boolean test(Country country) {
+        return (!(country.getIndepYear() == null && this.isEnabledYearFilter())) &&
+                (!(country.getLifeExpectancy() == null && this.isEnabledLifeExpectFilter())) &&
+                (!(country.getGnp() == null && this.isEnabledGnpFilter())) &&
+                (!(country.getGnpOld() == null && this.isEnabledGnpOldFilter())) &&
+                (this.getContinent() == null || country.getContinent() == this.getContinent()) &&
+                (this.getRegion() == null || this.getRegion().equals(country.getRegion())) &&
+                (this.getGovernmentForm() == null || this.getGovernmentForm().equals(country.getGovernmentForm()));
     }
 }
