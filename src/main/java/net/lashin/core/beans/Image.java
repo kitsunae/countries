@@ -1,17 +1,15 @@
 package net.lashin.core.beans;
 
-import javax.persistence.*;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
 
 @SuppressWarnings("WeakerAccess")
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@MappedSuperclass
 public abstract class Image {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected long id;
     @NotNull
     protected String url;
     @NotNull
@@ -22,13 +20,9 @@ public abstract class Image {
     protected Image() {
     }
 
-    public long getId() {
-        return id;
-    }
+    public abstract long getId();
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    public abstract void setId(long id);
 
     public String getUrl() {
         return url;
