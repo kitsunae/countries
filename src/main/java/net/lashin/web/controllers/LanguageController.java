@@ -1,10 +1,15 @@
 package net.lashin.web.controllers;
 
 import net.lashin.core.beans.CountryLanguage;
+import net.lashin.core.filters.LanguageFilter;
 import net.lashin.core.hateoas.CountryLanguageResource;
+import net.lashin.core.hateoas.asm.ResourceHandler;
 import net.lashin.core.services.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,15 +20,15 @@ import java.util.stream.Collectors;
 public class LanguageController {
 
     private final LanguageService service;
-    private final ResourceAssemblerSupport<CountryLanguage, CountryLanguageResource> assembler;
+    private final ResourceHandler<CountryLanguage, CountryLanguageResource> assembler;
 
     @Autowired
-    public LanguageController(LanguageService service, ResourceAssemblerSupport<CountryLanguage, CountryLanguageResource> assembler) {
+    public LanguageController(LanguageService service, ResourceHandler<CountryLanguage, CountryLanguageResource> assembler) {
         this.service = service;
         this.assembler = assembler;
     }
 
-    @RequestMapping(value = "/country/{countryCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/butch/country/{countryCode}", method = RequestMethod.GET)
     public List<CountryLanguageResource> getLanguagesByCountry(@PathVariable String countryCode){
         return service.getByCountryCode(countryCode)
                 .stream()
@@ -31,22 +36,46 @@ public class LanguageController {
                 .collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/official/{countryCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/country/{countryCode}", method = RequestMethod.GET)
+    public PagedResources<CountryLanguageResource> getLanguagesByCountry(@PathVariable String countryCode, Pageable pageable, PagedResourcesAssembler<CountryLanguage> pageAsm) {
+        Page<CountryLanguage> languages = service.getByCountryCode(countryCode, pageable);
+        return pageAsm.toResource(languages, assembler);
+    }
+
+    @RequestMapping(value = "/butch/official/{countryCode}", method = RequestMethod.GET)
     public List<CountryLanguageResource> getOfficialLanguagesOfCountry(@PathVariable String countryCode){
         return getLanguagesByCountryAndOfficialty(countryCode, true);
     }
 
-    @RequestMapping(value = "/unofficial/{countryCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/official/{countryCode}", method = RequestMethod.GET)
+    public PagedResources<CountryLanguageResource> getOfficialLanguagesOfCountry(@PathVariable String countryCode, Pageable pageable, PagedResourcesAssembler<CountryLanguage> pageAsm) {
+        Page<CountryLanguage> languages = getPagedByCountryAndOfficialty(countryCode, true, pageable);
+        return pageAsm.toResource(languages, assembler);
+    }
+
+    @RequestMapping(value = "/butch/unofficial/{countryCode}", method = RequestMethod.GET)
     public List<CountryLanguageResource> getUnofficialLanguagesOfCountry(@PathVariable String countryCode){
         return getLanguagesByCountryAndOfficialty(countryCode, false);
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/unofficial/{countryCode}", method = RequestMethod.GET)
+    public PagedResources<CountryLanguageResource> getUnofficialLanguagesOfCountry(@PathVariable String countryCode, Pageable pageable, PagedResourcesAssembler<CountryLanguage> pageAsm) {
+        Page<CountryLanguage> languages = getPagedByCountryAndOfficialty(countryCode, false, pageable);
+        return pageAsm.toResource(languages, assembler);
+    }
+
+    @RequestMapping(value = "/butch/all", method = RequestMethod.GET)
     public List<CountryLanguageResource> getAllLanguages(){
         return service.getAll()
                 .stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public PagedResources<CountryLanguageResource> getAllLanguages(Pageable pageable, PagedResourcesAssembler<CountryLanguage> pageAsm) {
+        Page<CountryLanguage> languages = service.getAll(pageable);
+        return pageAsm.toResource(languages, assembler);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -57,13 +86,24 @@ public class LanguageController {
 
     @RequestMapping(method = RequestMethod.POST)
     public CountryLanguageResource save(@RequestBody CountryLanguageResource language){
-        return assembler.toResource(service.save(language.toCountryLanguage()));
+        return assembler.toResource(service.save(assembler.toEntity(language)));
     }
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     public void delete(@RequestParam(value = "languageName") String languageName,
                        @RequestParam(value = "countryCode") String countryCode){
         service.remove(languageName, countryCode);
+    }
+
+    @RequestMapping(value = "/filter", method = RequestMethod.POST)
+    public PagedResources<CountryLanguageResource> filterLanguages(@RequestBody LanguageFilter filter, Pageable pageable, PagedResourcesAssembler<CountryLanguage> pageAsm) {
+        Page<CountryLanguage> languages = service.filter(filter, pageable);
+        return pageAsm.toResource(languages, assembler);
+    }
+
+    @RequestMapping(value = "/butch/filter", method = RequestMethod.POST)
+    public List<CountryLanguageResource> filterLAnguages(@RequestBody LanguageFilter filter) {
+        return service.filter(filter).stream().map(assembler::toResource).collect(Collectors.toList());
     }
 
     //TODO editing language method (think about changing other languages in case of changing percentage)
@@ -73,5 +113,9 @@ public class LanguageController {
                 .stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
+    }
+
+    private Page<CountryLanguage> getPagedByCountryAndOfficialty(String countryCode, boolean isOfficial, Pageable pageable) {
+        return service.getByCountryAndOfficialty(countryCode, isOfficial, pageable);
     }
 }

@@ -1,7 +1,5 @@
 package net.lashin.core.hateoas;
 
-import net.lashin.core.beans.Country;
-import net.lashin.core.beans.CountryLanguage;
 import org.springframework.hateoas.ResourceSupport;
 
 public class CountryLanguageResource extends ResourceSupport {
@@ -10,6 +8,7 @@ public class CountryLanguageResource extends ResourceSupport {
     private String language;
     private boolean isOfficial;
     private Double percentage;
+    private String description;
 
     public String getCountryCode() {
         return countryCode;
@@ -43,11 +42,11 @@ public class CountryLanguageResource extends ResourceSupport {
         this.percentage = percentage;
     }
 
-    public CountryLanguage toCountryLanguage(Country country){
-        return new CountryLanguage(isOfficial, percentage, country, language);
+    public String getDescription() {
+        return description;
     }
 
-    public CountryLanguage toCountryLanguage(){
-        return new CountryLanguage(countryCode,language,isOfficial, percentage);
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -4,6 +4,8 @@ package net.lashin.core.beans;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class City {
@@ -16,9 +18,12 @@ public class City {
     @Size(max = 20)
     private String district;
     private Integer population;
+    private String description;
     @ManyToOne
     @JoinColumn(name = "countryCode", nullable = false)
     private Country country;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "city", fetch = FetchType.EAGER)
+    private Set<CityImage> images = new HashSet<>();
 
     protected City() {
     }
@@ -78,6 +83,22 @@ public class City {
 
     public void setPopulation(Integer population) {
         this.population = population;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<CityImage> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<CityImage> images) {
+        this.images = images;
     }
 
     @SuppressWarnings("SimplifiableIfStatement")

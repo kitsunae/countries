@@ -5,16 +5,15 @@ import net.lashin.core.hateoas.CountryLanguageResource;
 import net.lashin.web.controllers.CountryController;
 import net.lashin.web.controllers.LanguageController;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Component
-public class CountryLanguageResourceAsm extends ResourceAssemblerSupport<CountryLanguage, CountryLanguageResource> {
+public class CountryLanguageResourceHandler extends ResourceHandler<CountryLanguage, CountryLanguageResource> {
 
-    public CountryLanguageResourceAsm(){
+    public CountryLanguageResourceHandler() {
         super(LanguageController.class, CountryLanguageResource.class);
     }
 
@@ -25,12 +24,20 @@ public class CountryLanguageResourceAsm extends ResourceAssemblerSupport<Country
         resource.setLanguage(language.getLanguage());
         resource.setOfficial(language.isOfficial());
         resource.setPercentage(language.getPercentage());
+        resource.setDescription(language.getDescription());
         Link self = linkTo(methodOn(LanguageController.class).getLanguage(language.getLanguage(), language.getCountryCode())).withSelfRel();
         resource.add(self);
         Link country = linkTo(methodOn(CountryController.class).getCountry(language.getCountryCode())).withRel("country");
         resource.add(country);
-        Link allCountries = linkTo(methodOn(CountryController.class).getCountriesWithSameLanguage(language.getLanguage())).withRel("allCountries");
+        Link allCountries = linkTo(methodOn(CountryController.class).getCountriesWithSameLanguage(language.getLanguage(), null, null)).withRel("allCountries");
         resource.add(allCountries);
         return resource;
+    }
+
+    @Override
+    public CountryLanguage toEntity(CountryLanguageResource resource) {
+        CountryLanguage language = new CountryLanguage(resource.getCountryCode(), resource.getLanguage(), resource.isOfficial(), resource.getPercentage());
+        language.setDescription(resource.getDescription());
+        return language;
     }
 }

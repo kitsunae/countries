@@ -1,14 +1,15 @@
 package net.lashin.web.controllers;
 
 import net.lashin.core.beans.City;
+import net.lashin.core.filters.CityFilter;
 import net.lashin.core.hateoas.CityResource;
+import net.lashin.core.hateoas.asm.ResourceHandler;
 import net.lashin.core.services.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +20,10 @@ import java.util.stream.Collectors;
 public class CityController {
 
     private final CityService service;
-    private final ResourceAssemblerSupport<City, CityResource> assembler;
+    private final ResourceHandler<City, CityResource> assembler;
 
     @Autowired
-    public CityController(CityService service, ResourceAssemblerSupport<City, CityResource> assembler) {
+    public CityController(CityService service, ResourceHandler<City, CityResource> assembler) {
         this.service = service;
         this.assembler = assembler;
     }
@@ -83,23 +84,34 @@ public class CityController {
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET)
-    public PagedResources<CityResource> getCitiesByName(String name, Pageable pageable, PagedResourcesAssembler<City> pageAsm) {
+    public PagedResources<CityResource> getCitiesByName(@RequestParam(value = "name") String name, Pageable pageable, PagedResourcesAssembler<City> pageAsm) {
         Page<City> cities = service.getByName(name, pageable);
         return pageAsm.toResource(cities, assembler);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public CityResource saveCity(@RequestBody CityResource cityResource){
-        return assembler.toResource(service.save(cityResource.toCity(), cityResource.getCountryCode()));
+        return assembler.toResource(service.save(assembler.toEntity(cityResource), cityResource.getCountryCode()));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public CityResource editCity(@RequestBody CityResource city, @PathVariable Long id){
-        return assembler.toResource(service.edit(city.toCity(), id, city.getCountryCode()));
+        return assembler.toResource(service.edit(assembler.toEntity(city), id, city.getCountryCode()));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteCity(@PathVariable Long id){
         service.remove(id);
+    }
+
+    @RequestMapping(value = "/filter", method = RequestMethod.POST)
+    public PagedResources<CityResource> filterCities(@RequestBody CityFilter filter, Pageable pageable, PagedResourcesAssembler<City> pageAsm) {
+        Page<City> cities = service.filter(filter, pageable);
+        return pageAsm.toResource(cities, assembler);
+    }
+
+    @RequestMapping(value = "/butch/filter", method = RequestMethod.POST)
+    public List<CityResource> filterCities(CityFilter filter) {
+        return service.filter(filter).stream().map(assembler::toResource).collect(Collectors.toList());
     }
 }

@@ -6,7 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Country {
@@ -36,6 +38,7 @@ public class Country {
     @Size(max = 2)
     @NotNull
     private String code2;
+    private String description;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "capital", referencedColumnName = "id")
     private City capital;
@@ -43,6 +46,8 @@ public class Country {
     private List<City> cities = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "country", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CountryLanguage> languages = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country", fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<CountryImage> images = new HashSet<>();
 
     protected Country() {
     }
@@ -189,6 +194,14 @@ public class Country {
         this.code2 = code2;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public City getCapital() {
         return this.capital;
     }
@@ -204,6 +217,7 @@ public class Country {
         city.setCountry(this);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void addLanguage(CountryLanguage language){
         if (!this.languages.contains(language))
             this.languages.add(language);
@@ -220,6 +234,14 @@ public class Country {
         for (CountryLanguage language : languages){
             addLanguage(language);
         }
+    }
+
+    public Set<CountryImage> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<CountryImage> images) {
+        this.images = images;
     }
 
     @Override

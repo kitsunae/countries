@@ -1,8 +1,8 @@
 package net.lashin.core.hateoas;
 
-import net.lashin.core.beans.Continent;
-import net.lashin.core.beans.Country;
 import org.springframework.hateoas.ResourceSupport;
+
+import java.util.List;
 
 public class CountryResource extends ResourceSupport {
 
@@ -21,6 +21,8 @@ public class CountryResource extends ResourceSupport {
     private String headOfState;
     private String code2;
     private CityResource capital;
+    private String description;
+    private List<CountryImageResource> images;
 
 
     public String getCode() {
@@ -143,10 +145,20 @@ public class CountryResource extends ResourceSupport {
         this.capital = capital;
     }
 
-    public Country toCountry(){
-        Country country = new Country(code, name, Continent.fromString(continent), region, surfaceArea, indepYear, population, lifeExpectancy, gnp, gnpOld, localName, governmentForm, headOfState, code2);
-        country.setCapital(capital.toCity(country));
-        return country;
+    public String getDescription() {
+        return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+    public List<CountryImageResource> getImages() {
+        return images;
+    }
+
+    public void setImages(List<CountryImageResource> images) {
+        this.images = images;
+    }
 }

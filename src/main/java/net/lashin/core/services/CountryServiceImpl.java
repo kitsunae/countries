@@ -121,7 +121,6 @@ public class CountryServiceImpl implements CountryService{
         return getByContinent(continent, pageRequest);
     }
 
-    //TODO edit
     @Override
     @Transactional(readOnly = true)
     public List<Country> getByLanguage(String language) {

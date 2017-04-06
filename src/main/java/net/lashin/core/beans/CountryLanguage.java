@@ -14,6 +14,7 @@ public class CountryLanguage {
     @org.hibernate.annotations.Type(type = "true_false")
     private boolean isOfficial;
     private Double percentage;
+    private String description;
     @ManyToOne
     @JoinColumn(name = "countryCode", insertable = false, updatable = false)
     private Country country;
@@ -72,6 +73,14 @@ public class CountryLanguage {
 
     public void setPercentage(Double percentage) {
         this.percentage = percentage;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

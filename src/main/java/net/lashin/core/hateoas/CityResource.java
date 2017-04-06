@@ -1,8 +1,8 @@
 package net.lashin.core.hateoas;
 
-import net.lashin.core.beans.City;
-import net.lashin.core.beans.Country;
 import org.springframework.hateoas.ResourceSupport;
+
+import java.util.List;
 
 public class CityResource extends ResourceSupport{
 
@@ -11,6 +11,8 @@ public class CityResource extends ResourceSupport{
     private String countryCode;
     private String district;
     private Integer population;
+    private String description;
+    private List<CityImageResource> images;
 
     public String getName() {
         return name;
@@ -52,11 +54,19 @@ public class CityResource extends ResourceSupport{
         this.identity = identity;
     }
 
-    public City toCity(){
-        return new City(identity, name, district, population);
+    public String getDescription() {
+        return description;
     }
 
-    public City toCity(Country country){
-        return new City(identity, name, district, population, country);
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<CityImageResource> getImages() {
+        return images;
+    }
+
+    public void setImages(List<CityImageResource> images) {
+        this.images = images;
     }
 }
