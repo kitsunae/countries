@@ -112,6 +112,10 @@ public class City {
         if (getName() != null ? !getName().equals(city.getName()) : city.getName() != null) return false;
         if (getDistrict() != null ? !getDistrict().equals(city.getDistrict()) : city.getDistrict() != null)
             return false;
+        if (getPopulation() != null ? !getPopulation().equals(city.getPopulation()) : city.getPopulation() != null)
+            return false;
+        if (getDescription() != null ? !getDescription().equals(city.getDescription()) : city.getDescription() != null)
+            return false;
         return getCountry() != null ? getCountry().equals(city.getCountry()) : city.getCountry() == null;
 
     }
@@ -120,6 +124,8 @@ public class City {
     public int hashCode() {
         int result = getName() != null ? getName().hashCode() : 0;
         result = 31 * result + (getDistrict() != null ? getDistrict().hashCode() : 0);
+        result = 31 * result + (getPopulation() != null ? getPopulation().hashCode() : 0);
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         result = 31 * result + (getCountry() != null ? getCountry().hashCode() : 0);
         return result;
     }

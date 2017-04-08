@@ -56,17 +56,17 @@ public abstract class Image {
 
         Image image = (Image) o;
 
-        if (getId() != image.getId()) return false;
         if (getUrl() != null ? !getUrl().equals(image.getUrl()) : image.getUrl() != null) return false;
-        return getType() == image.getType();
+        if (getType() != image.getType()) return false;
+        return getDescription() != null ? getDescription().equals(image.getDescription()) : image.getDescription() == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (getId() ^ (getId() >>> 32));
-        result = 31 * result + (getUrl() != null ? getUrl().hashCode() : 0);
+        int result = getUrl() != null ? getUrl().hashCode() : 0;
         result = 31 * result + (getType() != null ? getType().hashCode() : 0);
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         return result;
     }
 }

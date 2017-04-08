@@ -3,7 +3,8 @@ package net.lashin.core.beans;
 import javax.persistence.*;
 
 
-@Entity(name = "city_image")
+@Entity
+@Table(name = "city_image")
 public class CityImage extends Image {
 
     @Id
@@ -29,5 +30,24 @@ public class CityImage extends Image {
 
     public void setCity(City city) {
         this.city = city;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        CityImage image = (CityImage) o;
+
+        return getCity() != null ? getCity().equals(image.getCity()) : image.getCity() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (getCity() != null ? getCity().hashCode() : 0);
+        return result;
     }
 }

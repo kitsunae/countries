@@ -245,24 +245,64 @@ public class Country {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Country country = (Country) o;
-
-        return code.equals(country.getCode());
-    }
-
-    @Override
     public String toString() {
         return "Country{" +
                 "name='" + name + '\'' +
                 '}';
     }
 
+
+    @SuppressWarnings("SimplifiableIfStatement")
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Country country = (Country) o;
+
+        if (Double.compare(country.getSurfaceArea(), getSurfaceArea()) != 0) return false;
+        if (getPopulation() != country.getPopulation()) return false;
+        if (getCode() != null ? !getCode().equals(country.getCode()) : country.getCode() != null) return false;
+        if (getName() != null ? !getName().equals(country.getName()) : country.getName() != null) return false;
+        if (getContinent() != country.getContinent()) return false;
+        if (getRegion() != null ? !getRegion().equals(country.getRegion()) : country.getRegion() != null) return false;
+        if (getIndepYear() != null ? !getIndepYear().equals(country.getIndepYear()) : country.getIndepYear() != null)
+            return false;
+        if (getLifeExpectancy() != null ? !getLifeExpectancy().equals(country.getLifeExpectancy()) : country.getLifeExpectancy() != null)
+            return false;
+        if (getGnp() != null ? !getGnp().equals(country.getGnp()) : country.getGnp() != null) return false;
+        if (getGnpOld() != null ? !getGnpOld().equals(country.getGnpOld()) : country.getGnpOld() != null) return false;
+        if (getLocalName() != null ? !getLocalName().equals(country.getLocalName()) : country.getLocalName() != null)
+            return false;
+        if (getGovernmentForm() != null ? !getGovernmentForm().equals(country.getGovernmentForm()) : country.getGovernmentForm() != null)
+            return false;
+        if (getHeadOfState() != null ? !getHeadOfState().equals(country.getHeadOfState()) : country.getHeadOfState() != null)
+            return false;
+        if (getCode2() != null ? !getCode2().equals(country.getCode2()) : country.getCode2() != null) return false;
+        return getDescription() != null ? getDescription().equals(country.getDescription()) : country.getDescription() == null;
+
+    }
+
     @Override
     public int hashCode() {
-        return code.hashCode();
+        int result;
+        long temp;
+        result = getCode() != null ? getCode().hashCode() : 0;
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getContinent() != null ? getContinent().hashCode() : 0);
+        result = 31 * result + (getRegion() != null ? getRegion().hashCode() : 0);
+        temp = Double.doubleToLongBits(getSurfaceArea());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (getIndepYear() != null ? getIndepYear().hashCode() : 0);
+        result = 31 * result + getPopulation();
+        result = 31 * result + (getLifeExpectancy() != null ? getLifeExpectancy().hashCode() : 0);
+        result = 31 * result + (getGnp() != null ? getGnp().hashCode() : 0);
+        result = 31 * result + (getGnpOld() != null ? getGnpOld().hashCode() : 0);
+        result = 31 * result + (getLocalName() != null ? getLocalName().hashCode() : 0);
+        result = 31 * result + (getGovernmentForm() != null ? getGovernmentForm().hashCode() : 0);
+        result = 31 * result + (getHeadOfState() != null ? getHeadOfState().hashCode() : 0);
+        result = 31 * result + (getCode2() != null ? getCode2().hashCode() : 0);
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        return result;
     }
 }
