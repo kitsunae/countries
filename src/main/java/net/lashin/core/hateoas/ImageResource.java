@@ -40,4 +40,14 @@ public class ImageResource extends ResourceSupport {
     public void setType(ImageResourceType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "ImageResource{" +
+                "identity=" + identity +
+                ", size='" + size + '\'' +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }

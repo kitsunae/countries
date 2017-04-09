@@ -2,10 +2,14 @@ package net.lashin.core.filters;
 
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Continent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Predicate;
 
 public class CityFilter implements Predicate<City> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CityFilter.class);
 
     private String district;
     private int minPopulation;
@@ -69,7 +73,20 @@ public class CityFilter implements Predicate<City> {
 
     @Override
     public boolean test(City city) {
+        LOGGER.trace("Filtering city {}", city);
         return (continent == null || city.getCountry().getContinent() == continent) && (district == null || district.equals(city.getDistrict())) &&
                 (region == null || region.equals(city.getCountry().getRegion())) && (country == null || country.equals(city.getCountry().getCode()));
+    }
+
+    @Override
+    public String toString() {
+        return "CityFilter{" +
+                "district='" + district + '\'' +
+                ", minPopulation=" + minPopulation +
+                ", maxPopulation=" + maxPopulation +
+                ", continent=" + continent +
+                ", region='" + region + '\'' +
+                ", country='" + country + '\'' +
+                '}';
     }
 }

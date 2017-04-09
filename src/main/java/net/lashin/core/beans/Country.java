@@ -248,10 +248,10 @@ public class Country {
     @Override
     public String toString() {
         return "Country{" +
-                "name='" + name + '\'' +
+                "code='" + code + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
-
 
     @SuppressWarnings("SimplifiableIfStatement")
     @Override

@@ -7,6 +7,8 @@ import net.lashin.core.hateoas.CityResource;
 import net.lashin.core.hateoas.ImageResource;
 import net.lashin.web.controllers.CityController;
 import net.lashin.web.controllers.CountryController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
@@ -21,6 +23,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @Component
 public class CityResourceHandler extends ResourceHandler<City, CityResource> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CityResourceHandler.class);
+
     private final ResourceHandler<Image, ImageResource> imageHandler;
 
     @Autowired
@@ -31,6 +35,7 @@ public class CityResourceHandler extends ResourceHandler<City, CityResource> {
 
     @Override
     public CityResource toResource(City city) {
+        LOGGER.trace("Translating {} to resource", city);
         if (city==null) return null;
         CityResource res = new CityResource();
         res.setIdentity(city.getId());
@@ -53,6 +58,7 @@ public class CityResourceHandler extends ResourceHandler<City, CityResource> {
 
     @Override
     public City toEntity(CityResource resource) {
+        LOGGER.trace("Translating to entity resource {}", resource);
         Set<CityImage> images = resource.getImages()
                 .stream()
                 .map(ir -> {

@@ -2,11 +2,15 @@ package net.lashin.core.filters;
 
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.function.Predicate;
 
 public class CountryFilter implements Predicate<Country> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountryFilter.class);
 
     private Continent continent;
     private String region;
@@ -179,6 +183,7 @@ public class CountryFilter implements Predicate<Country> {
 
     @Override
     public boolean test(Country country) {
+        LOGGER.trace("Filtering country {}", country);
         return (!(country.getIndepYear() == null && this.isEnabledYearFilter())) &&
                 (!(country.getLifeExpectancy() == null && this.isEnabledLifeExpectFilter())) &&
                 (!(country.getGnp() == null && this.isEnabledGnpFilter())) &&
@@ -186,5 +191,26 @@ public class CountryFilter implements Predicate<Country> {
                 (this.getContinent() == null || country.getContinent() == this.getContinent()) &&
                 (this.getRegion() == null || this.getRegion().equals(country.getRegion())) &&
                 (this.getGovernmentForm() == null || this.getGovernmentForm().equals(country.getGovernmentForm()));
+    }
+
+    @Override
+    public String toString() {
+        return "CountryFilter{" +
+                "continent=" + continent +
+                ", region='" + region + '\'' +
+                ", governmentForm='" + governmentForm + '\'' +
+                ", minSurfaceArea=" + minSurfaceArea +
+                ", maxSurfaceArea=" + maxSurfaceArea +
+                ", minIndepYear=" + minIndepYear +
+                ", maxIndepYear=" + maxIndepYear +
+                ", minPopulation=" + minPopulation +
+                ", maxPopulation=" + maxPopulation +
+                ", minLifeExpectancy=" + minLifeExpectancy +
+                ", maxLifeExpectancy=" + maxLifeExpectancy +
+                ", minGnp=" + minGnp +
+                ", maxGnp=" + maxGnp +
+                ", minGnpOld=" + minGnpOld +
+                ", maxGnpOld=" + maxGnpOld +
+                '}';
     }
 }

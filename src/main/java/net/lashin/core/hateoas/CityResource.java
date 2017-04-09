@@ -69,4 +69,16 @@ public class CityResource extends ResourceSupport{
     public void setImages(List<ImageResource> images) {
         this.images = images;
     }
+
+    @Override
+    public String toString() {
+        return "CityResource{" +
+                "identity=" + identity +
+                ", name='" + name + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", district='" + district + '\'' +
+                ", population=" + population +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

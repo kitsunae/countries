@@ -7,6 +7,8 @@ import net.lashin.core.hateoas.ImageResource;
 import net.lashin.web.controllers.CityController;
 import net.lashin.web.controllers.CountryController;
 import net.lashin.web.controllers.LanguageController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Component
 public class CountryResourceHandler extends ResourceHandler<Country, CountryResource> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountryResourceHandler.class);
 
     private final ResourceHandler<City, CityResource> cityResourceHandler;
     private final ResourceHandler<Image, ImageResource> imageResourceHandler;
@@ -33,6 +36,7 @@ public class CountryResourceHandler extends ResourceHandler<Country, CountryReso
 
     @Override
     public CountryResource toResource(Country country) {
+        LOGGER.trace("Translating {} to resource", country);
         CountryResource resource = new CountryResource();
         resource.setName(country.getName());
         resource.setCode(country.getCode());
@@ -63,6 +67,7 @@ public class CountryResourceHandler extends ResourceHandler<Country, CountryReso
 
     @Override
     public Country toEntity(CountryResource resource) {
+        LOGGER.trace("Translating to entity resource {}", resource);
         Country country = new Country(resource.getCode(), resource.getName(), Continent.fromString(resource.getContinent()),
                 resource.getRegion(), resource.getSurfaceArea(), resource.getIndepYear(), resource.getPopulation(),
                 resource.getLifeExpectancy(), resource.getGnp(), resource.getGnpOld(), resource.getLocalName(), resource.getGovernmentForm(),

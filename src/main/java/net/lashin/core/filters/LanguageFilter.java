@@ -2,10 +2,14 @@ package net.lashin.core.filters;
 
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.CountryLanguage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Predicate;
 
 public class LanguageFilter implements Predicate<CountryLanguage> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LanguageFilter.class);
 
     private Continent continent;
     private String region;
@@ -62,8 +66,20 @@ public class LanguageFilter implements Predicate<CountryLanguage> {
 
     @Override
     public boolean test(CountryLanguage countryLanguage) {
+        LOGGER.trace("Filtering language {}", countryLanguage);
         return (this.getContinent() == null || countryLanguage.getCountry().getContinent() == this.getContinent()) &&
                 (this.getRegion() == null || this.getRegion().equals(countryLanguage.getCountry().getRegion())) &&
                 (this.isOfficial() == null || countryLanguage.isOfficial() == this.isOfficial());
+    }
+
+    @Override
+    public String toString() {
+        return "LanguageFilter{" +
+                "continent=" + continent +
+                ", region='" + region + '\'' +
+                ", minPercentage=" + minPercentage +
+                ", maxPercentage=" + maxPercentage +
+                ", isOfficial=" + isOfficial +
+                '}';
     }
 }

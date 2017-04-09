@@ -49,4 +49,15 @@ public class CountryLanguageResource extends ResourceSupport {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "CountryLanguageResource{" +
+                "countryCode='" + countryCode + '\'' +
+                ", language='" + language + '\'' +
+                ", isOfficial=" + isOfficial +
+                ", percentage=" + percentage +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

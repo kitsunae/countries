@@ -161,4 +161,26 @@ public class CountryResource extends ResourceSupport {
     public void setImages(List<ImageResource> images) {
         this.images = images;
     }
+
+    @Override
+    public String toString() {
+        return "CountryResource{" +
+                "code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", continent='" + continent + '\'' +
+                ", region='" + region + '\'' +
+                ", surfaceArea=" + surfaceArea +
+                ", indepYear=" + indepYear +
+                ", population=" + population +
+                ", lifeExpectancy=" + lifeExpectancy +
+                ", gnp=" + gnp +
+                ", gnpOld=" + gnpOld +
+                ", localName='" + localName + '\'' +
+                ", governmentForm='" + governmentForm + '\'' +
+                ", headOfState='" + headOfState + '\'' +
+                ", code2='" + code2 + '\'' +
+                ", capital=" + capital +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
