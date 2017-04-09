@@ -2,8 +2,9 @@ package net.lashin.core.hateoas.asm;
 
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.CityImage;
-import net.lashin.core.hateoas.CityImageResource;
+import net.lashin.core.beans.Image;
 import net.lashin.core.hateoas.CityResource;
+import net.lashin.core.hateoas.ImageResource;
 import net.lashin.web.controllers.CityController;
 import net.lashin.web.controllers.CountryController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @Component
 public class CityResourceHandler extends ResourceHandler<City, CityResource> {
 
-    private final ResourceHandler<CityImage, CityImageResource> imageHandler;
+    private final ResourceHandler<Image, ImageResource> imageHandler;
 
     @Autowired
-    public CityResourceHandler(ResourceHandler<CityImage, CityImageResource> imageHandler) {
+    public CityResourceHandler(ResourceHandler<Image, ImageResource> imageHandler) {
         super(CityController.class, CityResource.class);
         this.imageHandler = imageHandler;
     }
@@ -39,7 +40,7 @@ public class CityResourceHandler extends ResourceHandler<City, CityResource> {
         res.setPopulation(city.getPopulation());
         res.setDescription(city.getDescription());
         Set<CityImage> images = city.getImages();
-        List<CityImageResource> resourceImages = images.stream().map(imageHandler::toResource).collect(Collectors.toList());
+        List<ImageResource> resourceImages = images.stream().map(imageHandler::toResource).collect(Collectors.toList());
         res.setImages(resourceImages);
         Link selfRel = linkTo(methodOn(CityController.class).getCity(city.getId())).withSelfRel();
         res.add(selfRel);
@@ -52,7 +53,15 @@ public class CityResourceHandler extends ResourceHandler<City, CityResource> {
 
     @Override
     public City toEntity(CityResource resource) {
-        Set<CityImage> images = resource.getImages().stream().map(imageHandler::toEntity).collect(Collectors.toSet());
+        Set<CityImage> images = resource.getImages()
+                .stream()
+                .map(ir -> {
+                    Image image = imageHandler.toEntity(ir);
+                    //// TODO: 08.04.2017 throw exception?
+                    return image instanceof CityImage ? (CityImage) image : null;
+                })
+                .filter(image -> image != null)
+                .collect(Collectors.toSet());
         City city = new City(resource.getIdentity(), resource.getName(), resource.getDistrict(), resource.getPopulation());
         city.setImages(images);
         city.setDescription(resource.getDescription());

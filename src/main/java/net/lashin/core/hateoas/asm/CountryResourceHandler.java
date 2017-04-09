@@ -1,12 +1,9 @@
 package net.lashin.core.hateoas.asm;
 
-import net.lashin.core.beans.City;
-import net.lashin.core.beans.Continent;
-import net.lashin.core.beans.Country;
-import net.lashin.core.beans.CountryImage;
+import net.lashin.core.beans.*;
 import net.lashin.core.hateoas.CityResource;
-import net.lashin.core.hateoas.CountryImageResource;
 import net.lashin.core.hateoas.CountryResource;
+import net.lashin.core.hateoas.ImageResource;
 import net.lashin.web.controllers.CityController;
 import net.lashin.web.controllers.CountryController;
 import net.lashin.web.controllers.LanguageController;
@@ -25,10 +22,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class CountryResourceHandler extends ResourceHandler<Country, CountryResource> {
 
     private final ResourceHandler<City, CityResource> cityResourceHandler;
-    private final ResourceHandler<CountryImage, CountryImageResource> imageResourceHandler;
+    private final ResourceHandler<Image, ImageResource> imageResourceHandler;
 
     @Autowired
-    public CountryResourceHandler(ResourceHandler<City, CityResource> cityResourceHandler, ResourceHandler<CountryImage, CountryImageResource> imageResourceHandler) {
+    public CountryResourceHandler(ResourceHandler<City, CityResource> cityResourceHandler, ResourceHandler<Image, ImageResource> imageResourceHandler) {
         super(CountryController.class, CountryResource.class);
         this.cityResourceHandler = cityResourceHandler;
         this.imageResourceHandler = imageResourceHandler;
@@ -52,7 +49,7 @@ public class CountryResourceHandler extends ResourceHandler<Country, CountryReso
         resource.setGovernmentForm(country.getGovernmentForm());
         resource.setHeadOfState(country.getHeadOfState());
         resource.setCapital(cityResourceHandler.toResource(country.getCapital()));
-        List<CountryImageResource> imageResources = country.getImages().stream().map(imageResourceHandler::toResource).collect(Collectors.toList());
+        List<ImageResource> imageResources = country.getImages().stream().map(imageResourceHandler::toResource).collect(Collectors.toList());
         resource.setImages(imageResources);
         resource.setDescription(country.getDescription());
         Link self = linkTo(methodOn(CountryController.class).getCountry(country.getCode())).withSelfRel();
@@ -71,7 +68,14 @@ public class CountryResourceHandler extends ResourceHandler<Country, CountryReso
                 resource.getLifeExpectancy(), resource.getGnp(), resource.getGnpOld(), resource.getLocalName(), resource.getGovernmentForm(),
                 resource.getHeadOfState(), resource.getCode2());
         country.setCapital(cityResourceHandler.toEntity(resource.getCapital()));
-        Set<CountryImage> collect = resource.getImages().stream().map(imageResourceHandler::toEntity).collect(Collectors.toSet());
+        Set<CountryImage> collect = resource.getImages().stream()
+                .map(ir -> {
+                    Image image = imageResourceHandler.toEntity(ir);
+                    //// TODO: 08.04.2017 throw exception?
+                    return image instanceof CountryImage ? (CountryImage) image : null;
+                })
+                .filter(image -> image != null)
+                .collect(Collectors.toSet());
         country.setImages(collect);
         country.setDescription(resource.getDescription());
         return country;

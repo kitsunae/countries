@@ -1,7 +1,7 @@
 package net.lashin.core.beans;
 
 
-public enum ImageType {
+public enum ImageSize {
     XSMALL,
     SMALL,
     MEDIUM,

@@ -22,7 +22,7 @@ public class CountryResource extends ResourceSupport {
     private String code2;
     private CityResource capital;
     private String description;
-    private List<CountryImageResource> images;
+    private List<ImageResource> images;
 
 
     public String getCode() {
@@ -154,11 +154,11 @@ public class CountryResource extends ResourceSupport {
     }
 
 
-    public List<CountryImageResource> getImages() {
+    public List<ImageResource> getImages() {
         return images;
     }
 
-    public void setImages(List<CountryImageResource> images) {
+    public void setImages(List<ImageResource> images) {
         this.images = images;
     }
 }

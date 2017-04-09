@@ -46,7 +46,8 @@ public class Country {
     private List<City> cities = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "country", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CountryLanguage> languages = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country", fetch = FetchType.EAGER, orphanRemoval = true)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "country_image", joinColumns = @JoinColumn(name = "CountryCode"))
     private Set<CountryImage> images = new HashSet<>();
 
     protected Country() {

@@ -12,7 +12,7 @@ public class CityResource extends ResourceSupport{
     private String district;
     private Integer population;
     private String description;
-    private List<CityImageResource> images;
+    private List<ImageResource> images;
 
     public String getName() {
         return name;
@@ -62,11 +62,11 @@ public class CityResource extends ResourceSupport{
         this.description = description;
     }
 
-    public List<CityImageResource> getImages() {
+    public List<ImageResource> getImages() {
         return images;
     }
 
-    public void setImages(List<CityImageResource> images) {
+    public void setImages(List<ImageResource> images) {
         this.images = images;
     }
 }

@@ -1,24 +1,19 @@
 package net.lashin.core.beans;
 
+import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
 
-
-@SuppressWarnings("WeakerAccess")
 @MappedSuperclass
 public abstract class Image {
 
-    @NotNull
-    protected String url;
-    @NotNull
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    protected ImageType type;
-    protected String description;
+    protected ImageSize size;
+    private String url;
+    private String description;
 
-    protected Image() {
-    }
 
     public abstract long getId();
 
@@ -32,12 +27,12 @@ public abstract class Image {
         this.url = url;
     }
 
-    public ImageType getType() {
-        return type;
+    public ImageSize getSize() {
+        return size;
     }
 
-    public void setType(ImageType type) {
-        this.type = type;
+    public void setSize(ImageSize size) {
+        this.size = size;
     }
 
     public String getDescription() {
@@ -48,7 +43,6 @@ public abstract class Image {
         this.description = description;
     }
 
-    @SuppressWarnings("SimplifiableIfStatement")
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,17 +50,16 @@ public abstract class Image {
 
         Image image = (Image) o;
 
+        //noinspection SimplifiableIfStatement
         if (getUrl() != null ? !getUrl().equals(image.getUrl()) : image.getUrl() != null) return false;
-        if (getType() != image.getType()) return false;
-        return getDescription() != null ? getDescription().equals(image.getDescription()) : image.getDescription() == null;
+        return getSize() == image.getSize();
 
     }
 
     @Override
     public int hashCode() {
         int result = getUrl() != null ? getUrl().hashCode() : 0;
-        result = 31 * result + (getType() != null ? getType().hashCode() : 0);
-        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        result = 31 * result + (getSize() != null ? getSize().hashCode() : 0);
         return result;
     }
 }

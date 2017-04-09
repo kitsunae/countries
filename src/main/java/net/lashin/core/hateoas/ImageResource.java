@@ -2,13 +2,12 @@ package net.lashin.core.hateoas;
 
 import org.springframework.hateoas.ResourceSupport;
 
-
-public class CityImageResource extends ResourceSupport {
+public class ImageResource extends ResourceSupport {
 
     private long identity;
-    private String url;
-    private String type;
+    private String size;
     private String description;
+    private ImageResourceType type;
 
     public long getIdentity() {
         return identity;
@@ -18,20 +17,12 @@ public class CityImageResource extends ResourceSupport {
         this.identity = identity;
     }
 
-    public String getUrl() {
-        return url;
+    public String getSize() {
+        return size;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public String getDescription() {
@@ -40,5 +31,13 @@ public class CityImageResource extends ResourceSupport {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public ImageResourceType getType() {
+        return type;
+    }
+
+    public void setType(ImageResourceType type) {
+        this.type = type;
     }
 }

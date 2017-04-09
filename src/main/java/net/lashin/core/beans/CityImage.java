@@ -1,18 +1,11 @@
 package net.lashin.core.beans;
 
-import javax.persistence.*;
+import javax.persistence.Embeddable;
 
-
-@Entity
-@Table(name = "city_image")
+@Embeddable
 public class CityImage extends Image {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     protected long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id", nullable = false)
-    private City city;
 
     @Override
     public long getId() {
@@ -24,30 +17,4 @@ public class CityImage extends Image {
         this.id = id;
     }
 
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        CityImage image = (CityImage) o;
-
-        return getCity() != null ? getCity().equals(image.getCity()) : image.getCity() == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (getCity() != null ? getCity().hashCode() : 0);
-        return result;
-    }
 }

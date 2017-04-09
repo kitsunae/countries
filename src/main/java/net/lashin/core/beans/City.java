@@ -22,7 +22,8 @@ public class City {
     @ManyToOne
     @JoinColumn(name = "countryCode", nullable = false)
     private Country country;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "city", fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "city_image", joinColumns = @JoinColumn(name = "city_id"))
     private Set<CityImage> images = new HashSet<>();
 
     protected City() {

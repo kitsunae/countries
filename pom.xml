@@ -23,6 +23,8 @@
             <artifactId>spring-webmvc</artifactId>
             <version>4.3.4.RELEASE</version>
         </dependency>
+
+        <!-- Spring Data JPA -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
@@ -33,6 +35,8 @@
             <artifactId>spring-data-jpa</artifactId>
             <version>1.10.6.RELEASE</version>
         </dependency>
+
+        <!-- Spring HATEOAS support -->
         <dependency>
             <groupId>org.springframework.hateoas</groupId>
             <artifactId>spring-hateoas</artifactId>
@@ -132,6 +136,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -139,14 +144,10 @@
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
             </plugin>
         </plugins>
     </build>
