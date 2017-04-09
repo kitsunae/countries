@@ -1,6 +1,6 @@
 package net.lashin.core.services;
 
-import net.lashin.config.RootConfig;
+import net.lashin.config.TestRootConfig;
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.CountryLanguage;
 import net.lashin.core.filters.LanguageFilter;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {RootConfig.class})
+@ContextConfiguration(classes = {TestRootConfig.class})
 @Transactional
 public class LanguageServiceImplTest {
 
@@ -42,8 +42,6 @@ public class LanguageServiceImplTest {
         Page<String> languages = languageService.getAllLanguageNames(new PageRequest(1, 20));
         assertEquals(20, languages.getContent().size());
         assertEquals(457/20+1, languages.getTotalPages());
-        assertEquals("Macedonian", languages.getContent().get(0));
-        assertEquals("Polish", languages.getContent().get(19));
     }
 
     @Test

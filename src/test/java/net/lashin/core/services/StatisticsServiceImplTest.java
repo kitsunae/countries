@@ -1,6 +1,6 @@
 package net.lashin.core.services;
 
-import net.lashin.config.RootConfig;
+import net.lashin.config.TestRootConfig;
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {RootConfig.class})
+@ContextConfiguration(classes = {TestRootConfig.class})
 public class StatisticsServiceImplTest {
 
     @Autowired

@@ -1,6 +1,6 @@
 package net.lashin.web.controllers;
 
-import net.lashin.config.RootConfig;
+import net.lashin.config.TestRootConfig;
 import net.lashin.config.WebConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {WebConfig.class, RootConfig.class}, loader = AnnotationConfigWebContextLoader.class)
+@ContextConfiguration(classes = {WebConfig.class, TestRootConfig.class}, loader = AnnotationConfigWebContextLoader.class)
 public class CountryControllerTest {
 
     private MockMvc mockMvc;

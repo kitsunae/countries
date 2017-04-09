@@ -1,6 +1,6 @@
 package net.lashin.core.services;
 
-import net.lashin.config.RootConfig;
+import net.lashin.config.TestRootConfig;
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {RootConfig.class})
+@ContextConfiguration(classes = {TestRootConfig.class})
 @Transactional
 public class CityServiceImplTest {
 
