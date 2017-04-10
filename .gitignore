@@ -2,6 +2,6 @@
 out
 target
 *.iml
-log
+logs
 *.patch
 *.jpg

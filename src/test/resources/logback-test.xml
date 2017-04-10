@@ -8,8 +8,75 @@
         </encoder>
     </appender>
 
-    <logger name="net.lashin.core" level="debug"/>
-    <logger name="net.lashin.web" level="debug"/>
+    <appender name="file" class="ch.qos.logback.core.FileAppender">
+        <file>logs/country-test.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date %-5level %logger{0} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="sql" class="ch.qos.logback.core.FileAppender">
+        <file>logs/sql.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date %-5level %logger{0} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="sql-timing" class="ch.qos.logback.core.FileAppender">
+        <file>logs/sql-timing.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date %-5level %logger{0} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="sql-audit" class="ch.qos.logback.core.FileAppender">
+        <file>logs/sql-audit.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date %-5level %logger{0} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="sql-resultset" class="ch.qos.logback.core.FileAppender">
+        <file>logs/sql-resultset.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date %-5level %logger{0} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="sql-connection" class="ch.qos.logback.core.FileAppender">
+        <file>logs/sql-connection.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date %-5level %logger{0} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="net.lashin.core" level="debug">
+        <appender-ref ref="file"/>
+    </logger>
+    <logger name="net.lashin.web" level="debug">
+        <appender-ref ref="file"/>
+    </logger>
+    <logger name="jdbc.sqlonly" level="debug">
+        <appender-ref ref="sql"/>
+    </logger>
+    <logger name="jdbc.sqltiming" level="debug">
+        <appender-ref ref="sql-timing"/>
+    </logger>
+    <logger name="jdbc.audit" level="error">
+        <appender-ref ref="sql-audit"/>
+    </logger>
+    <logger name="jdbc.resultset" level="error">
+        <appender-ref ref="sql-resultset"/>
+    </logger>
+    <logger name="jdbc.connection" level="error">
+        <appender-ref ref="sql-connection"/>
+    </logger>
 
     <root level="info">
         <appender-ref ref="console"/>
