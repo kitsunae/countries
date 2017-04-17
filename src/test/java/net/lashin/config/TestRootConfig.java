@@ -70,6 +70,7 @@ public class TestRootConfig {
     private Properties getAdditionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
+        properties.setProperty("hibernate.format_sql", environment.getProperty("hibernate.format_sql"));
         return properties;
     }
 }

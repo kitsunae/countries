@@ -36,7 +36,7 @@ public class CityServiceImplTest {
         assertEquals(3, cities.size());
         List<Country> countries = cities.stream().map(City::getCountry).collect(Collectors.toList());
         for (Country country: countries){
-            assertEquals("Elisabeth II", country.getHeadOfState());
+            assertEquals("Elisabeth II", country.getPolicy().getHeadOfState());
         }
     }
 
@@ -141,7 +141,7 @@ public class CityServiceImplTest {
     public void getCityById() throws Exception {
         City city = cityService.getById(3580);
         assertEquals("Moscow", city.getName());
-        assertEquals(Integer.valueOf(8389200), city.getPopulation());
+        assertEquals(8389200, city.getPopulation());
         assertEquals("Moscow (City)", city.getDistrict());
         assertEquals(countryService.getByCode("RUS"), city.getCountry());
     }

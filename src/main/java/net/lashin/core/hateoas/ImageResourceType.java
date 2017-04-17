@@ -11,11 +11,11 @@ public enum ImageResourceType {
     CITY(CityImage.class),
     COUNTRY(CountryImage.class);
 
-    private static final Map<Class<? extends Image>, ImageResourceType> map = new HashMap<>();
+    private static final Map<Class<? extends Image>, ImageResourceType> MAP = new HashMap<>();
 
     static {
         for (ImageResourceType type : ImageResourceType.values()) {
-            map.put(type.getClazz(), type);
+            MAP.put(type.getClazz(), type);
         }
     }
 
@@ -26,7 +26,7 @@ public enum ImageResourceType {
     }
 
     public static ImageResourceType fromClass(Class<? extends Image> clazz) {
-        return map.get(clazz);
+        return MAP.get(clazz);
     }
 
     public Class<? extends Image> getClazz() {

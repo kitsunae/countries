@@ -94,7 +94,7 @@ public class LanguageServiceImplTest {
     public void getLanguageByNameAndCountry() throws Exception {
         CountryLanguage language = languageService.getByNameAndCountry("Tatar", "RUS");
         assertEquals("Tatar", language.getLanguage());
-        assertEquals(Double.valueOf(3.2), language.getPercentage());
+        assertEquals(3.2, language.getPercentage(), 0.001);
         assertFalse(language.isOfficial());
         assertEquals(countryService.getByCode("RUS"), language.getCountry());
     }
@@ -128,7 +128,7 @@ public class LanguageServiceImplTest {
         languageService.save(language);
         assertEquals(language, languageService.getByNameAndCountry("Chinese", "USA"));
         assertEquals(2, languageService.getByCountryAndOfficialty("USA", true).size());
-        assertEquals(language.getPercentage(), languageService.getByNameAndCountry("Chinese", "USA").getPercentage());
+        assertEquals(language.getPercentage(), languageService.getByNameAndCountry("Chinese", "USA").getPercentage(), 0.001);
     }
 
     @Test

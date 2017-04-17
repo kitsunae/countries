@@ -36,7 +36,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Transactional(readOnly = true)
     public List<Country> getBiggestCountries(int quantity) {
         LOGGER.debug("Get {} bigges countries", quantity);
-        PageRequest pageRequest = new PageRequest(0, quantity, Sort.Direction.DESC, "surfaceArea");
+        PageRequest pageRequest = new PageRequest(0, quantity, Sort.Direction.DESC, "geography.surfaceArea");
         return countryRepository.findAll(pageRequest).getContent();
     }
 
@@ -44,7 +44,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Transactional(readOnly = true)
     public Page<Country> getBiggestCountries(Pageable pageRequest) {
         LOGGER.debug("Get {} biggest countries, page #{}", pageRequest.getPageSize(), pageRequest.getPageNumber());
-        PageRequest ordered = new PageRequest(pageRequest.getPageNumber(), pageRequest.getPageSize(), Sort.Direction.DESC, "surfaceArea");
+        PageRequest ordered = new PageRequest(pageRequest.getPageNumber(), pageRequest.getPageSize(), Sort.Direction.DESC, "geography.surfaceArea");
         return countryRepository.findAll(ordered);
     }
 
@@ -74,7 +74,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         LOGGER.debug("Get languages paired by number of speakers");
         return languageRepository.findAll().stream()
                     .collect(Collectors.groupingBy(CountryLanguage::getLanguage,
-                            Collectors.summingDouble(lang->lang.getCountry().getPopulation()*lang.getPercentage()/100)));
+                            Collectors.summingDouble(lang -> lang.getCountry().getDemography().getPopulation() * lang.getPercentage() / 100)));
     }
 
     @Override
@@ -129,13 +129,13 @@ public class StatisticsServiceImpl implements StatisticsService {
         double cityPopulation = cityRepository.findByCountryCode(countryCode)
                 .stream()
                 .collect(Collectors.summingLong(City::getPopulation));
-        return cityPopulation/countryRepository.findOne(countryCode).getPopulation()*100;
+        return cityPopulation / countryRepository.findOne(countryCode).getDemography().getPopulation() * 100;
     }
 
     @Override
     @Transactional(readOnly = true)
     public long getWorldPopulation() {
         LOGGER.debug("Get world population");
-        return countryRepository.findAll().stream().collect(Collectors.summingLong(Country::getPopulation));
+        return countryRepository.findAll().stream().collect(Collectors.summingLong(c -> c.getDemography().getPopulation()));
     }
 }

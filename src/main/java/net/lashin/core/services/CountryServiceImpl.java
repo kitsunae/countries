@@ -114,14 +114,14 @@ public class CountryServiceImpl implements CountryService{
     @Transactional(readOnly = true)
     public List<Country> getByContinent(Continent continent) {
         LOGGER.debug("Get all countries by continent {}", continent);
-        return countryRepository.findByContinent(continent);
+        return countryRepository.findByGeographyContinent(continent);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Country> getByContinent(Continent continent, Pageable pageRequest) {
         LOGGER.debug("Get {} countries by continent {}, page#{}", pageRequest.getPageSize(), continent, pageRequest.getPageNumber());
-        return countryRepository.findByContinent(continent, pageRequest);
+        return countryRepository.findByGeographyContinent(continent, pageRequest);
     }
 
     @Override

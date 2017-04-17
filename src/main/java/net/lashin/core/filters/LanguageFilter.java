@@ -67,8 +67,8 @@ public class LanguageFilter implements Predicate<CountryLanguage> {
     @Override
     public boolean test(CountryLanguage countryLanguage) {
         LOGGER.trace("Filtering language {}", countryLanguage);
-        return (this.getContinent() == null || countryLanguage.getCountry().getContinent() == this.getContinent()) &&
-                (this.getRegion() == null || this.getRegion().equals(countryLanguage.getCountry().getRegion())) &&
+        return (this.getContinent() == null || countryLanguage.getCountry().getGeography().getContinent() == this.getContinent()) &&
+                (this.getRegion() == null || this.getRegion().equals(countryLanguage.getCountry().getGeography().getRegion())) &&
                 (this.isOfficial() == null || countryLanguage.isOfficial() == this.isOfficial());
     }
 

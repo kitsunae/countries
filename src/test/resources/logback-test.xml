@@ -56,16 +56,16 @@
         </encoder>
     </appender>
 
-    <logger name="net.lashin.core" level="debug">
+    <logger name="net.lashin.core" level="error">
         <appender-ref ref="file"/>
     </logger>
-    <logger name="net.lashin.web" level="debug">
+    <logger name="net.lashin.web" level="error">
         <appender-ref ref="file"/>
     </logger>
-    <logger name="jdbc.sqlonly" level="debug">
+    <logger name="jdbc.sqlonly" level="error">
         <appender-ref ref="sql"/>
     </logger>
-    <logger name="jdbc.sqltiming" level="debug">
+    <logger name="jdbc.sqltiming" level="error">
         <appender-ref ref="sql-timing"/>
     </logger>
     <logger name="jdbc.audit" level="error">
@@ -78,7 +78,7 @@
         <appender-ref ref="sql-connection"/>
     </logger>
 
-    <root level="info">
+    <root level="error">
         <appender-ref ref="console"/>
     </root>
 </configuration>

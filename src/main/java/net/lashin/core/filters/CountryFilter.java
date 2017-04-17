@@ -185,12 +185,12 @@ public class CountryFilter implements Predicate<Country> {
     public boolean test(Country country) {
         LOGGER.trace("Filtering country {}", country);
         return (!(country.getIndepYear() == null && this.isEnabledYearFilter())) &&
-                (!(country.getLifeExpectancy() == null && this.isEnabledLifeExpectFilter())) &&
-                (!(country.getGnp() == null && this.isEnabledGnpFilter())) &&
-                (!(country.getGnpOld() == null && this.isEnabledGnpOldFilter())) &&
-                (this.getContinent() == null || country.getContinent() == this.getContinent()) &&
-                (this.getRegion() == null || this.getRegion().equals(country.getRegion())) &&
-                (this.getGovernmentForm() == null || this.getGovernmentForm().equals(country.getGovernmentForm()));
+                (!(country.getDemography().getLifeExpectancy() == null && this.isEnabledLifeExpectFilter())) &&
+                (!(country.getEconomy().getGnp() == null && this.isEnabledGnpFilter())) &&
+                (!(country.getEconomy().getGnpOld() == null && this.isEnabledGnpOldFilter())) &&
+                (this.getContinent() == null || country.getGeography().getContinent() == this.getContinent()) &&
+                (this.getRegion() == null || this.getRegion().equals(country.getGeography().getRegion())) &&
+                (this.getGovernmentForm() == null || this.getGovernmentForm().equals(country.getPolicy().getGovernmentForm()));
     }
 
     @Override

@@ -5,7 +5,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class CountryImage extends Image {
 
-    protected long id;
+    private long id;
 
     public long getId() {
         return id;

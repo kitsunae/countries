@@ -5,7 +5,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class CityImage extends Image {
 
-    protected long id;
+    private long id;
 
     @Override
     public long getId() {

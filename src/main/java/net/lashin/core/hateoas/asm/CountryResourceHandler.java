@@ -38,20 +38,28 @@ public class CountryResourceHandler extends ResourceHandler<Country, CountryReso
     public CountryResource toResource(Country country) {
         LOGGER.trace("Translating {} to resource", country);
         CountryResource resource = new CountryResource();
+        CountryResource.Demography demography = new CountryResource.Demography();
+        demography.setLifeExpectancy(country.getDemography().getLifeExpectancy());
+        demography.setPopulation(country.getDemography().getPopulation());
+        resource.setDemography(demography);
+        CountryResource.Geography geography = new CountryResource.Geography();
+        geography.setContinent(country.getGeography().getContinent().toString());
+        geography.setRegion(country.getGeography().getRegion());
+        geography.setSurfaceArea(country.getGeography().getSurfaceArea());
+        resource.setGeography(geography);
+        CountryResource.Economy economy = new CountryResource.Economy();
+        economy.setGnp(country.getEconomy().getGnp());
+        economy.setGnpOld(country.getEconomy().getGnpOld());
+        resource.setEconomy(economy);
+        CountryResource.Policy policy = new CountryResource.Policy();
+        policy.setGovernmentForm(country.getPolicy().getGovernmentForm());
+        policy.setHeadOfState(country.getPolicy().getHeadOfState());
+        resource.setPolicy(policy);
         resource.setName(country.getName());
         resource.setCode(country.getCode());
         resource.setCode2(country.getCode2());
-        resource.setContinent(country.getContinent().toString());
-        resource.setRegion(country.getRegion());
-        resource.setSurfaceArea(country.getSurfaceArea());
         resource.setIndepYear(country.getIndepYear());
-        resource.setPopulation(country.getPopulation());
-        resource.setLifeExpectancy(country.getLifeExpectancy());
-        resource.setGnp(country.getGnp());
-        resource.setGnpOld(country.getGnpOld());
         resource.setLocalName(country.getLocalName());
-        resource.setGovernmentForm(country.getGovernmentForm());
-        resource.setHeadOfState(country.getHeadOfState());
         resource.setCapital(cityResourceHandler.toResource(country.getCapital()));
         List<ImageResource> imageResources = country.getImages().stream().map(imageResourceHandler::toResource).collect(Collectors.toList());
         resource.setImages(imageResources);
@@ -68,10 +76,15 @@ public class CountryResourceHandler extends ResourceHandler<Country, CountryReso
     @Override
     public Country toEntity(CountryResource resource) {
         LOGGER.trace("Translating to entity resource {}", resource);
-        Country country = new Country(resource.getCode(), resource.getName(), Continent.fromString(resource.getContinent()),
-                resource.getRegion(), resource.getSurfaceArea(), resource.getIndepYear(), resource.getPopulation(),
-                resource.getLifeExpectancy(), resource.getGnp(), resource.getGnpOld(), resource.getLocalName(), resource.getGovernmentForm(),
-                resource.getHeadOfState(), resource.getCode2());
+        CountryResource.Geography resGeography = resource.getGeography();
+        CountryResource.Policy resPolicy = resource.getPolicy();
+        CountryResource.Demography resDemography = resource.getDemography();
+        CountryResource.Economy resEconomy = resource.getEconomy();
+        CountryGeography geography = new CountryGeography(Continent.fromString(resGeography.getContinent()), resGeography.getRegion(), resGeography.getSurfaceArea());
+        CountryPolicy policy = new CountryPolicy(resPolicy.getGovernmentForm(), resPolicy.getHeadOfState());
+        CountryDemography demography = new CountryDemography(resDemography.getPopulation(), resDemography.getLifeExpectancy());
+        CountryEconomy economy = new CountryEconomy(resEconomy.getGnp(), resEconomy.getGnpOld());
+        Country country = new Country(resource.getCode(), resource.getName(), resource.getLocalName(), resource.getCode2(), geography, demography, policy, economy);
         country.setCapital(cityResourceHandler.toEntity(resource.getCapital()));
         Set<CountryImage> collect = resource.getImages().stream()
                 .map(ir -> {

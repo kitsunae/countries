@@ -74,8 +74,8 @@ public class CityFilter implements Predicate<City> {
     @Override
     public boolean test(City city) {
         LOGGER.trace("Filtering city {}", city);
-        return (continent == null || city.getCountry().getContinent() == continent) && (district == null || district.equals(city.getDistrict())) &&
-                (region == null || region.equals(city.getCountry().getRegion())) && (country == null || country.equals(city.getCountry().getCode()));
+        return (continent == null || city.getCountry().getGeography().getContinent() == continent) && (district == null || district.equals(city.getDistrict())) &&
+                (region == null || region.equals(city.getCountry().getGeography().getRegion())) && (country == null || country.equals(city.getCountry().getCode()));
     }
 
     @Override

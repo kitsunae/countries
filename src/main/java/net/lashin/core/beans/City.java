@@ -2,6 +2,8 @@ package net.lashin.core.beans;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -16,8 +18,11 @@ public class City {
     @NotNull
     private String name;
     @Size(max = 20)
+    @NotNull
     private String district;
-    private Integer population;
+    @Max(Integer.MAX_VALUE)
+    @Min(0)
+    private int population;
     private String description;
     @ManyToOne
     @JoinColumn(name = "countryCode", nullable = false)
@@ -47,7 +52,7 @@ public class City {
 
     public City(String name, String district, Integer population, Country country) {
         this(name, district, population);
-        country.addCity(this);
+        this.country = country;
     }
 
     public Country getCountry() {
@@ -78,11 +83,11 @@ public class City {
         this.district = district;
     }
 
-    public Integer getPopulation() {
+    public int getPopulation() {
         return population;
     }
 
-    public void setPopulation(Integer population) {
+    public void setPopulation(int population) {
         this.population = population;
     }
 
@@ -113,7 +118,7 @@ public class City {
         if (getName() != null ? !getName().equals(city.getName()) : city.getName() != null) return false;
         if (getDistrict() != null ? !getDistrict().equals(city.getDistrict()) : city.getDistrict() != null)
             return false;
-        if (getPopulation() != null ? !getPopulation().equals(city.getPopulation()) : city.getPopulation() != null)
+        if (getPopulation() != city.getPopulation())
             return false;
         if (getDescription() != null ? !getDescription().equals(city.getDescription()) : city.getDescription() != null)
             return false;
@@ -125,7 +130,7 @@ public class City {
     public int hashCode() {
         int result = getName() != null ? getName().hashCode() : 0;
         result = 31 * result + (getDistrict() != null ? getDistrict().hashCode() : 0);
-        result = 31 * result + (getPopulation() != null ? getPopulation().hashCode() : 0);
+        result = 31 * result + getPopulation();
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
         result = 31 * result + (getCountry() != null ? getCountry().hashCode() : 0);
         return result;

@@ -155,7 +155,6 @@ public class CountryServiceImplTest {
     public void save() throws Exception {
         City city = new City("New Vasuki", "Chelyaba", 15);
         Country country = new Country("AAA", "Chunga-Changa", Continent.AFRICA,"Region", 0.02, 15, "Pesech", "Tyrany", "AA");
-        country.addCity(city);
         country.setCapital(city);
         countryService.save(country);
         assertEquals(country, countryService.getByCode("AAA"));

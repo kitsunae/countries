@@ -10,7 +10,7 @@ public abstract class Image {
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    protected ImageSize size;
+    private ImageSize size;
     private String url;
     private String description;
 

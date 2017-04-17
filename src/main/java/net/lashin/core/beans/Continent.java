@@ -12,11 +12,11 @@ public enum Continent {
     ANTARCTICA("Antarctica"),
     SOUTH_AMERICA("South America");
 
-    private static final Map<String, Continent> map = new HashMap<>();
+    private static final Map<String, Continent> MAP = new HashMap<>();
 
     static {
         for (Continent c : Continent.values()) {
-            map.put(c.toString(), c);
+            MAP.put(c.toString(), c);
         }
     }
 
@@ -27,7 +27,7 @@ public enum Continent {
     }
 
     public static Continent fromString(String name) {
-        return map.get(name);
+        return MAP.get(name);
     }
 
     @Override

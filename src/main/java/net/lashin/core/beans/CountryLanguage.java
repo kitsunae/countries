@@ -4,6 +4,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 
 
 @Entity
@@ -13,7 +15,9 @@ public class CountryLanguage {
     private CountryLanguageId countryLanguageId;
     @org.hibernate.annotations.Type(type = "true_false")
     private boolean isOfficial;
-    private Double percentage;
+    @DecimalMax("100.00")
+    @DecimalMin("0.00")
+    private double percentage;
     private String description;
     @ManyToOne
     @JoinColumn(name = "countryCode", insertable = false, updatable = false)
@@ -28,11 +32,11 @@ public class CountryLanguage {
         this.percentage = percentage;
     }
 
-    public CountryLanguage(boolean isOfficial, Double percentage, Country country, String language) {
+    public CountryLanguage(boolean isOfficial, double percentage, Country country, String language) {
         this.isOfficial = isOfficial;
         this.percentage = percentage;
-        this.countryLanguageId = new CountryLanguageId(null, language);
-        country.addLanguage(this);
+        this.country = country;
+        this.countryLanguageId = new CountryLanguageId(country.getCode(), language);
     }
 
     public Country getCountry() {
@@ -67,11 +71,11 @@ public class CountryLanguage {
         isOfficial = official;
     }
 
-    public Double getPercentage() {
+    public double getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(Double percentage) {
+    public void setPercentage(double percentage) {
         this.percentage = percentage;
     }
 

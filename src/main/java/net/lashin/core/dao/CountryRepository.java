@@ -14,8 +14,10 @@ import java.util.stream.Collectors;
 public interface CountryRepository extends JpaRepository<Country, String> {
     List<Country> findByName(String name);
     Page<Country> findByName(String name, Pageable pageable);
-    List<Country> findByContinent(Continent continent);
-    Page<Country> findByContinent(Continent continent, Pageable pageable);
+
+    List<Country> findByGeographyContinent(Continent continent);
+
+    Page<Country> findByGeographyContinent(Continent continent, Pageable pageable);
     List<Country> findByCapitalId(Long id);
     Page<Country> findByCapitalId(Long cityId, Pageable pageable);
     List<Country> findByCapitalName(String name);
@@ -28,12 +30,12 @@ public interface CountryRepository extends JpaRepository<Country, String> {
     Page<String> findAllCountryNames(Pageable pageable);
 
     @Query("select c from Country c " +
-            "where (c.surfaceArea between ?1 and ?2) " +
+            "where (c.geography.surfaceArea between ?1 and ?2) " +
             "and (c.indepYear between ?3 and ?4 or c.indepYear is null ) " +
-            "and (c.population between ?5 and ?6) " +
-            "and (c.lifeExpectancy between ?7 and ?8 or c.lifeExpectancy is null ) " +
-            "and (c.gnp between ?9 and ?10 or c.gnp is null) " +
-            "and (c.gnpOld between ?11 and ?12 or c.gnpOld is null)")
+            "and (c.demography.population between ?5 and ?6) " +
+            "and (c.demography.lifeExpectancy between ?7 and ?8 or c.demography.lifeExpectancy is null ) " +
+            "and (c.economy.gnp between ?9 and ?10 or c.economy.gnp is null) " +
+            "and (c.economy.gnpOld between ?11 and ?12 or c.economy.gnpOld is null)")
     List<Country> filterCountries(double minSurface, double maxSurface, int minYear, int maxYear, int minPopulation, int maxPopulation,
                                   double minLifeExpect, double maxLifeExpect, double minGnp, double maxGnp, double minGnpOld, double maxGnpOld);
 
