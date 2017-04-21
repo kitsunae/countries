@@ -89,7 +89,6 @@ public class CountryResourceHandler extends ResourceHandler<Country, CountryReso
         Set<CountryImage> collect = resource.getImages().stream()
                 .map(ir -> {
                     Image image = imageResourceHandler.toEntity(ir);
-                    //// TODO: 08.04.2017 throw exception?
                     return image instanceof CountryImage ? (CountryImage) image : null;
                 })
                 .filter(image -> image != null)

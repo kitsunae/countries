@@ -63,7 +63,6 @@ public class CityResourceHandler extends ResourceHandler<City, CityResource> {
                 .stream()
                 .map(ir -> {
                     Image image = imageHandler.toEntity(ir);
-                    //// TODO: 08.04.2017 throw exception?
                     return image instanceof CityImage ? (CityImage) image : null;
                 })
                 .filter(image -> image != null)

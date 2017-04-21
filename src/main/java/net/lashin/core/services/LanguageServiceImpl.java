@@ -7,6 +7,8 @@ import net.lashin.core.filters.LanguageFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public List<CountryLanguage> getAll() {
         LOGGER.debug("Get all languages");
         return languageRepository.findAll();
@@ -37,6 +40,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public Page<CountryLanguage> getAll(Pageable pageRequest) {
         LOGGER.debug("Get {} languages, page #{}", pageRequest.getPageSize(), pageRequest.getPageNumber());
         return languageRepository.findAll(pageRequest);
@@ -44,23 +48,26 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public List<CountryLanguage> getByCountryCode(String countryId) {
         LOGGER.debug("Get all languages by country code {}", countryId);
-        return languageRepository.findByCountry_Code(countryId);
+        return languageRepository.findByCountryCode(countryId);
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public Page<CountryLanguage> getByCountryCode(String countryCode, Pageable pageRequest) {
         LOGGER.debug("Get {} languages by country code {}, page #{}", pageRequest.getPageSize(), countryCode, pageRequest.getPageNumber());
-        return languageRepository.findByCountry_Code(countryCode, pageRequest);
+        return languageRepository.findByCountryLanguageIdCountryCode(countryCode, pageRequest);
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public List<CountryLanguage> getByCountryAndOfficialty(String countryCode, boolean isOfficial) {
         LOGGER.debug("Get all languages by country code {} and official={}", countryCode, isOfficial);
-        return languageRepository.findByCountry_Code(countryCode)
+        return languageRepository.findByCountryCode(countryCode)
                 .stream()
                 .filter(countryLanguage -> countryLanguage.isOfficial()==isOfficial)
                 .collect(Collectors.toList());
@@ -68,6 +75,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public Page<CountryLanguage> getByCountryAndOfficialty(String countryCode, boolean isOfficial, Pageable pageRequest) {
         LOGGER.debug("Get {} languages by country code {} and official={}, page #{}", pageRequest.getPageSize(), countryCode, isOfficial, pageRequest.getPageNumber());
         List<CountryLanguage> list = getByCountryAndOfficialty(countryCode, isOfficial);
@@ -80,6 +88,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public CountryLanguage getByNameAndCountry(String language, String countryCode) {
         LOGGER.debug("Get language {} of country {}", language, countryCode);
         CountryLanguageId id = new CountryLanguageId(countryCode, language);
@@ -88,6 +97,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "countrylanguages", allEntries = true)
     public CountryLanguage save(CountryLanguage language) {
         LOGGER.debug("Save language {}", language);
         return languageRepository.save(language);
@@ -95,6 +105,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "countrylanguages", allEntries = true)
     public void remove(String language, String countryCode) {
         LOGGER.debug("Delete language {} of country {}");
         languageRepository.delete(new CountryLanguageId(countryCode, language));
@@ -116,6 +127,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public List<CountryLanguage> filter(LanguageFilter filter) {
         LOGGER.debug("Filter languages, filter {}", filter);
         return languageRepository.filterLanguages(filter);
@@ -123,6 +135,7 @@ public class LanguageServiceImpl implements LanguageService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public Page<CountryLanguage> filter(LanguageFilter filter, Pageable pageRequest) {
         LOGGER.debug("Filter languages, filter {}, amount {} page #{}", filter, pageRequest.getPageSize(), pageRequest.getPageNumber());
         List<CountryLanguage> list = filter(filter);

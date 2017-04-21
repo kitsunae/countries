@@ -9,6 +9,7 @@ import net.lashin.core.dao.CountryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public List<Country> getBiggestCountries(int quantity) {
         LOGGER.debug("Get {} bigges countries", quantity);
         PageRequest pageRequest = new PageRequest(0, quantity, Sort.Direction.DESC, "geography.surfaceArea");
@@ -42,6 +44,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public Page<Country> getBiggestCountries(Pageable pageRequest) {
         LOGGER.debug("Get {} biggest countries, page #{}", pageRequest.getPageSize(), pageRequest.getPageNumber());
         PageRequest ordered = new PageRequest(pageRequest.getPageNumber(), pageRequest.getPageSize(), Sort.Direction.DESC, "geography.surfaceArea");
@@ -50,6 +53,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public Map<String, Long> getMostCommonLanguages(int quantity) {
         LOGGER.debug("Get {} most common languages", quantity);
         Map<String, Double> map = getLanguagesWithNumberOfSpeakers();
@@ -79,6 +83,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countrylanguages")
     public Page<Map<String, Long>> getMostCommonLanguages(Pageable pageRequest) {
         LOGGER.debug("Get {} most common languages, page #{}", pageRequest.getPageSize(), pageRequest.getPageNumber());
         Map<String, Double> map = getLanguagesWithNumberOfSpeakers();
@@ -108,6 +113,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public List<City> getBiggestCities(int quantity) {
         LOGGER.debug("Get {} biggest cities", quantity);
         PageRequest pageRequest = new PageRequest(0,quantity, new Sort(Sort.Direction.DESC, "population"));
@@ -116,6 +122,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public Page<City> getBiggestCities(Pageable pageRequest) {
         LOGGER.debug("Get {} biggest cities, page #{}", pageRequest.getPageSize(), pageRequest.getPageNumber());
         PageRequest ordered = new PageRequest(pageRequest.getPageNumber(), pageRequest.getPageSize(), Sort.Direction.DESC, "population");

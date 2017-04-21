@@ -2,11 +2,15 @@ package net.lashin.config;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -25,6 +29,7 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "net.lashin.core.dao")
 @EnableTransactionManagement
 @PropertySource("classpath:/db/test.properties")
+@EnableCaching
 public class TestRootConfig {
 
     @Autowired
@@ -72,5 +77,17 @@ public class TestRootConfig {
         properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
         properties.setProperty("hibernate.format_sql", environment.getProperty("hibernate.format_sql"));
         return properties;
+    }
+
+    @Bean
+    public EhCacheCacheManager ehCacheCacheManager() {
+        return new EhCacheCacheManager(ehCacheManagerFactoryBean().getObject());
+    }
+
+    @Bean
+    public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
+        EhCacheManagerFactoryBean factoryBean = new EhCacheManagerFactoryBean();
+        factoryBean.setConfigLocation(new ClassPathResource("cache/ehcache-test.xml"));
+        return factoryBean;
     }
 }

@@ -8,6 +8,8 @@ import net.lashin.core.filters.CityFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public List<City> getByName(String name) {
         LOGGER.debug("Get by name {}", name);
         return cityRepository.findByName(name);
@@ -41,6 +44,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public Page<City> getByName(String name, Pageable pageRequest) {
         LOGGER.debug("Get by name {}, page {} amount {}", name, pageRequest.getPageNumber(), pageRequest.getPageSize());
         return cityRepository.findByName(name, pageRequest);
@@ -59,6 +63,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public Page<City> getWorldCapitals(Pageable pageRequest) {
         LOGGER.debug("Get {} world capitals, page#{}", pageRequest.getPageSize(), pageRequest.getPageNumber());
         List<City> all = getWorldCapitals();
@@ -71,6 +76,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public List<City> getAll() {
         LOGGER.debug("Get all cities");
         return cityRepository.findAll();
@@ -78,6 +84,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public Page<City> getAll(Pageable pageRequest) {
         LOGGER.debug("Get {} cities, page #{}", pageRequest.getPageSize(), pageRequest.getPageNumber());
         return cityRepository.findAll(pageRequest);
@@ -85,10 +92,11 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"cities", "countries"}, allEntries = true)
     public City edit(City city, Long cityId, String countryCode) {
         LOGGER.debug("Edit city {} with id {} of country {}", city, cityId, countryCode);
         if (!Objects.equals(city.getId(), cityId))
-            return null; //TODO throw exception
+            throw new IllegalArgumentException("City id not consistent");
         Country country = countryRepository.findOne(countryCode);
         city.setCountry(country);
         return cityRepository.save(city);
@@ -96,6 +104,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"cities", "countries"}, allEntries = true)
     public City save(City city, String countryCode) {
         LOGGER.debug("Saving city {} of country {}", city, countryCode);
         Country country = countryRepository.findOne(countryCode);
@@ -105,6 +114,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public List<City> getByCountryCode(String countryCode) {
         LOGGER.debug("Get cities by country code {}", countryCode);
         return cityRepository.findByCountryCode(countryCode);
@@ -112,6 +122,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public Page<City> getByCountryCode(String countryCode, Pageable pageRequest) {
         LOGGER.debug("Get {} cities by country code {}, page {}", pageRequest.getPageSize(), countryCode, pageRequest.getPageNumber());
         return cityRepository.findByCountryCode(countryCode, pageRequest);
@@ -119,6 +130,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public List<City> getByCountry(Country country) {
         LOGGER.debug("Get cities of country {}", country);
         return cityRepository.findByCountryCode(country.getCode());
@@ -126,6 +138,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public Page<City> getByCountry(Country country, Pageable pageRequest) {
         LOGGER.debug("Get {} cities of country {}, page #{}", pageRequest.getPageSize(), country, pageRequest.getPageNumber());
         return cityRepository.findByCountryCode(country.getCode(), pageRequest);
@@ -133,6 +146,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public City getById(long id) {
         LOGGER.debug("Get city by id {}", id);
         return cityRepository.findOne(id);
@@ -140,6 +154,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"cities", "countries"}, allEntries = true)
     public void remove(Long id) {
         LOGGER.debug("Delete city with id {}", id);
         List<Country> countries = countryRepository.findByCapitalId(id);
@@ -150,6 +165,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public List<City> filter(CityFilter filter) {
         LOGGER.debug("Filter cities, filter {}", filter);
         return cityRepository.filterCities(filter);
@@ -157,6 +173,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("cities")
     public Page<City> filter(CityFilter filter, Pageable pageRequest) {
         LOGGER.debug("Filter cities, filter {}, {} of page #{}", filter, pageRequest.getPageSize(), pageRequest.getPageNumber());
         List<City> all = filter(filter);

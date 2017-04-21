@@ -1,13 +1,18 @@
 package net.lashin.config;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import net.sf.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -22,6 +27,7 @@ import javax.sql.DataSource;
 @PropertySource("classpath:/database.properties")
 @EnableJpaRepositories("net.lashin.core.dao")
 @EnableTransactionManagement
+@EnableCaching
 @ComponentScan(basePackages = {"net.lashin.core"})
 public class RootConfig {
 
@@ -30,15 +36,12 @@ public class RootConfig {
     private Environment environment;
 
     @Bean
-    public DataSource dataSource(){
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(environment.getProperty("jdbc.driver"));
-        dataSource.setUrl(environment.getProperty("jdbc.url"));
-        dataSource.setUsername(environment.getProperty("jdbc.user"));
-        dataSource.setPassword(environment.getProperty("jdbc.password"));
-        dataSource.setInitialSize(environment.getProperty("dbcp.initial_size", Integer.class));
-        dataSource.setMaxActive(environment.getProperty("dbcp.max_active", Integer.class));
-        return dataSource;
+    public JndiObjectFactoryBean dataSource() {
+        JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
+        jndiObjectFactoryBean.setJndiName("jdbc/worldDB");
+        jndiObjectFactoryBean.setResourceRef(true);
+        jndiObjectFactoryBean.setProxyInterface(DataSource.class);
+        return jndiObjectFactoryBean;
     }
 
     @Bean
@@ -51,6 +54,7 @@ public class RootConfig {
         return adapter;
     }
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter vendorAdapter){
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
@@ -63,5 +67,17 @@ public class RootConfig {
     @Bean(name = "transactionManager")
     public JpaTransactionManager jpaTransactionManager(EntityManagerFactory emf){
         return new JpaTransactionManager(emf);
+    }
+
+    @Bean
+    public EhCacheCacheManager ehCacheCacheManager(CacheManager cacheManager) {
+        return new EhCacheCacheManager(cacheManager);
+    }
+
+    @Bean
+    public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
+        EhCacheManagerFactoryBean factoryBean = new EhCacheManagerFactoryBean();
+        factoryBean.setConfigLocation(new ClassPathResource("cache/ehcache.xml"));
+        return factoryBean;
     }
 }

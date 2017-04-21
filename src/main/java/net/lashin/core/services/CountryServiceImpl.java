@@ -9,6 +9,8 @@ import net.lashin.core.filters.CountryFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public List<Country> getByName(String name) {
         LOGGER.debug("Get countries by name {}", name);
         return countryRepository.findByName(name);
@@ -42,6 +45,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public Page<Country> getByName(String name, Pageable pageRequest) {
         LOGGER.debug("Get {} countries by name {}, page #{}", pageRequest.getPageSize(), name, pageRequest.getPageNumber());
         return countryRepository.findByName(name, pageRequest);
@@ -49,6 +53,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public Country getByCode(String code) {
         LOGGER.debug("Get country by code {}", code);
         return countryRepository.findOne(code);
@@ -56,6 +61,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public List<Country> getByCapital(Long cityId) {
         LOGGER.debug("Get countries by capital id {}", cityId);
         return countryRepository.findByCapitalId(cityId);
@@ -63,6 +69,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public Page<Country> getByCapital(Long cityId, Pageable pageRequest) {
         LOGGER.debug("Get {} countries by capital id {}, page #{}", pageRequest.getPageSize(), cityId, pageRequest.getPageNumber());
         return countryRepository.findByCapitalId(cityId, pageRequest);
@@ -70,6 +77,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public List<Country> getByCapital(String capitalName) {
         LOGGER.debug("Get countries by capital name {}", capitalName);
         return countryRepository.findByCapitalName(capitalName);
@@ -77,6 +85,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public Page<Country> getByCapital(String capitalName, Pageable pageRequest) {
         LOGGER.debug("Get {} countries by capital name {}, page #{}", pageRequest.getPageSize(), capitalName, pageRequest.getPageNumber());
         return countryRepository.findByCapitalName(capitalName, pageRequest);
@@ -84,6 +93,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public List<Country> getAll() {
         LOGGER.debug("Get all countries");
         return countryRepository.findAll();
@@ -91,6 +101,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public Page<Country> getAll(Pageable pageRequest) {
         LOGGER.debug("Get {} countries, page #{}", pageRequest.getPageSize(), pageRequest.getPageNumber());
         return countryRepository.findAll(pageRequest);
@@ -112,6 +123,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public List<Country> getByContinent(Continent continent) {
         LOGGER.debug("Get all countries by continent {}", continent);
         return countryRepository.findByGeographyContinent(continent);
@@ -119,6 +131,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public Page<Country> getByContinent(Continent continent, Pageable pageRequest) {
         LOGGER.debug("Get {} countries by continent {}, page#{}", pageRequest.getPageSize(), continent, pageRequest.getPageNumber());
         return countryRepository.findByGeographyContinent(continent, pageRequest);
@@ -126,6 +139,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public List<Country> getByContinentName(String continentName) {
         LOGGER.debug("Get all countries by continent name {}", continentName);
         Continent continent = Continent.fromString(continentName);
@@ -134,6 +148,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public Page<Country> getByContinentName(String continentName, Pageable pageRequest) {
         LOGGER.debug("Get {} countries by continent name {}, page#{}", pageRequest.getPageSize(), continentName, pageRequest.getPageNumber());
         Continent continent = Continent.fromString(continentName);
@@ -142,6 +157,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public List<Country> getByLanguage(String language) {
         LOGGER.debug("Get all countries by language {}", language);
         return languageRepository.findByLanguage(language)
@@ -152,6 +168,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public Page<Country> getByLanguage(String language, Pageable pageRequest) {
         LOGGER.debug("Get {} countries by language {}, page #{}", pageRequest.getPageSize(), language, pageRequest.getPageNumber());
         List<Country> list = getByLanguage(language);
@@ -165,6 +182,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional
+    @CacheEvict(value = {"countries", "cities", "countrylanguages"}, allEntries = true)
     public Country save(Country country) {
         LOGGER.debug("Save country {}", country);
         return countryRepository.save(country);
@@ -172,15 +190,17 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional
+    @CacheEvict(value = {"countries", "cities", "countrylanguages"}, allEntries = true)
     public Country edit(Country country, String countryCode) {
         LOGGER.debug("Edit country {} with code {}", country, countryCode);
         if (!country.getCode().equals(countryCode))
-            return null; //TODO throw Exception
+            throw new IllegalArgumentException("Country code not consistent");
         return save(country);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = {"countries", "cities", "countrylanguages"}, allEntries = true)
     public void remove(Country country) {
         LOGGER.debug("Remove country {}", country);
         countryRepository.delete(country);
@@ -188,6 +208,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional
+    @CacheEvict(value = {"countries", "cities", "countrylanguages"}, allEntries = true)
     public void remove(String countryCode) {
         LOGGER.debug("Remove country by code {}", countryCode);
         countryRepository.delete(countryCode);
@@ -195,6 +216,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public List<Country> filter(CountryFilter filter) {
         LOGGER.debug("Filter all countries, filter {}", filter);
         return countryRepository.filterCountries(filter);
@@ -202,6 +224,7 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("countries")
     public Page<Country> filter(CountryFilter filter, Pageable pageRequest) {
         LOGGER.debug("Filter countries, filter {}, amount {} page#{}", filter, pageRequest.getPageSize(), pageRequest.getPageNumber());
         List<Country> list = filter(filter);

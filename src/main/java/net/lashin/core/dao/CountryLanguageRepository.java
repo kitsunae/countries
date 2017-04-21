@@ -12,8 +12,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public interface CountryLanguageRepository extends JpaRepository<CountryLanguage, CountryLanguageId> {
-    List<CountryLanguage> findByCountry_Code(String countryCode);
-    Page<CountryLanguage> findByCountry_Code(String countryCode, Pageable pageRequest);
+
+    @Query("select l from CountryLanguage l where l.countryLanguageId.countryCode=?1")
+    List<CountryLanguage> findByCountryCode(String countryCode);
+
+    Page<CountryLanguage> findByCountryLanguageIdCountryCode(String countryCode, Pageable pageRequest);
 
     @Query("select distinct l.countryLanguageId.language from CountryLanguage l")
     List<String> findAllLanguageNames();

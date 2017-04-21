@@ -119,6 +119,7 @@ public class CountryController {
         return assembler.toResource(service.save(assembler.toEntity(country)));
     }
 
+    //// TODO: 21.04.2017 editing and saving with check of country code for preventing unintentional editing instead of saving new
     @RequestMapping(value = "/{countryCode}", method = RequestMethod.PUT)
     public CountryResource edit(@RequestBody CountryResource country, @PathVariable String countryCode){
         LOGGER.debug("Editing country {} with code {}", country, countryCode);
