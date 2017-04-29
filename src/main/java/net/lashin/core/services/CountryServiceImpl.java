@@ -56,7 +56,7 @@ public class CountryServiceImpl implements CountryService{
     @Cacheable("countries")
     public Country getByCode(String code) {
         LOGGER.debug("Get country by code {}", code);
-        return countryRepository.findOne(code);
+        return countryRepository.findCountryWithImages(code);
     }
 
     @Override
@@ -185,6 +185,9 @@ public class CountryServiceImpl implements CountryService{
     @CacheEvict(value = {"countries", "cities", "countrylanguages"}, allEntries = true)
     public Country save(Country country) {
         LOGGER.debug("Save country {}", country);
+        if (countryRepository.findOne(country.getCode()) != null) {
+            throw new IllegalArgumentException("This country code already exists");
+        }
         return countryRepository.save(country);
     }
 
@@ -195,7 +198,7 @@ public class CountryServiceImpl implements CountryService{
         LOGGER.debug("Edit country {} with code {}", country, countryCode);
         if (!country.getCode().equals(countryCode))
             throw new IllegalArgumentException("Country code not consistent");
-        return save(country);
+        return countryRepository.save(country);
     }
 
     @Override

@@ -97,7 +97,7 @@ public class CityServiceImpl implements CityService {
         LOGGER.debug("Edit city {} with id {} of country {}", city, cityId, countryCode);
         if (!Objects.equals(city.getId(), cityId))
             throw new IllegalArgumentException("City id not consistent");
-        Country country = countryRepository.findOne(countryCode);
+        Country country = countryRepository.getOne(countryCode);
         city.setCountry(country);
         return cityRepository.save(city);
     }
@@ -107,7 +107,7 @@ public class CityServiceImpl implements CityService {
     @CacheEvict(value = {"cities", "countries"}, allEntries = true)
     public City save(City city, String countryCode) {
         LOGGER.debug("Saving city {} of country {}", city, countryCode);
-        Country country = countryRepository.findOne(countryCode);
+        Country country = countryRepository.getOne(countryCode);
         city.setCountry(country);
         return cityRepository.save(city);
     }

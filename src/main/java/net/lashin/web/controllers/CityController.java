@@ -14,6 +14,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,13 +104,13 @@ public class CityController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public CityResource saveCity(@RequestBody CityResource cityResource){
+    public CityResource saveCity(@RequestBody @Valid CityResource cityResource) {
         LOGGER.debug("Saving city {}", cityResource);
         return assembler.toResource(service.save(assembler.toEntity(cityResource), cityResource.getCountryCode()));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public CityResource editCity(@RequestBody CityResource city, @PathVariable Long id){
+    public CityResource editCity(@RequestBody @Valid CityResource city, @PathVariable Long id) {
         LOGGER.debug("Editing city {} with id {}", city, id);
         return assembler.toResource(service.edit(assembler.toEntity(city), id, city.getCountryCode()));
     }

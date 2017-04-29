@@ -2,22 +2,39 @@ package net.lashin.core.hateoas;
 
 import org.springframework.hateoas.ResourceSupport;
 
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CountryResource extends ResourceSupport {
 
+    @NotNull
+    @Size(max = 3)
     private String code;
+    @NotNull
+    @Size(max = 52)
     private String name;
+    @Max(999999)
     private Integer indepYear;
+    @NotNull
+    @Size(max = 45)
     private String localName;
+    @NotNull
+    @Size(max = 2)
     private String code2;
+    @Valid
     private CityResource capital;
+    @Valid
     private Geography geography;
+    @Valid
     private Demography demography;
+    @Valid
     private Economy economy;
+    @Valid
     private Policy policy;
     private String description;
-    private List<ImageResource> images;
+    private List<ImageResource> images = new ArrayList<>();
 
 
     public String getCode() {
@@ -119,8 +136,13 @@ public class CountryResource extends ResourceSupport {
 
     public static class Geography {
 
+        @NotNull
         private String continent;
+        @DecimalMax("9999999999.99")
+        @DecimalMin("0.01")
         private Double surfaceArea;
+        @Size(max = 26)
+        @NotNull
         private String region;
 
         public String getContinent() {
@@ -150,7 +172,11 @@ public class CountryResource extends ResourceSupport {
 
     public static class Demography {
 
+        @Max(Integer.MAX_VALUE)
+        @Min(0)
         private Integer population;
+        @DecimalMax("999.9")
+        @DecimalMin("0.1") //// TODO: 17.04.2017 check
         private Double lifeExpectancy;
 
         public Integer getPopulation() {
@@ -173,7 +199,11 @@ public class CountryResource extends ResourceSupport {
 
     public static class Economy {
 
+        @DecimalMax("9999999999.99")
+        @DecimalMin("0")
         private Double gnp;
+        @DecimalMax("9999999999.99")
+        @DecimalMin("0")
         private Double gnpOld;
 
         public Double getGnp() {
@@ -195,7 +225,10 @@ public class CountryResource extends ResourceSupport {
 
     public static class Policy {
 
+        @Size(max = 45)
+        @NotNull
         private String governmentForm;
+        @Size(max = 60)
         private String headOfState;
 
         public String getGovernmentForm() {

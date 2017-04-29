@@ -8,10 +8,12 @@ import net.lashin.core.filters.CityFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +25,15 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestRootConfig.class})
 @Transactional
+@Sql(scripts = {"classpath:/db/initDB.sql"})
 public class CityServiceImplTest {
 
     @Autowired
     private CityService cityService;
     @Autowired
     private CountryService countryService;
+    @Autowired
+    private EhCacheCacheManager cacheManager;
 
     @Test
     public void getCitiesByName() throws Exception {
@@ -83,6 +88,7 @@ public class CityServiceImplTest {
     @Test
     @Rollback
     public void edit() throws Exception {
+        cacheManager.getCache("cities").clear();
         City city = cityService.getById(3580);
         city.setName("New Moscow");
         cityService.edit(city, 3580L, "RUS");

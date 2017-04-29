@@ -5,23 +5,41 @@ import net.lashin.core.beans.Country;
 import net.lashin.core.filters.CountryFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public interface CountryRepository extends JpaRepository<Country, String> {
+
     List<Country> findByName(String name);
+
+    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
     Page<Country> findByName(String name, Pageable pageable);
 
     List<Country> findByGeographyContinent(Continent continent);
 
+    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
     Page<Country> findByGeographyContinent(Continent continent, Pageable pageable);
+
+    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
     List<Country> findByCapitalId(Long id);
+
+    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
     Page<Country> findByCapitalId(Long cityId, Pageable pageable);
+
+    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
     List<Country> findByCapitalName(String name);
+
+    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
     Page<Country> findByCapitalName(String capitalName, Pageable pageable);
+
+    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT c from Country c where c.code=:code")
+    Country findCountryWithImages(@Param("code") String code);
 
     @Query("select c.name from Country c")
     List<String> findAllCountryNames();

@@ -1,6 +1,8 @@
 package net.lashin.core.beans;
 
 
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -10,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@NamedEntityGraph(name = "City.images", attributeNodes = {@NamedAttributeNode("images")})
 public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +27,11 @@ public class City {
     @Min(0)
     private int population;
     private String description;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "countryCode", nullable = false)
+    @org.hibernate.annotations.Fetch(FetchMode.JOIN)
     private Country country;
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "city_image", joinColumns = @JoinColumn(name = "city_id"))
     private Set<CityImage> images = new HashSet<>();
 

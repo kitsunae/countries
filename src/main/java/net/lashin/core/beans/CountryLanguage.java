@@ -1,5 +1,7 @@
 package net.lashin.core.beans;
 
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -21,6 +23,7 @@ public class CountryLanguage {
     private String description;
     @ManyToOne
     @JoinColumn(name = "countryCode", insertable = false, updatable = false)
+    @org.hibernate.annotations.Fetch(FetchMode.JOIN)
     private Country country;
 
     protected CountryLanguage() {

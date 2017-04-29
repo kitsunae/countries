@@ -76,6 +76,8 @@ public class TestRootConfig {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("hibernate.hbm2ddl.auto"));
         properties.setProperty("hibernate.format_sql", environment.getProperty("hibernate.format_sql"));
+        properties.setProperty("hibernate.use_sql_comments", environment.getProperty("hibernate.use_sql_comments"));
+        properties.setProperty("hibernate.generate_statistics", environment.getProperty("hibernate.generate_statistics"));
         return properties;
     }
 

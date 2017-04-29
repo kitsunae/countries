@@ -14,6 +14,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,7 +99,7 @@ public class LanguageController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public CountryLanguageResource save(@RequestBody CountryLanguageResource language){
+    public CountryLanguageResource save(@RequestBody @Valid CountryLanguageResource language) {
         LOGGER.debug("Saving language {}", language);
         return assembler.toResource(service.save(assembler.toEntity(language)));
     }
@@ -118,7 +119,7 @@ public class LanguageController {
     }
 
     @RequestMapping(value = "/butch/filter", method = RequestMethod.POST)
-    public List<CountryLanguageResource> filterLAnguages(@RequestBody LanguageFilter filter) {
+    public List<CountryLanguageResource> filterLanguages(@RequestBody LanguageFilter filter) {
         LOGGER.debug("Filter all languages with filter {}", filter);
         return service.filter(filter).stream().map(assembler::toResource).collect(Collectors.toList());
     }

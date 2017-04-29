@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,7 +46,7 @@ public class CityResourceHandler extends ResourceHandler<City, CityResource> {
         res.setPopulation(city.getPopulation());
         res.setDescription(city.getDescription());
         Set<CityImage> images = city.getImages();
-        List<ImageResource> resourceImages = images.stream().map(imageHandler::toResource).collect(Collectors.toList());
+        List<ImageResource> resourceImages = images instanceof HashSet ? images.stream().map(imageHandler::toResource).collect(Collectors.toList()) : null;
         res.setImages(resourceImages);
         Link selfRel = linkTo(methodOn(CityController.class).getCity(city.getId())).withSelfRel();
         res.add(selfRel);
@@ -59,6 +60,8 @@ public class CityResourceHandler extends ResourceHandler<City, CityResource> {
     @Override
     public City toEntity(CityResource resource) {
         LOGGER.trace("Translating to entity resource {}", resource);
+        if (resource == null)
+            return null;
         Set<CityImage> images = resource.getImages()
                 .stream()
                 .map(ir -> {

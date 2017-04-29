@@ -23,7 +23,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
-@ComponentScan("net.lashin.web.controllers")
+@ComponentScan("net.lashin.web")
 public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;

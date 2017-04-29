@@ -6,12 +6,11 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
+@NamedEntityGraph(name = "Country.images", attributeNodes = {@NamedAttributeNode("images")})
 public class Country {
     @Id
     @Size(max = 3)
@@ -42,11 +41,11 @@ public class Country {
     @JoinColumn(name = "capital", referencedColumnName = "id")
     @org.hibernate.annotations.Fetch(FetchMode.JOIN)
     private City capital;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<City> cities = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<CountryLanguage> languages = new ArrayList<>();
-    @ElementCollection(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<City> cities = new HashSet<>();
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<CountryLanguage> languages = new HashSet<>();
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "country_image", joinColumns = @JoinColumn(name = "CountryCode"))
     private Set<CountryImage> images = new HashSet<>();
 

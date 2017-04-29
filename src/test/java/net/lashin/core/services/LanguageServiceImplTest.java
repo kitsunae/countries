@@ -7,10 +7,12 @@ import net.lashin.core.filters.LanguageFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +24,15 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestRootConfig.class})
 @Transactional
+@Sql(scripts = {"classpath:/db/initDB.sql"})
 public class LanguageServiceImplTest {
 
     @Autowired
     private LanguageService languageService;
     @Autowired
     private CountryService countryService;
+    @Autowired
+    private EhCacheCacheManager cacheManager;
 
     @Test
     public void getAllLanguages() throws Exception {
@@ -74,6 +79,7 @@ public class LanguageServiceImplTest {
 
     @Test
     public void getLanguagesByCountryAndOfficialty() throws Exception {
+        cacheManager.getCache("countrylanguages").clear();
         List<CountryLanguage> list = languageService.getByCountryAndOfficialty("RUS", true);
         assertEquals(1, list.size());
         assertEquals("Russian", list.get(0).getLanguage());

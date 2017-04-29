@@ -2,17 +2,29 @@ package net.lashin.core.hateoas;
 
 import org.springframework.hateoas.ResourceSupport;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CityResource extends ResourceSupport{
 
     private Long identity;
+    @NotNull
+    @Size(max = 35)
     private String name;
+    @NotNull
     private String countryCode;
+    @NotNull
+    @Size(max = 20)
     private String district;
+    @Min(0)
+    @Max(Integer.MAX_VALUE)
     private Integer population;
     private String description;
-    private List<ImageResource> images;
+    private List<ImageResource> images = new ArrayList<>();
 
     public String getName() {
         return name;

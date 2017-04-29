@@ -15,11 +15,13 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/country")
+
 public class CountryController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CountryController.class);
@@ -114,14 +116,13 @@ public class CountryController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public CountryResource save(@RequestBody CountryResource country){
+    public CountryResource save(@RequestBody @Valid CountryResource country) {
         LOGGER.debug("Saving country {}", country);
         return assembler.toResource(service.save(assembler.toEntity(country)));
     }
 
-    //// TODO: 21.04.2017 editing and saving with check of country code for preventing unintentional editing instead of saving new
     @RequestMapping(value = "/{countryCode}", method = RequestMethod.PUT)
-    public CountryResource edit(@RequestBody CountryResource country, @PathVariable String countryCode){
+    public CountryResource edit(@RequestBody @Valid CountryResource country, @PathVariable String countryCode) {
         LOGGER.debug("Editing country {} with code {}", country, countryCode);
         return assembler.toResource(service.edit(assembler.toEntity(country), countryCode));
     }

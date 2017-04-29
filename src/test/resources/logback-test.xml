@@ -16,6 +16,14 @@
         </encoder>
     </appender>
 
+    <appender name="hibernate" class="ch.qos.logback.core.FileAppender">
+        <file>logs/hibernate.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date %-5level %logger{0} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <appender name="sql" class="ch.qos.logback.core.FileAppender">
         <file>logs/sql.log</file>
         <encoder>
@@ -62,6 +70,12 @@
     <logger name="net.lashin.web" level="error">
         <appender-ref ref="file"/>
     </logger>
+    <logger name="org.hibernate.stat" level="debug">
+        <appender-ref ref="console"/>
+    </logger>
+    <logger name="org.hibernate" level="info">
+        <appender-ref ref="console"/>
+    </logger>
     <logger name="jdbc.sqlonly" level="error">
         <appender-ref ref="sql"/>
     </logger>
@@ -78,7 +92,7 @@
         <appender-ref ref="sql-connection"/>
     </logger>
 
-    <root level="error">
+    <root level="off">
         <appender-ref ref="console"/>
     </root>
 </configuration>

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -61,7 +62,8 @@ public class CountryResourceHandler extends ResourceHandler<Country, CountryReso
         resource.setIndepYear(country.getIndepYear());
         resource.setLocalName(country.getLocalName());
         resource.setCapital(cityResourceHandler.toResource(country.getCapital()));
-        List<ImageResource> imageResources = country.getImages().stream().map(imageResourceHandler::toResource).collect(Collectors.toList());
+        Set<CountryImage> images = country.getImages();
+        List<ImageResource> imageResources = images instanceof HashSet ? images.stream().map(imageResourceHandler::toResource).collect(Collectors.toList()) : null;
         resource.setImages(imageResources);
         resource.setDescription(country.getDescription());
         Link self = linkTo(methodOn(CountryController.class).getCountry(country.getCode())).withSelfRel();
