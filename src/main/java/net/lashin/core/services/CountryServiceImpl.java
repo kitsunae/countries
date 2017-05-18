@@ -160,7 +160,7 @@ public class CountryServiceImpl implements CountryService{
     @Cacheable("countries")
     public List<Country> getByLanguage(String language) {
         LOGGER.debug("Get all countries by language {}", language);
-        return languageRepository.findByLanguage(language)
+        return languageRepository.findWithCountriesByLanguage(language)
                 .stream()
                 .map(CountryLanguage::getCountry)
                 .collect(Collectors.toList());

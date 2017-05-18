@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class WideExceptionHandler {
 
-    private static Logger LOG = LoggerFactory.getLogger(WideExceptionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WideExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleUncaughtException(Exception e) {

@@ -4,17 +4,16 @@ import net.lashin.config.TestRootConfig;
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.CountryLanguage;
 import net.lashin.core.filters.LanguageFilter;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +22,6 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestRootConfig.class})
-@Transactional
 @Sql(scripts = {"classpath:/db/initDB.sql"})
 public class LanguageServiceImplTest {
 
@@ -33,6 +31,13 @@ public class LanguageServiceImplTest {
     private CountryService countryService;
     @Autowired
     private EhCacheCacheManager cacheManager;
+
+    @Before
+    public void setUp() {
+        cacheManager.getCache("cities").clear();
+        cacheManager.getCache("countries").clear();
+        cacheManager.getCache("countrylanguages").clear();
+    }
 
     @Test
     public void getAllLanguages() throws Exception {
@@ -65,7 +70,7 @@ public class LanguageServiceImplTest {
                 .collect(Collectors.toList());
         assertTrue(names.contains("Russian"));
         assertTrue(names.contains("Avarian"));
-        assertEquals(countryService.getByCode("RUS"), languages.get(0).getCountry());
+        assertEquals("RUS", languages.get(0).getCountryCode());
     }
 
     @Test
@@ -79,12 +84,11 @@ public class LanguageServiceImplTest {
 
     @Test
     public void getLanguagesByCountryAndOfficialty() throws Exception {
-        cacheManager.getCache("countrylanguages").clear();
         List<CountryLanguage> list = languageService.getByCountryAndOfficialty("RUS", true);
         assertEquals(1, list.size());
         assertEquals("Russian", list.get(0).getLanguage());
         assertTrue(list.get(0).isOfficial());
-        assertEquals(countryService.getByCode("RUS"), list.get(0).getCountry());
+        assertEquals("RUS", list.get(0).getCountryCode());
     }
 
     @Test
@@ -102,11 +106,10 @@ public class LanguageServiceImplTest {
         assertEquals("Tatar", language.getLanguage());
         assertEquals(3.2, language.getPercentage(), 0.001);
         assertFalse(language.isOfficial());
-        assertEquals(countryService.getByCode("RUS"), language.getCountry());
+        assertEquals("RUS", language.getCountryCode());
     }
 
     @Test
-    @Rollback
     public void save() throws Exception {
         CountryLanguage language = new CountryLanguage("RUS", "OLOLOLO", true, 99.0);
         languageService.save(language);
@@ -115,7 +118,6 @@ public class LanguageServiceImplTest {
     }
 
     @Test
-    @Rollback
     public void remove() throws Exception {
         languageService.remove("English", "USA");
         assertTrue(languageService.getByCountryAndOfficialty("USA", true).isEmpty());
@@ -126,7 +128,6 @@ public class LanguageServiceImplTest {
     }
 
     @Test
-    @Rollback
     public void editTest() throws Exception{
         CountryLanguage language = languageService.getByNameAndCountry("Chinese", "USA");
         language.setPercentage(45.3);

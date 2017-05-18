@@ -1,17 +1,17 @@
 package net.lashin.core.beans;
 
-import org.hibernate.annotations.FetchMode;
-
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 
 
 @Entity
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = CountryLanguage.COUNTRYLANGUAGE_WITH_COUNTRY, attributeNodes = {@NamedAttributeNode("country")})
+})
 public class CountryLanguage {
+
+    public static final String COUNTRYLANGUAGE_WITH_COUNTRY = "CountryLanguage.country";
 
     @EmbeddedId
     private CountryLanguageId countryLanguageId;
@@ -21,9 +21,8 @@ public class CountryLanguage {
     @DecimalMin("0.00")
     private double percentage;
     private String description;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "countryCode", insertable = false, updatable = false)
-    @org.hibernate.annotations.Fetch(FetchMode.JOIN)
     private Country country;
 
     protected CountryLanguage() {

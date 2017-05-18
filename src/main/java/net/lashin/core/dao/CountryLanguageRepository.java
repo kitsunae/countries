@@ -5,6 +5,7 @@ import net.lashin.core.beans.CountryLanguageId;
 import net.lashin.core.filters.LanguageFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -26,6 +27,10 @@ public interface CountryLanguageRepository extends JpaRepository<CountryLanguage
 
     @Query("select l from CountryLanguage l where l.countryLanguageId.language=?1")
     List<CountryLanguage> findByLanguage(String language);
+
+    @EntityGraph(value = CountryLanguage.COUNTRYLANGUAGE_WITH_COUNTRY, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("select l from CountryLanguage l where l.countryLanguageId.language=?1")
+    List<CountryLanguage> findWithCountriesByLanguage(String language);
 
     @Query("select l from CountryLanguage l where l.percentage between ?1 and ?2")
     List<CountryLanguage> filterLanguages(double minPercentage, double maxPercentage);

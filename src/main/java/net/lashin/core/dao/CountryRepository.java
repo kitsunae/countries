@@ -15,29 +15,32 @@ import java.util.stream.Collectors;
 
 public interface CountryRepository extends JpaRepository<Country, String> {
 
+    @EntityGraph(value = Country.COUNTRY_FULL, type = EntityGraph.EntityGraphType.LOAD)
     List<Country> findByName(String name);
 
-    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value = Country.COUNTRY_FULL, type = EntityGraph.EntityGraphType.LOAD)
     Page<Country> findByName(String name, Pageable pageable);
+
+    @Query("select c from Country c left join fetch c.capital")
+    List<Country> findWithCapitals();
 
     List<Country> findByGeographyContinent(Continent continent);
 
-    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
     Page<Country> findByGeographyContinent(Continent continent, Pageable pageable);
 
-    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value = Country.COUNTRY_WITH_IMAGES, type = EntityGraph.EntityGraphType.LOAD)
     List<Country> findByCapitalId(Long id);
 
-    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value = Country.COUNTRY_WITH_IMAGES, type = EntityGraph.EntityGraphType.LOAD)
     Page<Country> findByCapitalId(Long cityId, Pageable pageable);
 
-    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value = Country.COUNTRY_FULL, type = EntityGraph.EntityGraphType.LOAD)
     List<Country> findByCapitalName(String name);
 
-    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value = Country.COUNTRY_FULL, type = EntityGraph.EntityGraphType.LOAD)
     Page<Country> findByCapitalName(String capitalName, Pageable pageable);
 
-    @EntityGraph(value = "Country.images", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value = Country.COUNTRY_FULL, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT c from Country c where c.code=:code")
     Country findCountryWithImages(@Param("code") String code);
 

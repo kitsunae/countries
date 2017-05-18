@@ -54,7 +54,7 @@ public class CityServiceImpl implements CityService {
     @Transactional(readOnly = true)
     public List<City> getWorldCapitals() {
         LOGGER.debug("Get all world capitals");
-        return countryRepository.findAll()
+        return countryRepository.findWithCapitals()
                 .stream()
                 .map(Country::getCapital)
                 .filter(city -> city!=null)

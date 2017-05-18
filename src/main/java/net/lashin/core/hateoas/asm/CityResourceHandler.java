@@ -37,7 +37,8 @@ public class CityResourceHandler extends ResourceHandler<City, CityResource> {
     @Override
     public CityResource toResource(City city) {
         LOGGER.trace("Translating {} to resource", city);
-        if (city==null) return null;
+        if (city == null)
+            return null;
         CityResource res = new CityResource();
         res.setIdentity(city.getId());
         res.setCountryCode(city.getCountry().getCode());

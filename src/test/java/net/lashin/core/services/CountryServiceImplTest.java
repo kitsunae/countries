@@ -5,16 +5,16 @@ import net.lashin.core.beans.City;
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
 import net.lashin.core.filters.CountryFilter;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestRootConfig.class})
-@Transactional
 @Sql(scripts = {"classpath:/db/initDB.sql"})
 public class CountryServiceImplTest {
 
@@ -30,6 +29,15 @@ public class CountryServiceImplTest {
     private CountryService countryService;
     @Autowired
     private CityService cityService;
+    @Autowired
+    private EhCacheCacheManager cacheManager;
+
+    @Before
+    public void setUp() {
+        cacheManager.getCache("cities").clear();
+        cacheManager.getCache("countries").clear();
+        cacheManager.getCache("countrylanguages").clear();
+    }
 
     @Test
     public void getCountriesByName() throws Exception {
@@ -153,7 +161,6 @@ public class CountryServiceImplTest {
     }
 
     @Test
-    @Rollback
     public void save() throws Exception {
         City city = new City("New Vasuki", "Chelyaba", 15);
         Country country = new Country("AAA", "Chunga-Changa", Continent.AFRICA,"Region", 0.02, 15, "Pesech", "Tyrany", "AA");
@@ -165,19 +172,16 @@ public class CountryServiceImplTest {
     }
 
     @Test
-    @Rollback
     public void edit() throws Exception {
         Country country = countryService.getByCode("RUS");
         City newCapital = cityService.getByName("St Petersburg").get(0);
         country.setCapital(newCapital);
         countryService.edit(country, "RUS");
-        assertEquals(newCapital, countryService.getByCapital(newCapital.getId()).get(0).getCapital());
         assertTrue(cityService.getWorldCapitals().contains(newCapital));
         assertEquals(country, cityService.getById(newCapital.getId()).getCountry());
     }
 
     @Test
-    @Rollback
     public void remove() throws Exception {
         countryService.remove("USA");
         assertNull(countryService.getByCode("USA"));
@@ -185,7 +189,6 @@ public class CountryServiceImplTest {
     }
 
     @Test
-    @Rollback
     public void remove1() throws Exception {
         Country country = countryService.getByCode("USA");
         countryService.remove(country);

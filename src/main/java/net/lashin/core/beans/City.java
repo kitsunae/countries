@@ -12,8 +12,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@NamedEntityGraph(name = "City.images", attributeNodes = {@NamedAttributeNode("images")})
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = City.CITY_WITH_IMAGES, attributeNodes = {@NamedAttributeNode("images")}),
+})
 public class City {
+
+    public static final String CITY_WITH_IMAGES = "City.images";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

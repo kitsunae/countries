@@ -3,9 +3,11 @@ package net.lashin.core.services;
 import net.lashin.config.TestRootConfig;
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,6 +33,15 @@ public class StatisticsServiceImplTest {
     private CountryService countryService;
     @Autowired
     private CityService cityService;
+    @Autowired
+    private EhCacheCacheManager cacheManager;
+
+    @Before
+    public void setUp() {
+        cacheManager.getCache("cities").clear();
+        cacheManager.getCache("countries").clear();
+        cacheManager.getCache("countrylanguages").clear();
+    }
 
     @Test
     public void getBiggestCountries(){

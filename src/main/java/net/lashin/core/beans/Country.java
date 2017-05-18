@@ -1,7 +1,5 @@
 package net.lashin.core.beans;
 
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
@@ -10,8 +8,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@NamedEntityGraph(name = "Country.images", attributeNodes = {@NamedAttributeNode("images")})
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = Country.COUNTRY_WITH_IMAGES, attributeNodes = {@NamedAttributeNode("images")}),
+        @NamedEntityGraph(name = Country.COUNTRY_WITH_CAPITAL, attributeNodes = {@NamedAttributeNode("capital")}),
+        @NamedEntityGraph(name = Country.COUNTRY_WITH_CITIES, attributeNodes = {@NamedAttributeNode("cities")}),
+        @NamedEntityGraph(name = Country.COUNTRY_WITH_LANGUAGES, attributeNodes = {@NamedAttributeNode("languages")}),
+        @NamedEntityGraph(name = Country.COUNTRY_FULL, attributeNodes = {
+                @NamedAttributeNode("images"),
+                @NamedAttributeNode("capital")
+        })
+})
 public class Country {
+
+    public static final String COUNTRY_WITH_IMAGES = "Country.images";
+    public static final String COUNTRY_FULL = "Country.full";
+    static final String COUNTRY_WITH_CAPITAL = "Country.capital";
+    static final String COUNTRY_WITH_CITIES = "Country.cities";
+    static final String COUNTRY_WITH_LANGUAGES = "Country.languages";
     @Id
     @Size(max = 3)
     @NotNull
@@ -37,9 +50,8 @@ public class Country {
     @Embedded
     private CountryEconomy economy;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "capital", referencedColumnName = "id")
-    @org.hibernate.annotations.Fetch(FetchMode.JOIN)
     private City capital;
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<City> cities = new HashSet<>();
@@ -178,6 +190,14 @@ public class Country {
 
     public void setEconomy(CountryEconomy economy) {
         this.economy = economy;
+    }
+
+    public Set<City> getCities() {
+        return cities;
+    }
+
+    public Set<CountryLanguage> getLanguages() {
+        return languages;
     }
 
     public Set<CountryImage> getImages() {

@@ -7,13 +7,13 @@ import net.lashin.core.hateoas.ImageResource;
 import net.lashin.web.controllers.CityController;
 import net.lashin.web.controllers.CountryController;
 import net.lashin.web.controllers.LanguageController;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -61,9 +61,11 @@ public class CountryResourceHandler extends ResourceHandler<Country, CountryReso
         resource.setCode2(country.getCode2());
         resource.setIndepYear(country.getIndepYear());
         resource.setLocalName(country.getLocalName());
-        resource.setCapital(cityResourceHandler.toResource(country.getCapital()));
+        if (Hibernate.isInitialized(country.getCapital())) {
+            resource.setCapital(cityResourceHandler.toResource(country.getCapital()));
+        }
         Set<CountryImage> images = country.getImages();
-        List<ImageResource> imageResources = images instanceof HashSet ? images.stream().map(imageResourceHandler::toResource).collect(Collectors.toList()) : null;
+        List<ImageResource> imageResources = Hibernate.isInitialized(images) ? images.stream().map(imageResourceHandler::toResource).collect(Collectors.toList()) : null;
         resource.setImages(imageResources);
         resource.setDescription(country.getDescription());
         Link self = linkTo(methodOn(CountryController.class).getCountry(country.getCode())).withSelfRel();
