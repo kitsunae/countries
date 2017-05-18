@@ -1,43 +1,25 @@
 package net.lashin.core.services;
 
-import net.lashin.config.TestRootConfig;
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Continent;
 import net.lashin.core.beans.Country;
 import net.lashin.core.filters.CountryFilter;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestRootConfig.class})
-@Sql(scripts = {"classpath:/db/initDB.sql"})
-public class CountryServiceImplTest {
+@SuppressWarnings("SpringJavaAutowiredMembersInspection")
+public class CountryServiceImplTest extends AbstractServiceTest {
 
     @Autowired
     private CountryService countryService;
     @Autowired
     private CityService cityService;
-    @Autowired
-    private EhCacheCacheManager cacheManager;
-
-    @Before
-    public void setUp() {
-        cacheManager.getCache("cities").clear();
-        cacheManager.getCache("countries").clear();
-        cacheManager.getCache("countrylanguages").clear();
-    }
 
     @Test
     public void getCountriesByName() throws Exception {

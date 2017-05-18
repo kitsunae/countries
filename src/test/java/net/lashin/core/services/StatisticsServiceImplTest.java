@@ -1,19 +1,11 @@
 package net.lashin.core.services;
 
-import net.lashin.config.TestRootConfig;
 import net.lashin.core.beans.City;
 import net.lashin.core.beans.Country;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -21,11 +13,8 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestRootConfig.class})
-@Transactional
-@Sql(scripts = {"classpath:/db/initDB.sql"})
-public class StatisticsServiceImplTest {
+@SuppressWarnings("SpringJavaAutowiredMembersInspection")
+public class StatisticsServiceImplTest extends AbstractServiceTest {
 
     @Autowired
     private StatisticsService statisticsService;
@@ -33,15 +22,6 @@ public class StatisticsServiceImplTest {
     private CountryService countryService;
     @Autowired
     private CityService cityService;
-    @Autowired
-    private EhCacheCacheManager cacheManager;
-
-    @Before
-    public void setUp() {
-        cacheManager.getCache("cities").clear();
-        cacheManager.getCache("countries").clear();
-        cacheManager.getCache("countrylanguages").clear();
-    }
 
     @Test
     public void getBiggestCountries(){
