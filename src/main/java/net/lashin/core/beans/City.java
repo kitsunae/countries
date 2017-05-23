@@ -36,8 +36,7 @@ public class City {
     @JoinColumn(name = "countryCode", nullable = false)
     @org.hibernate.annotations.Fetch(FetchMode.JOIN)
     private Country country;
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "city_image", joinColumns = @JoinColumn(name = "city_id"))
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "city", orphanRemoval = true)
     private Set<CityImage> images = new HashSet<>();
 
     protected City() {

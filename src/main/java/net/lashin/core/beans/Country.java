@@ -57,8 +57,7 @@ public class Country {
     private Set<City> cities = new HashSet<>();
     @OneToMany(mappedBy = "country", fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<CountryLanguage> languages = new HashSet<>();
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "country_image", joinColumns = @JoinColumn(name = "CountryCode"))
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", orphanRemoval = true)
     private Set<CountryImage> images = new HashSet<>();
 
     protected Country() {

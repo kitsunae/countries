@@ -15,9 +15,9 @@ public abstract class Image {
     private String description;
 
 
-    public abstract long getId();
+    public abstract Long getId();
 
-    public abstract void setId(long id);
+    public abstract void setId(Long id);
 
     public String getUrl() {
         return url;

@@ -1,11 +1,15 @@
 package net.lashin.web.controllers;
 
-import net.lashin.core.hateoas.ImageResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 public class IndexController {
@@ -20,7 +24,9 @@ public class IndexController {
 
     //TODO WTF?
     @RequestMapping(value = "/", method = RequestMethod.HEAD)
-    public ImageResource getImage() {
-        return null;
+    public ResponseEntity<Object> getImage() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.DATE, LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        return ResponseEntity.ok().headers(headers).build();
     }
 }
