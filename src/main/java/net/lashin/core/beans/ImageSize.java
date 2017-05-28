@@ -2,6 +2,7 @@ package net.lashin.core.beans;
 
 
 public enum ImageSize {
+    DEFAULT(0),
     XSMALL(100),
     SMALL(300),
     MEDIUM(500),
@@ -16,5 +17,11 @@ public enum ImageSize {
 
     public int getSize() {
         return size;
+    }
+
+    public void setSize(int size) {
+        if (this != DEFAULT)
+            return;
+        this.size = size;
     }
 }

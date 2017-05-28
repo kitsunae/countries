@@ -6,35 +6,37 @@ import net.lashin.core.dao.CityImageRepository;
 import net.lashin.core.dao.CityRepository;
 import net.lashin.core.dao.CountryImageRepository;
 import net.lashin.core.dao.CountryRepository;
-import net.lashin.core.hateoas.ImageResourceType;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-@Service
 @Transactional
 public class ImageServiceImpl implements ImageService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImageServiceImpl.class);
 
+    private final String startDirectory;
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
     private final CityImageRepository cityImageRepository;
     private final CountryImageRepository countryImageRepository;
     private final CityRepository cityRepository;
     private final CountryRepository countryRepository;
 
-    @Autowired
-    public ImageServiceImpl(CityImageRepository cityImageRepository, CountryImageRepository countryImageRepository, CityRepository cityRepository, CountryRepository countryRepository) {
+    public ImageServiceImpl(String startDirectory, CityImageRepository cityImageRepository, CountryImageRepository countryImageRepository, CityRepository cityRepository, CountryRepository countryRepository) {
+        this.startDirectory = startDirectory;
         this.cityImageRepository = cityImageRepository;
         this.countryImageRepository = countryImageRepository;
         this.cityRepository = cityRepository;
@@ -47,22 +49,32 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<CountryImage> save(String countryCode, InputStream inputStream, ImageResourceType imageResourceType, String fileName, String description) {
-        List<CountryImage> result = new ArrayList<>(5);
+    public List<CountryImage> save(String countryCode, InputStream inputStream, String fileName, String description) {
+        List<CountryImage> result = new ArrayList<>(ImageSize.values().length);
+        String fileType = fileName.substring(fileName.lastIndexOf("."));
         try {
             BufferedImage image = ImageIO.read(inputStream);
+            Path rootDir = Files.createDirectories(Paths.get(startDirectory, "country", countryCode));
             for (ImageSize size : ImageSize.values()) {
+                if (size.getSize() > Math.max(image.getHeight(), image.getWidth()))
+                    continue;
+                if (size == ImageSize.DEFAULT)
+                    size.setSize(Math.max(image.getHeight(), image.getWidth()));
                 BufferedImage scaled = Scalr.resize(image, Scalr.Method.QUALITY, Scalr.Mode.AUTOMATIC, size.getSize());
                 CountryImage countryImage = new CountryImage();
                 countryImage.setDescription(description);
                 countryImage.setSize(size);
-                countryImage.setUrl("src\\test\\resources\\test_files\\" + size.name() + "\\" + fileName);
+                countryImage.setUrl(startDirectory + "/" + size.name() + "/" + fileName);
                 countryImage.setCountry(countryRepository.getOne(countryCode));
                 CountryImage save = countryImageRepository.save(countryImage);
-                boolean writed = ImageIO.write(scaled, "jpg", new File("src\\test\\resources\\test_files\\" + size.name() + "\\" + save.getId() + ".jpg"));
+                Path dir = rootDir.resolve(size.name());
+                dir = Files.createDirectories(dir);
+                Path file = dir.resolve(save.getId() + fileType);
+                file = Files.createFile(file);
+                boolean writed = ImageIO.write(scaled, fileType.substring(1), file.toFile());
                 if (!writed)
                     throw new RuntimeException("Failed to write file");
-                save.setUrl("src\\test\\resources\\test_files\\" + size.name() + "\\" + save.getId() + ".jpg");
+                save.setUrl(startDirectory + "/" + size.name() + "/" + save.getId() + fileType);
                 CountryImage entity = countryImageRepository.save(save);
                 scaled.flush();
                 result.add(entity);
@@ -70,7 +82,7 @@ public class ImageServiceImpl implements ImageService {
             image.flush();
 
         } catch (IOException e) {
-            LOG.error("Failed to process input stream of image {}, error: {}", imageResourceType, e.getMessage());
+            LOG.error("Failed to process input stream of image, error: {}", e.getMessage());
             throw new RuntimeException(e);
         } finally {
             try {
@@ -83,7 +95,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<CountryImage> save(String countryCode, InputStream inputStream, ImageResourceType imageResourceType, String fileName) {
-        return save(countryCode, inputStream, imageResourceType, fileName, null);
+    public List<CountryImage> save(String countryCode, InputStream inputStream, String fileName) {
+        return save(countryCode, inputStream, fileName, null);
     }
 }
