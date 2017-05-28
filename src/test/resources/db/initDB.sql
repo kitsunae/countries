@@ -2545,9 +2545,7 @@ INSERT INTO city VALUES (1, 'Kabul', 'AFG', 'Kabol', 1780000, NULL), (2, 'Qandah
   (4075, 'Khan Yunis', 'PSE', 'Khan Yunis', 123175, NULL), (4076, 'Hebron', 'PSE', 'Hebron', 119401, NULL),
   (4077, 'Jabaliya', 'PSE', 'North Gaza', 113901, NULL), (4078, 'Nablus', 'PSE', 'Nablus', 100231, NULL),
   (4079, 'Rafah', 'PSE', 'Rafah', 92020, NULL);
-INSERT INTO city_image VALUES (1, 'images/city/3580/SMALL/img_1.jpg', 'SMALL', 3580, 'Moscow City');
-INSERT INTO country_image
-VALUES (1, 'images/country/RUS/XLARGE/img_1.jpg', 'XLARGE', 'RUS', 'Beautiful view on Kremlin');
+
 INSERT INTO countrylanguage
 VALUES ('ABW', 'Dutch', 'T', 5.3, NULL), ('ABW', 'English', 'F', 9.5, NULL), ('ABW', 'Papiamento', 'F', 76.7, NULL),
   ('ABW', 'Spanish', 'F', 7.4, NULL), ('AFG', 'Balochi', 'F', 0.9, NULL), ('AFG', 'Dari', 'T', 32.1, NULL),

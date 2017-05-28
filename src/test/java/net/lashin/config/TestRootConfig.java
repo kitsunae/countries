@@ -101,7 +101,7 @@ public class TestRootConfig {
 
     @Bean
     public ImageService imageService(CityImageRepository cityImageRepository, CountryImageRepository countryImageRepository, CityRepository cityRepository, CountryRepository countryRepository) {
-        String startFileDirectory = "src/test/resources/test_files";
-        return new ImageServiceImpl(startFileDirectory, cityImageRepository, countryImageRepository, cityRepository, countryRepository);
+        String fileDir = environment.getProperty("image.dir");
+        return new ImageServiceImpl(fileDir, cityImageRepository, countryImageRepository, cityRepository, countryRepository);
     }
 }

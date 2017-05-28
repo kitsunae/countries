@@ -23,7 +23,8 @@ import org.springframework.web.context.WebApplicationContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class AbstractControllerTest {
 
-    MockMvc mockMvc;
+    @SuppressWarnings("WeakerAccess")
+    protected MockMvc mockMvc;
     @Autowired
     private WebApplicationContext context;
     @Autowired
