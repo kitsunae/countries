@@ -1,11 +1,5 @@
 package net.lashin.config;
 
-import net.lashin.core.dao.CityImageRepository;
-import net.lashin.core.dao.CityRepository;
-import net.lashin.core.dao.CountryImageRepository;
-import net.lashin.core.dao.CountryRepository;
-import net.lashin.core.services.ImageService;
-import net.lashin.core.services.ImageServiceImpl;
 import net.sf.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
@@ -85,11 +79,5 @@ public class RootConfig {
         EhCacheManagerFactoryBean factoryBean = new EhCacheManagerFactoryBean();
         factoryBean.setConfigLocation(new ClassPathResource("cache/ehcache.xml"));
         return factoryBean;
-    }
-
-    @Bean
-    public ImageService imageService(CityImageRepository cityImageRepository, CountryImageRepository countryImageRepository, CityRepository cityRepository, CountryRepository countryRepository) {
-        String fileDir = environment.getProperty("image.dir");
-        return new ImageServiceImpl(fileDir, cityImageRepository, countryImageRepository, cityRepository, countryRepository);
     }
 }

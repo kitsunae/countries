@@ -47,7 +47,7 @@ public class ImageResourceHandler extends ResourceHandler<Image, ImageResource> 
         resource.setDescription(entity.getDescription());
         resource.setSize(entity.getSize().toString());
         resource.setType(ImageResourceType.fromClass(entity.getClass()));
-        Link self = linkTo(methodOn(IndexController.class).getImage())
+        Link self = linkTo(methodOn(IndexController.class).getDateTime())
                 .slash(entity.getUrl()).withSelfRel();
         resource.add(self);
         return resource;

@@ -22,9 +22,8 @@ public class IndexController {
         return "index";
     }
 
-    //TODO WTF?
     @RequestMapping(value = "/", method = RequestMethod.HEAD)
-    public ResponseEntity<Object> getImage() {
+    public ResponseEntity<Object> getDateTime() {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.DATE, LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
         return ResponseEntity.ok().headers(headers).build();

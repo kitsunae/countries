@@ -11,7 +11,7 @@
     </appender>
 
     <appender name="file" class="ch.qos.logback.core.FileAppender">
-        <file>logs/country.log</file>
+        <file>${COUNTRIES_DIR}/logs/country.log</file>
         <encoder>
             <charset>UTF-8</charset>
             <pattern>%date %-5level %logger{0} [%file:%line] %msg%n</pattern>

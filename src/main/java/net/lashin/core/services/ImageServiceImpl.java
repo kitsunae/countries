@@ -10,10 +10,13 @@ import net.lashin.core.dao.CountryRepository;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -21,9 +24,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.*;
 
+@Service
 @Transactional
 public class ImageServiceImpl implements ImageService {
 
@@ -36,7 +41,8 @@ public class ImageServiceImpl implements ImageService {
     private final CityRepository cityRepository;
     private final CountryRepository countryRepository;
 
-    public ImageServiceImpl(String startDirectory, CityImageRepository cityImageRepository, CountryImageRepository countryImageRepository, CityRepository cityRepository, CountryRepository countryRepository) {
+    public ImageServiceImpl(@Value("${UPLOAD_DIR}") String startDirectory, CityImageRepository cityImageRepository, CountryImageRepository countryImageRepository, CityRepository cityRepository, CountryRepository countryRepository) {
+        Objects.requireNonNull(startDirectory);
         this.startDirectory = startDirectory;
         this.cityImageRepository = cityImageRepository;
         this.countryImageRepository = countryImageRepository;
@@ -51,7 +57,7 @@ public class ImageServiceImpl implements ImageService {
         List<Future<CountryImage>> images = new ArrayList<>(ImageSize.values().length);
         try {
             BufferedImage image = ImageIO.read(inputStream);
-            Path rootDir = Files.createDirectories(Paths.get(startDirectory, "country", countryCode));
+            Path rootDir = Files.createDirectories(Paths.get(startDirectory, "images", "country", countryCode));
             for (ImageSize size : ImageSize.values()) {
                 if (size.getSize() > Math.max(image.getHeight(), image.getWidth()))
                     continue;
@@ -89,7 +95,7 @@ public class ImageServiceImpl implements ImageService {
         List<Future<CityImage>> images = new ArrayList<>(ImageSize.values().length);
         try {
             BufferedImage image = ImageIO.read(inputStream);
-            Path rootDir = Files.createDirectories(Paths.get(startDirectory, "city", String.valueOf(id)));
+            Path rootDir = Files.createDirectories(Paths.get(startDirectory, "images", "city", String.valueOf(id)));
             for (ImageSize size : ImageSize.values()) {
                 if (size.getSize() > Math.max(image.getHeight(), image.getWidth()))
                     continue;
@@ -121,6 +127,36 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public byte[] produceRawCountryImage(String code, ImageSize size, String fileName) {
+        Path path = Paths.get(startDirectory, "images", "country", code, size.name(), fileName);
+        return produceRawImage(path, fileName.substring(fileName.lastIndexOf(".")));
+    }
+
+    @Override
+    public byte[] produceRawCityImage(Long id, ImageSize size, String fileName) {
+        Path path = Paths.get(startDirectory, "images", "city", id.toString(), size.name(), fileName);
+        return produceRawImage(path, fileName.substring(fileName.lastIndexOf(".")));
+    }
+
+
+    private byte[] produceRawImage(Path path, String fileType) {
+        try {
+            LOG.debug("Trying to read file {}", path);
+            BufferedImage image = ImageIO.read(path.toFile());
+            try (ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream()) {
+                boolean writed = ImageIO.write(image, fileType, byteOutputStream);
+                if (!writed)
+                    throw new RuntimeException("Failed to process image");
+                image.flush();
+                return byteOutputStream.toByteArray();
+            }
+        } catch (IOException e) {
+            LOG.error("Failed to load image {}, error: {}", path, e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public List<CountryImage> save(String countryCode, InputStream inputStream, String fileName) {
         return save(countryCode, inputStream, fileName, null);
     }
@@ -130,10 +166,11 @@ public class ImageServiceImpl implements ImageService {
         return save(id, inputStream, fileName, null);
     }
 
+    // todo rewrite
     private String constructUrl(Path path, String... args) {
         StringJoiner stringJoiner = new StringJoiner("/");
-        stringJoiner.add(startDirectory);
-        for (int i = path.getNameCount() - 2; i < path.getNameCount(); ++i) {
+        path = Paths.get(startDirectory).relativize(path);
+        for (int i = path.getNameCount() - 3; i < path.getNameCount(); ++i) {
             stringJoiner.add(path.getName(i).toString());
         }
         if (args != null) {

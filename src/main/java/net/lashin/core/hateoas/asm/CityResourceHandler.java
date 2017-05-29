@@ -7,13 +7,13 @@ import net.lashin.core.hateoas.CityResource;
 import net.lashin.core.hateoas.ImageResource;
 import net.lashin.web.controllers.CityController;
 import net.lashin.web.controllers.CountryController;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,20 +41,24 @@ public class CityResourceHandler extends ResourceHandler<City, CityResource> {
             return null;
         CityResource res = new CityResource();
         res.setIdentity(city.getId());
-        res.setCountryCode(city.getCountry().getCode());
+        if (Hibernate.isInitialized(city.getCountry())) {
+            res.setCountryCode(city.getCountry().getCode());
+        }
         res.setDistrict(city.getDistrict());
         res.setName(city.getName());
         res.setPopulation(city.getPopulation());
         res.setDescription(city.getDescription());
         Set<CityImage> images = city.getImages();
-        List<ImageResource> resourceImages = images instanceof HashSet ? images.stream().map(imageHandler::toResource).collect(Collectors.toList()) : null;
+        List<ImageResource> resourceImages = Hibernate.isInitialized(images) ? images.stream().map(imageHandler::toResource).collect(Collectors.toList()) : null;
         res.setImages(resourceImages);
         Link selfRel = linkTo(methodOn(CityController.class).getCity(city.getId())).withSelfRel();
         res.add(selfRel);
-        Link cities = linkTo(methodOn(CityController.class).getAllCitiesOfCountry(city.getCountry().getCode(), null, null)).withRel("allCities");
-        res.add(cities);
-        Link country = linkTo(methodOn(CountryController.class).getCountry(city.getCountry().getCode())).withRel("country");
-        res.add(country);
+        if (Hibernate.isInitialized(city.getCountry())) {
+            Link cities = linkTo(methodOn(CityController.class).getAllCitiesOfCountry(city.getCountry().getCode(), null, null)).withRel("allCities");
+            res.add(cities);
+            Link country = linkTo(methodOn(CountryController.class).getCountry(city.getCountry().getCode())).withRel("country");
+            res.add(country);
+        }
         return res;
     }
 
