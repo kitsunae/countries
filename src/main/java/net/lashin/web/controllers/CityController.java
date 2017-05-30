@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -104,9 +106,9 @@ public class CityController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public CityResource saveCity(@RequestBody @Valid CityResource cityResource) {
+    public ResponseEntity<CityResource> saveCity(@RequestBody @Valid CityResource cityResource) {
         LOGGER.debug("Saving city {}", cityResource);
-        return assembler.toResource(service.save(assembler.toEntity(cityResource), cityResource.getCountryCode()));
+        return new ResponseEntity<>(assembler.toResource(service.save(assembler.toEntity(cityResource), cityResource.getCountryCode())), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)

@@ -32,6 +32,7 @@ public class ImageController {
 
     @Autowired
     public ImageController(ImageService imageService, ImageResourceHandler resourceHandler) {
+        LOGGER.debug("Instantiating Images Controller");
         this.imageService = imageService;
         this.resourceHandler = resourceHandler;
     }

@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -99,9 +101,9 @@ public class LanguageController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public CountryLanguageResource save(@RequestBody @Valid CountryLanguageResource language) {
+    public ResponseEntity<CountryLanguageResource> save(@RequestBody @Valid CountryLanguageResource language) {
         LOGGER.debug("Saving language {}", language);
-        return assembler.toResource(service.save(assembler.toEntity(language)));
+        return new ResponseEntity<>(assembler.toResource(service.save(assembler.toEntity(language))), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)

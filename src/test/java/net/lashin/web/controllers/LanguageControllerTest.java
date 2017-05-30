@@ -1,8 +1,11 @@
 package net.lashin.web.controllers;
 
+import net.lashin.core.hateoas.CountryLanguageResource;
+import net.lashin.util.JsonUtil;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,24 +75,23 @@ public class LanguageControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk());
     }
 
-//    @Test
-//    public void save() throws Exception {
-//
-//    }
-//
-//    @Test
-//    public void delete() throws Exception {
-//
-//    }
-//
-//    @Test
-//    public void filterLanguages() throws Exception {
-//
-//    }
-//
-//    @Test
-//    public void filterLanguages1() throws Exception {
-//
-//    }
+    @Test
+    public void save() throws Exception {
+        CountryLanguageResource resource = new CountryLanguageResource();
+        resource.setLanguage("Tumba");
+        resource.setCountryCode("DMA");
+        resource.setOfficial(false);
+        resource.setPercentage(0.01);
+        resource.setDescription("Imaginary language");
+        mockMvc.perform(post("/language").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(resource)))
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
 
+    @Test
+    public void deleteLanguage() throws Exception {
+        mockMvc.perform(delete("/language/").param("languageName", "Mordva").param("countryCode", "RUS"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

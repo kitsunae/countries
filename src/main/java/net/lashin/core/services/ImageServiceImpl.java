@@ -29,7 +29,6 @@ import java.util.StringJoiner;
 import java.util.concurrent.*;
 
 @Service
-@Transactional
 public class ImageServiceImpl implements ImageService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImageServiceImpl.class);
@@ -52,6 +51,7 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
+    @Transactional
     public List<CountryImage> save(String countryCode, InputStream inputStream, String fileName, String description) {
         List<CountryImage> result = new ArrayList<>(ImageSize.values().length);
         List<Future<CountryImage>> images = new ArrayList<>(ImageSize.values().length);
@@ -90,6 +90,7 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
+    @Transactional
     public List<CityImage> save(Long id, InputStream inputStream, String fileName, String description) {
         List<CityImage> result = new ArrayList<>(ImageSize.values().length);
         List<Future<CityImage>> images = new ArrayList<>(ImageSize.values().length);
@@ -128,18 +129,19 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public byte[] produceRawCountryImage(String code, ImageSize size, String fileName) {
-        Path path = Paths.get(startDirectory, "images", "country", code, size.name(), fileName);
-        return produceRawImage(path, fileName.substring(fileName.lastIndexOf(".")));
+        Path path = Files.exists(Paths.get(startDirectory, "images", "country", code, size.name(), fileName + ".jpg")) ? Paths.get(startDirectory, "images", "country", code, size.name(), fileName + ".jpg") : Paths.get(startDirectory, "images", "country", code, size.name(), fileName + ".png");
+        return produceRawImage(path, path.getFileName().toString().substring(path.getFileName().toString().lastIndexOf(".") + 1));
     }
 
     @Override
     public byte[] produceRawCityImage(Long id, ImageSize size, String fileName) {
-        Path path = Paths.get(startDirectory, "images", "city", id.toString(), size.name(), fileName);
-        return produceRawImage(path, fileName.substring(fileName.lastIndexOf(".")));
+        Path path = Files.exists(Paths.get(startDirectory, "images", "city", id.toString(), size.name(), fileName + ".jpg")) ? Paths.get(startDirectory, "images", "city", id.toString(), size.name(), fileName + ".jpg") : Paths.get(startDirectory, "images", "city", id.toString(), size.name(), fileName + ".png");
+        return produceRawImage(path, path.getFileName().toString().substring(path.getFileName().toString().lastIndexOf(".") + 1));
     }
 
-
     private byte[] produceRawImage(Path path, String fileType) {
+        if (path == null || fileType == null)
+            throw new IllegalArgumentException("Cannot resolve image");
         try {
             LOG.debug("Trying to read file {}", path);
             BufferedImage image = ImageIO.read(path.toFile());
@@ -157,11 +159,13 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Transactional
     public List<CountryImage> save(String countryCode, InputStream inputStream, String fileName) {
         return save(countryCode, inputStream, fileName, null);
     }
 
     @Override
+    @Transactional
     public List<CityImage> save(Long id, InputStream inputStream, String fileName) {
         return save(id, inputStream, fileName, null);
     }

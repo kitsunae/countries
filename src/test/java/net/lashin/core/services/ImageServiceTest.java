@@ -7,14 +7,15 @@ import net.lashin.core.beans.Image;
 import net.lashin.core.beans.ImageSize;
 import net.lashin.core.dao.CityImageRepository;
 import net.lashin.core.dao.CountryImageRepository;
+import net.lashin.util.TestFilesUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,16 +44,7 @@ public class ImageServiceTest extends AbstractServiceTest {
         super.setUp();
         Path city = Paths.get(uploadDir + "/images/city/3580");
         Path country = Paths.get(uploadDir + "/images/country/RUS");
-        try {
-            if (Files.exists(city)) {
-                Files.walkFileTree(city, new TestFileVisitor());
-            }
-            if (Files.exists(country)) {
-                Files.walkFileTree(country, new TestFileVisitor());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        TestFilesUtil.cleanUp(city, country);
     }
 
     @Test
@@ -85,30 +77,6 @@ public class ImageServiceTest extends AbstractServiceTest {
         Iterable<CityImage> images = cityImageRepository.findAll();
         for (CityImage image : images) {
             assertEquals("images/city/3580/" + image.getSize() + "/" + image.getId() + ".jpg", image.getUrl());
-        }
-    }
-
-    private static class TestFileVisitor implements FileVisitor<Path> {
-        @Override
-        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            return FileVisitResult.CONTINUE;
-        }
-
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            Files.delete(file);
-            return FileVisitResult.CONTINUE;
-        }
-
-        @Override
-        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-            return FileVisitResult.TERMINATE;
-        }
-
-        @Override
-        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-            Files.delete(dir);
-            return FileVisitResult.CONTINUE;
         }
     }
 }

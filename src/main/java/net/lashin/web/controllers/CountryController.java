@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -116,9 +118,9 @@ public class CountryController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public CountryResource save(@RequestBody @Valid CountryResource country) {
+    public ResponseEntity<CountryResource> save(@RequestBody @Valid CountryResource country) {
         LOGGER.debug("Saving country {}", country);
-        return assembler.toResource(service.save(assembler.toEntity(country)));
+        return new ResponseEntity<>(assembler.toResource(service.save(assembler.toEntity(country))), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{countryCode}", method = RequestMethod.PUT)
